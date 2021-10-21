@@ -3,19 +3,20 @@
 
 #include "string/String.h"
 
-class entry
-{
+class entry {
 private:
   word *w;
   void *payload;
+  entry *next;
 
 public:
   entry(const word *w, void *payload);
+  entry *getNext() { return this->next; };
+  void setNext(entry *e) { this->next = e; };
   ~entry();
 };
 
-class word
-{
+class word {
 private:
   String *str;
 
