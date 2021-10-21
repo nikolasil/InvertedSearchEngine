@@ -11,11 +11,12 @@ private:
 
 public:
   entry_list();
+  ~entry_list();
   int addEntry(entry *e);
   int getCount();
   entry *getStart() { return this->start; };
   entry *getEnd() { return this->end; };
-  ~entry_list();
+  void print();
 };
 
 #endif

@@ -9,6 +9,7 @@ public:
   String();
   String(const char *string);
   ~String();
+  void print();
 };
 
 #endif

@@ -7,9 +7,9 @@ entry_list::entry_list() {
 
 int entry_list::addEntry(entry *e) {
   if (!this->start || !this->end) {
-    return -1; //entry list not initialized
+    return -1; // entry list not initialized
   }
-  if (this->start == nullptr) { //no entries in entry list
+  if (this->start == nullptr) { // no entries in entry list
     this->start = e;
   } else {
     this->end->setNext(e);
@@ -30,5 +30,13 @@ int entry_list::getCount() {
     return -1;
   } else {
     return this->count;
+  }
+}
+
+void entry_list::print() {
+  entry *current = this->start;
+  while (current) {
+    current->print();
+    current = current->getNext();
   }
 }

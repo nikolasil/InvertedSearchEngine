@@ -1,3 +1,4 @@
+#include <iostream>
 #include "entry.h"
 #include "string/String.h"
 // entry
@@ -12,11 +13,15 @@ entry::~entry() {
   delete this->next;
 }
 
-// word
-word::word(const char *string) {
-  this->str = new String(string);
+void entry::print() {
+  w->print();
+  if (this->next)
+    cout << " -> ";
+  else
+    cout << "\n";
 }
 
-word::~word() {
-  delete this->str;
-}
+// word
+word::word(const char *string) { this->str = new String(string); }
+
+word::~word() { delete this->str; }
