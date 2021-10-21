@@ -1,14 +1,13 @@
 #include "entry_list.h"
+#include <iostream>
 
+using namespace std;
 entry_list::entry_list() {
   this->start = this->end = nullptr;
   this->count = 0;
 }
 
 int entry_list::addEntry(entry *e) {
-  if (!this->start || !this->end) {
-    return -1; // entry list not initialized
-  }
   if (this->start == nullptr) { // no entries in entry list
     this->start = e;
   } else {
