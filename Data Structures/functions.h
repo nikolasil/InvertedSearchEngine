@@ -1,11 +1,8 @@
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
-#ifndef __SIGMOD_CORE_H_
-#define __SIGMOD_CORE_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include "entrylist.h"
+#include "entry.h"
 /// Maximum document length in characters.
 #define MAX_DOC_LENGTH (1 << 22)
 
@@ -28,7 +25,8 @@ typedef unsigned int QueryID;
 typedef unsigned int DocID;
 
 /// Matching types:
-typedef enum {
+typedef enum
+{
   /**
     * Two words match if they are exactly the same.
     */
@@ -48,7 +46,8 @@ typedef enum {
 } MatchType;
 
 /// Error codes:
-typedef enum {
+typedef enum
+{
   /**
     * Must be returned by each core function unless specified otherwise.
     */
@@ -132,9 +131,5 @@ ErrorCode lookup_entry_index(const word &w, idnex *ix, int threshold, entry_list
 */
 
 ErrorCode destroy_entry_index(index *ix);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

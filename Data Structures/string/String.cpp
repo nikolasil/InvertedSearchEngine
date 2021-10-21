@@ -3,15 +3,15 @@
 using namespace std;
 
 String::String() {
-  str = new char[1];
-  str[0] = '\0';
+  this->str = new char[1];
+  this->str[0] = '\0';
 }
 
-String::String(const char *string) {
-  str = new char[strlen(string) + 1];
-  strcpy(str, string);
+String::String(const char* string) {
+  this->str = new char[strlen(string) + 1];
+  strcpy(this->str, string);
 }
 
 String::~String() {
-  delete[] str;
+  delete[] this->str;
 }
