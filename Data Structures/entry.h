@@ -3,8 +3,22 @@
 
 #include "string/String.h"
 
-class entry
-{
+class word {
+private:
+  String *str;
+
+public:
+  word(const char *string);
+  ~word();
+  // GETTERS
+  String *getWord() { return this->str; };
+  // SETTERS
+  void setWord(char *string) { this->str = new String(string); };
+  void setWord(String *string) { this->str = string; };
+  void print() { this->str->print(); };
+};
+
+class entry {
 private:
   word *w;
   void *payload;
@@ -22,20 +36,4 @@ public:
 
   void print();
 };
-
-class word
-{
-private:
-  String *str;
-
-public:
-  word(const char *string);
-  ~word();
-  // GETTERS
-  String *getWord() { return this->str; };
-  // SETTERS
-  void setWord(char *string) { this->str = new String(string); };
-  void setWord(String *string) { this->str = string; };
-};
-
 #endif
