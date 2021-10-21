@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
   entry_list *testList = new entry_list();
   testList->addEntry(new entry((const word *)new word("nikolas"), nullptr));
   testList->addEntry(new entry((const word *)new word("mixalis"), nullptr));
-  testList->addEntry(new entry((const word *)new word("ioanidis"), nullptr));
+  testList->addEntry(new entry((const word *)new word("project"), nullptr));
 
   testList->print();
 

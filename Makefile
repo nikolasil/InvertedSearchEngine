@@ -17,6 +17,9 @@ entry_list.o :
 entry.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/entry.cpp
 
+run:
+	./invSearchEngine
+
 .PHONY: clean
 clean:
 	rm -f invSearchEngine $(FILES)
