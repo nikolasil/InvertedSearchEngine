@@ -28,7 +28,7 @@ public:
   entry(const word *w, void *payload);
   ~entry();
   // GETTERS
-  word *getWord() { return this->w->getStr(); };
+  String *getWord() { return this->w->getStr(); };
   void *getPayload() { return this->payload; };
   entry *getNext() { return this->next; };
   // SETTERS

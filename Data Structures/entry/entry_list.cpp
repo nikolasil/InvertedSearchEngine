@@ -46,7 +46,7 @@ linkedList *entry_list::generateLinkedList() {
   entry *current = this->start;
 
   while (current != nullptr) {
-    list->add(current->getWord());
+    list->addNode(current->getWord());
     current = current->getNext();
   }
 

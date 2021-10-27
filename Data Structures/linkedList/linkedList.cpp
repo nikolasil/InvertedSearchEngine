@@ -1,5 +1,6 @@
 #include "linkedList.h"
 #include <cstring>
+#include <iostream>
 using namespace std;
 // Linked List
 linkedList::linkedList() {
@@ -8,6 +9,10 @@ linkedList::linkedList() {
 
 linkedList::~linkedList() {
   delete this->head;
+}
+
+void linkedList::print() {
+  this->head->print();
 }
 
 listNode *linkedList::addNode(String *word) {
@@ -37,6 +42,15 @@ listNode::listNode(String *word) {
 listNode::~listNode() {
   delete this->word;
   delete this->next;
+}
+
+void listNode::print() {
+  if (!this->next)
+    return;
+
+  cout << this->word->getStr() << " ";
+  this->next->print();
+  cout << endl;
 }
 
 String *listNode::getWord() {

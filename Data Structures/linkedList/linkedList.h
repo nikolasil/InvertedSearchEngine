@@ -14,6 +14,7 @@ public:
   String *getWord();
   void setNext(listNode *next);
   listNode *getNext();
+  void print();
 };
 class linkedList {
 private:
@@ -24,6 +25,7 @@ public:
   ~linkedList();
   listNode *addNode(String *word);
   listNode *getNode(String *word);
+  void print();
 };
 
 #endif
