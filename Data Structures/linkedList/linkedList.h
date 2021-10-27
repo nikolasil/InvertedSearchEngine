@@ -1,7 +1,7 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include "../string/String.h";
+#include "../string/String.h"
 
 class listNode {
 private:

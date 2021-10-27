@@ -13,13 +13,15 @@ linkedList::~linkedList() {
 
 void linkedList::print() {
   this->head->print();
+  cout << endl;
 }
 
 listNode *linkedList::addNode(String *word) {
 
   listNode *newNode = new listNode(word);
   newNode->setNext(this->head);
-  return (this->head = newNode);
+  this->head = newNode;
+  return this->head;
 }
 
 listNode *linkedList::getNode(String *word) {
@@ -45,12 +47,10 @@ listNode::~listNode() {
 }
 
 void listNode::print() {
-  if (!this->next)
-    return;
-
   cout << this->word->getStr() << " ";
-  this->next->print();
-  cout << endl;
+  if (this->next) {
+    this->next->print();
+  }
 }
 
 String *listNode::getWord() {
