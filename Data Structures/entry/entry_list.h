@@ -3,6 +3,8 @@
 
 #include "entry.h"
 #include "../string/String.h"
+#include "../linkedList/linkedList.h"
+
 class entry_list {
 private:
   entry *start;
@@ -16,6 +18,7 @@ public:
   int getCount();
   entry *getStart() { return this->start; };
   entry *getEnd() { return this->end; };
+  linkedList *generateLinkedList();
   void print();
 };
 
