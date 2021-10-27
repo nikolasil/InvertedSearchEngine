@@ -10,6 +10,7 @@ public:
   String(const char *string);
   ~String();
   void print();
+  char *getStr();
 };
 
 #endif

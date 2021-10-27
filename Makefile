@@ -1,6 +1,6 @@
 CC = g++ -std=c++11
 CFLAFS = -O3 -g
-FILES = main.o String.o entry_list.o entry.o 
+FILES = main.o String.o entry_list.o entry.o tree.o
 
 invSearchEngine: clean $(FILES)
 	$(CC) $(CFLAFS) -o invSearchEngine $(FILES)
@@ -16,6 +16,8 @@ entry_list.o :
 
 entry.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/entry/entry.cpp
+tree.o :
+	$(CC) $(CFLAFS) -c Data\ Structures/tree/tree.cpp
 
 run:
 	./invSearchEngine
