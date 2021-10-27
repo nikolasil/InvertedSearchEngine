@@ -16,3 +16,7 @@ String::String(const char *string) {
 void String::print() { cout << this->str; }
 
 String::~String() { delete[] this->str; }
+
+char *String::getStr() {
+  return this->str;
+}
