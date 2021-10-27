@@ -1,4 +1,5 @@
 #include "entry_list.h"
+#include "../linkedList/linkedList.h"
 #include <iostream>
 
 using namespace std;
@@ -38,4 +39,16 @@ void entry_list::print() {
     current->print();
     current = current->getNext();
   }
+}
+
+linkedList *entry_list::generateLinkedList() {
+  linkedList *list = new linkedList();
+  entry *current = this->start;
+
+  while (current != nullptr) {
+    list->add(current->getWord());
+    current = current->getNext();
+  }
+
+  return list;
 }

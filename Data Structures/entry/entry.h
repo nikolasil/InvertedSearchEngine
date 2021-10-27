@@ -11,10 +11,10 @@ public:
   word(const char *string);
   ~word();
   // GETTERS
-  String *getWord() { return this->str; };
+  String *getStr() { return this->str; };
   // SETTERS
-  void setWord(char *string) { this->str = new String(string); };
-  void setWord(String *string) { this->str = string; };
+  void setStr(char *string) { this->str = new String(string); };
+  void setStr(String *string) { this->str = string; };
   void print() { this->str->print(); };
 };
 
@@ -28,7 +28,7 @@ public:
   entry(const word *w, void *payload);
   ~entry();
   // GETTERS
-  word *getWord() { return this->w; };
+  word *getWord() { return this->w->getStr(); };
   void *getPayload() { return this->payload; };
   entry *getNext() { return this->next; };
   // SETTERS
