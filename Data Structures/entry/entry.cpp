@@ -1,5 +1,5 @@
 #include "entry.h"
-#include "string/String.h"
+#include "../string/String.h"
 #include <iostream>
 
 using namespace std;

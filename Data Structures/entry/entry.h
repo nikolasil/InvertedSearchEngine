@@ -1,7 +1,7 @@
 #ifndef ENTRY_H
 #define ENTRY_H
 
-#include "string/String.h"
+#include "../string/String.h"
 
 class word {
 private:

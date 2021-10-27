@@ -2,7 +2,7 @@
 #define ENTRYLIST_H
 
 #include "entry.h"
-#include "string/String.h"
+#include "../string/String.h"
 class entry_list {
 private:
   entry *start;

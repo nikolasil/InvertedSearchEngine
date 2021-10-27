@@ -12,10 +12,10 @@ String.o:
 	$(CC) $(CFLAFS) -c Data\ Structures/string/String.cpp
 
 entry_list.o :
-	$(CC) $(CFLAFS) -c Data\ Structures/entry_list.cpp
+	$(CC) $(CFLAFS) -c Data\ Structures/entry/entry_list.cpp
 
 entry.o :
-	$(CC) $(CFLAFS) -c Data\ Structures/entry.cpp
+	$(CC) $(CFLAFS) -c Data\ Structures/entry/entry.cpp
 
 run:
 	./invSearchEngine

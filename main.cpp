@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Data Structures/entry.h"
-#include "Data Structures/entry_list.h"
+#include "Data Structures/entry/entry.h"
+#include "Data Structures/entry/entry_list.h"
 
 using namespace std;
 

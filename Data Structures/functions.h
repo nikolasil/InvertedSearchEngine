@@ -1,8 +1,8 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "entrylist.h"
-#include "entry.h"
+#include "entry/entrylist.h"
+#include "entry/entry.h"
 /// Maximum document length in characters.
 #define MAX_DOC_LENGTH (1 << 22)
 
