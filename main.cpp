@@ -3,6 +3,7 @@
 #include "Data Structures/entry/entry.h"
 #include "Data Structures/entry/entry_list.h"
 #include "Data Structures/tree/tree.h"
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -16,10 +17,10 @@ int main(int argc, char *argv[]) {
   myTree->add(new String("hell"));
   myTree->add(new String("help"));
   myTree->add(new String("fall"));
+  myTree->add(new String("felt"));
   myTree->add(new String("fell"));
-  myTree->add(new String("sell"));
-  myTree->add(new String("sold"));
   myTree->add(new String("small"));
+  myTree->add(new String("melt"));
   myTree->print();
   return 0;
 }
