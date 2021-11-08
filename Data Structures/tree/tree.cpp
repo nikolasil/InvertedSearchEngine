@@ -16,10 +16,11 @@ void tree::add(String *word) {
   tree_node *current = this->root;
 
   if (current == nullptr) {
+    cout << "root : " << word->getStr() << endl;
     this->root = new tree_node(word);
     return;
   }
-  while (1) {
+  while (true) {
     // Compare word with node data
     int diff = hammingDistance(word, current->getData());
 
@@ -40,7 +41,12 @@ void tree::print() {
 }
 
 // Tree Node
-tree_node::tree_node(String *d) { this->data = d; }
+tree_node::tree_node(String *d) {
+  this->data = d;
+  for (int i = 0; i < 30; i++) {
+    this->childs[i] = nullptr;
+  }
+}
 
 tree_node::~tree_node() {
   delete this->data;
@@ -48,55 +54,28 @@ tree_node::~tree_node() {
 }
 String *tree_node::getData() { return this->data; }
 tree_node *tree_node::findChild(int w) {
-  tree_edge *currentEdge = this->childs;
-  while (currentEdge != nullptr) {
-    if (currentEdge->getWeight() == w) { // check for weight equivalence
-      return currentEdge->getChild();
-    }
-    currentEdge = currentEdge->getNext();
+  if (this->childs[w - 1] != nullptr) {
+    return this->childs[w - 1]->getChild();
   }
-  return nullptr; // no weight equivalence
+  return nullptr;
 }
 void tree_node::addChild(int w, tree_node *c) {
-  // the edge list was empty
-  if (this->childs == nullptr) {
-    this->childs = new tree_edge(w, c);
-    this->childs->setNext(nullptr);
-    return;
-  }
-
-  tree_edge *prev = nullptr;
-  tree_edge *current = this->childs;
-
-  while (current != nullptr && current->getWeight() < w) {
-    prev = current;
-    current = current->getNext();
-  }
-
-  // the new edge must be in the first place
-  if (prev == nullptr) {
-    this->childs = new tree_edge(w, c);
-    this->childs->setNext(current);
-    return;
-  }
-  // the new edge must be in the last place
-  if (current == nullptr) {
-    prev->setNext(new tree_edge(w, c));
-    return;
-  }
-  // the new edge must be between prev-current
-  prev->setNext(new tree_edge(w, c));
-  prev->getNext()->setNext(current);
-  return;
+  this->childs[w - 1] = new tree_edge(w, c);
 }
 
 void tree_node::print() {
 
   cout << endl;
-  cout << endl;
   cout << this->data->getStr() << " ";
-  if (this->childs != nullptr) {
-    this->childs->print();
+  for (int i = 0; i < 30; i++) {
+    if (this->childs[i] != nullptr) {
+      this->childs[i]->print();
+    }
+  }
+  for (int i = 0; i < 30; i++) {
+    if (this->childs[i] != nullptr) {
+      this->childs[i]->printChild();
+    }
   }
 }
 // Tree Edge
@@ -105,27 +84,14 @@ tree_edge::tree_edge(int w, tree_node *c) {
   this->weight = w;
   this->child = c;
 }
-tree_edge::~tree_edge() {
-  delete this->next_edge;
-  delete this->child;
-}
+tree_edge::~tree_edge() { delete this->child; }
 
 int tree_edge::getWeight() { return this->weight; }
-
-tree_edge *tree_edge::getNext() { return this->next_edge; }
-
-void tree_edge::setNext(tree_edge *next) { this->next_edge = next; }
 
 tree_node *tree_edge::getChild() { return this->child; }
 
 void tree_edge::print() {
-
-  tree_edge *current = this;
   cout << "[" << this->weight << "->" << this->child->getData()->getStr()
        << "], ";
-  if (this->next_edge != nullptr) {
-    this->next_edge->print();
-  }
-  // cout << endl;
-  this->child->print();
 }
+void tree_edge::printChild() { this->child->print(); }

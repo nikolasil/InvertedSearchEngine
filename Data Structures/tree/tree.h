@@ -10,8 +10,6 @@ private:
   int weight;
   tree_node *child;
 
-  tree_edge *next_edge;
-
 public:
   tree_edge(int w, tree_node *c);
   ~tree_edge();
@@ -20,12 +18,13 @@ public:
   tree_node *getChild();
   tree_edge *getNext();
   void print();
+  void printChild();
 };
 
 class tree_node {
 private:
   String *data;
-  tree_edge *childs;
+  tree_edge *childs[31];
 
 public:
   tree_node(String *d);
