@@ -23,8 +23,3 @@ void entry::print() {
   else
     cout << "\n";
 }
-
-// word
-word::word(const char *string) { this->str = new String(string); }
-
-word::~word() { delete this->str; }

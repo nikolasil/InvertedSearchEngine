@@ -50,7 +50,11 @@ tree_node::tree_node(String *d) {
 
 tree_node::~tree_node() {
   delete this->data;
-  delete this->childs;
+  for (int i = 0; i < 30; i++) {
+    if (this->childs[i] != nullptr) {
+      delete this->childs[i];
+    }
+  }
 }
 String *tree_node::getData() { return this->data; }
 tree_node *tree_node::findChild(int w) {
