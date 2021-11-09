@@ -91,9 +91,14 @@ ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix) {
   }
 }
 
-ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold,entry_list **result) {
+ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold, entry_list **result) {
   try {
-    *result = ix->lookup(w, threshold);
+    entry_list *res;
+    entry_list **resPtr = &res;
+    res = ix->lookup((String *)&w, threshold);
+    res->print();
+    result = resPtr;
+
     return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;

@@ -1,7 +1,7 @@
 #include "approximateMatching.h"
 #include "../string/String.h"
 #include <cstring>
-
+#include <iostream>
 using namespace std;
 
 int hammingDistance(String *word1, String *word2) {
