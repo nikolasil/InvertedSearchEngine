@@ -90,3 +90,12 @@ ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix) {
     return EC_FAIL;
   }
 }
+
+ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold,entry_list **result) {
+  try {
+    *result = ix->lookup(w, threshold);
+    return EC_SUCCESS;
+  } catch (const exception &e) {
+    return EC_FAIL;
+  }
+}

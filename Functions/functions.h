@@ -123,7 +123,7 @@ ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix);
  * This method returns a set of entries that correspond with the given word depending of the index match type and the threshold.
  */
 
-ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold, entry_list *result);
+ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold, entry_list **result);
 ;
 
 /**

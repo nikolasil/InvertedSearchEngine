@@ -39,7 +39,10 @@ int main(int argc, char *argv[]) {
 
   ix->print();
 
+  entry_list **result;
+  const word key("henn");
+  lookup_entry_index(key, tree, 2, result);
+  result->print();
   delete el;
-
   return 0;
 }

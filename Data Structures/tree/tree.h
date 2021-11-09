@@ -35,6 +35,7 @@ public:
   void addChild(int w, tree_node *c);
   tree_node *findChild(int w);
   String *getData();
+  void lookup(String *word, int threshold, entry_list **foundWords);
   void print();
 };
 
@@ -48,6 +49,7 @@ public:
   void add(String *word);
   void print();
   void fillLinkedList(linkedList *list, MatchType type);
+  entry_list *lookup(String *word, int threshold);
 };
 
 #endif
