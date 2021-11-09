@@ -25,7 +25,7 @@ void tree::add(String *word) {
     // Compare word with node data
     int diff = hammingDistance(word, current->getData());
 
-    cout << "Difference is " << diff << " -> " << word->getStr() << endl;
+    // cout << "Difference is " << diff << " -> " << word->getStr() << endl;
     // Search for child node with equal weight in edge
     tree_node *childNode = nullptr;
     if ((childNode = current->findChild(diff)) == nullptr) {
@@ -60,7 +60,7 @@ entry_list *tree::lookup(String *word, int threshold) {
   int diff = hammingDistance(word, this->root->getData());
   if (diff <= threshold) {
     foundWords->addEntry(new entry(this->root->getData(), nullptr));
-    cout << "[1] Added " << this->root->getData()->getStr() << " with diff " << diff << endl;
+    cout << "Added " << this->root->getData()->getStr() << " with diff " << diff << endl;
   }
 
   this->root->lookup(word, threshold, foundWordsPtr);
@@ -117,15 +117,15 @@ void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
   int diff = hammingDistance(word, this->getData());
   int min = diff - threshold;
   int max = diff + threshold;
-  cout << "Space : [" << min << "," << max << "]" << endl;
+  // cout << "Space : [" << min << "," << max << "]" << endl;
   for (int i = min; i < max; i++) {
     child = this->findChild(i);
     if (child != nullptr) {
-      cout << "Weight for child" << child->getData()->getStr() << " is " << i << endl;
+      // cout << "Weight for child" << child->getData()->getStr() << " is " << i << endl;
       diff = hammingDistance(child->getData(), word);
       if (diff <= threshold) {
         (*foundWords)->addEntry(new entry(child->getData(), nullptr));
-        cout << "[2] Added " << child->getData()->getStr() << " with diff " << diff << endl;
+        cout << "Added " << child->getData()->getStr() << " with diff " << diff << endl;
       }
       child->lookup(word, threshold, foundWords);
     }

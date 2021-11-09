@@ -9,11 +9,6 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  // entry_list *testList = new entry_list();
-  // testList->addEntry(new entry((const word *)new word("nikolas"), nullptr));
-  // testList->addEntry(new entry((const word *)new word("mixalis"), nullptr));
-  // testList->addEntry(new entry((const word *)new word("project"), nullptr));
-
   entry_list *el;
   entry_list **elPtr = &el;
   create_entry_list(elPtr);
@@ -49,18 +44,21 @@ int main(int argc, char *argv[]) {
   add_entry(elPtr, (const entry **)e5Ptr);
   add_entry(elPtr, (const entry **)e6Ptr);
   add_entry(elPtr, (const entry **)e7Ptr);
-
+  cout << "-- entry_list --" << endl;
   el->print();
 
   tree *ix;
   tree **ixPtr = &ix;
   build_entry_index((const entry_list **)elPtr, MT_HAMMING_DIST, ixPtr);
 
+  cout << "-- index --" << endl;
   ix->print();
 
+  cout << "-- started lookup --" << endl;
   entry_list *result;
   const word key("henn");
   lookup_entry_index(key, ix, 2, &result);
+  cout << "-- lookup result --" << endl;
   result->print();
   delete el;
   return 0;
