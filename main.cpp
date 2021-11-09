@@ -59,9 +59,8 @@ int main(int argc, char *argv[]) {
   ix->print();
 
   entry_list *result;
-  entry_list **resultPtr = &result;
   const word key("henn");
-  lookup_entry_index(key, ix, 2, resultPtr);
+  lookup_entry_index(key, ix, 2, &result);
   result->print();
   delete el;
   return 0;
