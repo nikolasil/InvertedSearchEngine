@@ -4,7 +4,8 @@
 
 using namespace std;
 entry_list::entry_list() {
-  this->start = this->end = nullptr;
+  this->start = nullptr;
+  this->end = nullptr;
   this->count = 0;
 }
 
@@ -25,7 +26,7 @@ entry_list::~entry_list() {
   }
 }
 
-int entry_list::getCount() {
+unsigned int entry_list::getCount() const {
   if (!this->count) {
     return -1;
   } else {
@@ -41,7 +42,7 @@ void entry_list::print() {
   }
 }
 
-linkedList *entry_list::generateLinkedList() {
+linkedList *entry_list::generateLinkedList() const {
   linkedList *list = new linkedList();
   entry *current = this->start;
 
@@ -49,6 +50,5 @@ linkedList *entry_list::generateLinkedList() {
     list->addNode(current->getWord());
     current = current->getNext();
   }
-
   return list;
 }

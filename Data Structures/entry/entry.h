@@ -13,11 +13,12 @@ private:
 
 public:
   entry(const word *w, void *payload);
+  entry();
   ~entry();
   // GETTERS
   word *getWord() { return this->w; };
   void *getPayload() { return this->payload; };
-  entry *getNext() { return this->next; };
+  entry *getNext() const { return this->next; };
   // SETTERS
   void setNext(entry *e) { this->next = e; };
 

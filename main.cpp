@@ -4,6 +4,8 @@
 #include "Data Structures/entry/entry_list.h"
 #include "Data Structures/linkedList/linkedList.h"
 #include "Data Structures/tree/tree.h"
+#include "Functions/functions.h"
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -12,19 +14,32 @@ int main(int argc, char *argv[]) {
   // testList->addEntry(new entry((const word *)new word("mixalis"), nullptr));
   // testList->addEntry(new entry((const word *)new word("project"), nullptr));
 
-  // testList->print();
-  tree *myTree = new tree();
-  myTree->add(new String("hell"));
-  myTree->add(new String("help"));
-  myTree->add(new String("fall"));
-  myTree->add(new String("felt"));
-  myTree->add(new String("fell"));
-  myTree->add(new String("small"));
-  myTree->add(new String("melt"));
-  myTree->print();
+  entry_list *el;
+  entry_list **elPtr = &el;
+  create_entry_list(elPtr);
+  entry *e1, *e2, *e3;
+  entry **e1Ptr = &e1;
+  entry **e2Ptr = &e2;
+  entry **e3Ptr = &e3;
 
-  // linkedList *list = testList->generateLinkedList();
-  // list->print();
+  const word *w1 = new word("hell");
+  const word *w2 = new word("help");
+  const word *w3 = new word("fall");
+  create_entry(w1, e1Ptr);
+  create_entry(w2, e2Ptr);
+  create_entry(w3, e3Ptr);
+  add_entry(elPtr, (const entry **)e1Ptr);
+  add_entry(elPtr, (const entry **)e2Ptr);
+  add_entry(elPtr, (const entry **)e3Ptr);
+  el->print();
+
+  tree *ix;
+  tree **ixPtr = &ix;
+  build_entry_index((const entry_list **)elPtr, MT_HAMMING_DIST, ixPtr);
+
+  ix->print();
+
+  delete el;
 
   return 0;
 }

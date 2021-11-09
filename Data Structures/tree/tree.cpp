@@ -1,4 +1,5 @@
 #include "tree.h"
+#include "../linkedList/linkedList.h"
 #include "../string/String.h"
 #include "../utils/approximateMatching.h"
 #include <ctime>
@@ -40,6 +41,15 @@ void tree::print() {
   cout << endl;
 }
 
+void tree::fillLinkedList(linkedList *list, MatchType type) {
+  listNode *current = list->getHead();
+  while (current) {
+    if (type == MT_HAMMING_DIST) {
+      this->add((String *)current->getWord());
+    }
+    current = current->getNext();
+  }
+}
 // Tree Node
 tree_node::tree_node(String *d) {
   this->data = d;

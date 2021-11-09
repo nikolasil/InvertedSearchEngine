@@ -1,8 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "../Data Structures/entry/entry.h"
-#include "../Data Structures/entry/entry_list.h"
 /// Maximum document length in characters.
 #define MAX_DOC_LENGTH (1 << 22)
 
@@ -63,6 +61,10 @@ typedef enum {
   EC_FAIL
 } ErrorCode;
 
+#include "../Data Structures/entry/entry.h"
+#include "../Data Structures/entry/entry_list.h"
+#include "../Data Structures/tree/tree.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //*********************************************************************************************
 
@@ -70,18 +72,18 @@ typedef enum {
  * This method creates a new entry that represents the word w and returns a specific exit code
  */
 
-ErrorCode create_entry(const word *w, entry *e);
+ErrorCode create_entry(const word *w, entry **e);
 
 /**
  * This method destroys a given entry and returns the proper exit code
  */
 
-ErrorCode destory_entry(entry *e);
+ErrorCode destory_entry(entry **e);
 
 /**
  * This method creates and initializes a new entry_list and returns the proper error code
  */
-ErrorCode create_entry_list(entry_list *el);
+ErrorCode create_entry_list(entry_list **el);
 
 /**
  * This method returns the number of entries contained in the given entry list
@@ -93,7 +95,7 @@ unsigned int get_number_entries(const entry_list *el);
  * This method adds a new entry to a given entry_list and returns the proper exit code
  */
 
-ErrorCode add_entry(entry_list *el, const entry *e);
+ErrorCode add_entry(entry_list **el, const entry **e);
 
 /**
  * This method returns the first entry in the given entry list
@@ -109,25 +111,25 @@ entry *get_next(const entry_list *el, const entry *e);
  * This method destroys the entry list and returns the proper error code
  */
 
-ErrorCode destroy_entry_list(entry_list *el);
+ErrorCode destroy_entry_list(entry_list **el);
 
 /**
  * This method creates a new index from an existing entry list, the match type that will be applied  and returns the proper exit code.
  */
 
-ErrorCode build_entry_index(const entry_list *el, MatchType type, index *ix);
+ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix);
 
 /**
  * This method returns a set of entries that correspond with the given word depending of the index match type and the threshold.
  */
 
-ErrorCode lookup_entry_index(const word &w, idnex *ix, int threshold, entry_list *result);
+ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold, entry_list *result);
 ;
 
 /**
  * This method destroys the index and returns the proper exit code
  */
 
-ErrorCode destroy_entry_index(index *ix);
+ErrorCode destroy_entry_index(tree *ix);
 
 #endif

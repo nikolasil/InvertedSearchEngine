@@ -5,6 +5,8 @@ using namespace std;
 // Linked List
 linkedList::linkedList() {
   this->head = nullptr;
+  this->last = nullptr;
+  this->count = 0;
 }
 
 linkedList::~linkedList() {
@@ -19,9 +21,14 @@ void linkedList::print() {
 listNode *linkedList::addNode(String *word) {
 
   listNode *newNode = new listNode(word);
-  newNode->setNext(this->head);
-  this->head = newNode;
-  return this->head;
+  if (this->head == nullptr) { // no entries in entry list
+    this->head = newNode;
+  } else {
+    this->last->setNext(newNode);
+  }
+  this->last = newNode;
+  count++;
+  return 0;
 }
 
 listNode *linkedList::getNode(String *word) {

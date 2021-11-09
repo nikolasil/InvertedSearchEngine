@@ -10,10 +10,20 @@ entry::entry(const word *w, void *payload) {
   this->payload = payload;
 }
 
+entry::entry() {
+  this->w = nullptr;
+  this->payload = nullptr;
+  this->next = nullptr;
+}
+
 entry::~entry() {
-  delete this->w;
+  if (this->w != nullptr) {
+    delete this->w;
+  }
+  if (this->next != nullptr) {
+    delete this->next;
+  }
   // delete this->payload;
-  delete this->next;
 }
 
 void entry::print() {
