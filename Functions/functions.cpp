@@ -78,6 +78,13 @@ ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix) {
     case MT_HAMMING_DIST:
       (*ix)->fillLinkedList(list, type);
       return EC_SUCCESS;
+    case MT_EDIT_DIST:
+
+      return EC_SUCCESS;
+    case MT_EXACT_MATCH:
+      return EC_SUCCESS;
+    default:
+      return EC_SUCCESS;
     }
   } catch (const exception &e) {
     return EC_FAIL;
