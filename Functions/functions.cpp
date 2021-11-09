@@ -60,3 +60,26 @@ entry *get_next(const entry_list *el, entry *e) {
   }
   return el->getNext(e);
 }
+
+ErrorCode destroy_entry_list(entry_list **el) {
+  try {
+    delete el;
+    return EC_SUCCESS;
+  } catch (const exception &e) {
+    return EC_FAIL;
+  }
+}
+
+ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix) {
+  try {
+    linkedList *list = (*el)->generateLinkedList();
+    *ix = new tree();
+    switch (type) {
+    case MT_HAMMING_DIST:
+      (*ix)->fillLinkedList(list, type);
+      return EC_SUCCESS;
+    }
+  } catch (const exception &e) {
+    return EC_FAIL;
+  }
+}
