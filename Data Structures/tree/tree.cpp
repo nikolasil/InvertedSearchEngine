@@ -71,14 +71,14 @@ entry_list *tree::lookup(String *word, int threshold) {
 // Tree Node
 tree_node::tree_node(String *d) {
   this->data = d;
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < MAX_WORD_LENGTH; i++) {
     this->childs[i] = nullptr;
   }
 }
 
 tree_node::~tree_node() {
   delete this->data;
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < MAX_WORD_LENGTH; i++) {
     if (this->childs[i] != nullptr) {
       delete this->childs[i];
     }
@@ -101,12 +101,12 @@ void tree_node::print() {
 
   cout << endl;
   cout << this->data->getStr() << " ";
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < MAX_WORD_LENGTH; i++) {
     if (this->childs[i] != nullptr) {
       this->childs[i]->print();
     }
   }
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < MAX_WORD_LENGTH; i++) {
     if (this->childs[i] != nullptr) {
       this->childs[i]->printChild();
     }
@@ -120,7 +120,7 @@ void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
   int max = diff + threshold;
   cout << "Node " << this->getData()->getStr() << " with diff=" << diff
        << ",space=[" << min << "," << max << "]" << endl;
-  for (int i = 0; i < 30; i++) {
+  for (int i = 0; i < MAX_WORD_LENGTH; i++) {
     child = this->findChild(i);
     if (child != nullptr) {
       diff = hammingDistance(child->getData(), word);
