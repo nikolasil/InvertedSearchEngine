@@ -120,7 +120,7 @@ void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
   int max = diff + threshold;
   cout << "Node " << this->getData()->getStr() << " with diff=" << diff
        << ",space=[" << min << "," << max << "]" << endl;
-  for (int i = 0; i < 31; i++) {
+  for (int i = 0; i < 30; i++) {
     child = this->findChild(i);
     if (child != nullptr) {
       diff = hammingDistance(child->getData(), word);
