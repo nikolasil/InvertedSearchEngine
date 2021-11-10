@@ -19,12 +19,15 @@ public:
 class linkedList {
 private:
   listNode *head;
+  listNode *last;
+  int count;
 
 public:
   linkedList();
   ~linkedList();
   listNode *addNode(String *word);
   listNode *getNode(String *word);
+  listNode *getHead() const { return this->head; };
   void print();
 };
 

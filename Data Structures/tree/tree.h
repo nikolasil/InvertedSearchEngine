@@ -1,10 +1,13 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "../string/String.h"
-
 class tree_edge;
 class tree_node;
+class tree;
+
+#include "../../Functions/functions.h"
+#include "../string/String.h"
+
 class tree_edge {
 private:
   int weight;
@@ -32,6 +35,7 @@ public:
   void addChild(int w, tree_node *c);
   tree_node *findChild(int w);
   String *getData();
+  void lookup(String *word, int threshold, entry_list **foundWords);
   void print();
 };
 
@@ -44,6 +48,8 @@ public:
   ~tree();
   void add(String *word);
   void print();
+  void fillLinkedList(linkedList *list, MatchType type);
+  entry_list *lookup(String *word, int threshold);
 };
 
 #endif

@@ -3,20 +3,7 @@
 
 #include "../string/String.h"
 
-class word {
-private:
-  String *str;
-
-public:
-  word(const char *string);
-  ~word();
-  // GETTERS
-  String *getStr() { return this->str; };
-  // SETTERS
-  void setStr(char *string) { this->str = new String(string); };
-  void setStr(String *string) { this->str = string; };
-  void print() { this->str->print(); };
-};
+typedef String word;
 
 class entry {
 private:
@@ -26,11 +13,12 @@ private:
 
 public:
   entry(const word *w, void *payload);
+  entry();
   ~entry();
   // GETTERS
-  String *getWord() { return this->w->getStr(); };
+  word *getWord() { return this->w; };
   void *getPayload() { return this->payload; };
-  entry *getNext() { return this->next; };
+  entry *getNext() const { return this->next; };
   // SETTERS
   void setNext(entry *e) { this->next = e; };
 

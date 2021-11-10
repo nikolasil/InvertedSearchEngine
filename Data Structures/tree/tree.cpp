@@ -1,4 +1,5 @@
 #include "tree.h"
+#include "../linkedList/linkedList.h"
 #include "../string/String.h"
 #include "../utils/approximateMatching.h"
 #include <ctime>
@@ -24,7 +25,7 @@ void tree::add(String *word) {
     // Compare word with node data
     int diff = hammingDistance(word, current->getData());
 
-    cout << "Difference is " << diff << " -> " << word->getStr() << endl;
+    // cout << "Difference is " << diff << " -> " << word->getStr() << endl;
     // Search for child node with equal weight in edge
     tree_node *childNode = nullptr;
     if ((childNode = current->findChild(diff)) == nullptr) {
@@ -40,6 +41,32 @@ void tree::print() {
   cout << endl;
 }
 
+void tree::fillLinkedList(linkedList *list, MatchType type) {
+  listNode *current = list->getHead();
+  while (current) {
+    if (type == MT_HAMMING_DIST) {
+      this->add((String *)current->getWord());
+    }
+    current = current->getNext();
+  }
+}
+
+entry_list *tree::lookup(String *word, int threshold) {
+  entry_list *foundWords = new entry_list();
+  entry_list **foundWordsPtr = &foundWords;
+  if (this->root == nullptr) {
+    return foundWords;
+  }
+  int diff = hammingDistance(word, this->root->getData());
+  if (diff <= threshold) {
+    foundWords->addEntry(new entry(this->root->getData(), nullptr));
+    cout << "Added " << this->root->getData()->getStr() << " with diff " << diff << endl;
+  }
+
+  this->root->lookup(word, threshold, foundWordsPtr);
+  return foundWords;
+}
+
 // Tree Node
 tree_node::tree_node(String *d) {
   this->data = d;
@@ -50,10 +77,16 @@ tree_node::tree_node(String *d) {
 
 tree_node::~tree_node() {
   delete this->data;
-  delete this->childs;
+  for (int i = 0; i < 30; i++) {
+    if (this->childs[i] != nullptr) {
+      delete this->childs[i];
+    }
+  }
 }
 String *tree_node::getData() { return this->data; }
 tree_node *tree_node::findChild(int w) {
+  if (w > 31 || w <= 0)
+    return nullptr;
   if (this->childs[w - 1] != nullptr) {
     return this->childs[w - 1]->getChild();
   }
@@ -75,6 +108,26 @@ void tree_node::print() {
   for (int i = 0; i < 30; i++) {
     if (this->childs[i] != nullptr) {
       this->childs[i]->printChild();
+    }
+  }
+}
+
+void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
+  tree_node *child;
+  int diff = hammingDistance(word, this->getData());
+  int min = diff - threshold;
+  int max = diff + threshold;
+  // cout << "Space : [" << min << "," << max << "]" << endl;
+  for (int i = min; i < max; i++) {
+    child = this->findChild(i);
+    if (child != nullptr) {
+      // cout << "Weight for child" << child->getData()->getStr() << " is " << i << endl;
+      diff = hammingDistance(child->getData(), word);
+      if (diff <= threshold) {
+        (*foundWords)->addEntry(new entry(child->getData(), nullptr));
+        cout << "Added " << child->getData()->getStr() << " with diff " << diff << endl;
+      }
+      child->lookup(word, threshold, foundWords);
     }
   }
 }
