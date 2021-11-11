@@ -10,17 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   entry_list *el;
-  entry_list **elPtr = &el;
-  create_entry_list(elPtr);
   entry *e1, *e2, *e3, *e4, *e5, *e6, *e7;
-  entry **e1Ptr = &e1;
-  entry **e2Ptr = &e2;
-  entry **e3Ptr = &e3;
-  entry **e4Ptr = &e4;
-  entry **e5Ptr = &e5;
-  entry **e6Ptr = &e6;
-  entry **e7Ptr = &e7;
-
   const word *w1 = new word("hell");
   const word *w2 = new word("help");
   const word *w3 = new word("fall");
@@ -28,28 +18,28 @@ int main(int argc, char *argv[]) {
   const word *w5 = new word("fell");
   const word *w6 = new word("felt");
   const word *w7 = new word("melt");
+  create_entry_list(&el);
 
-  create_entry(w1, e1Ptr);
-  create_entry(w2, e2Ptr);
-  create_entry(w3, e3Ptr);
-  create_entry(w4, e4Ptr);
-  create_entry(w5, e5Ptr);
-  create_entry(w6, e6Ptr);
-  create_entry(w7, e7Ptr);
+  create_entry(w1, &e1);
+  create_entry(w2, &e2);
+  create_entry(w3, &e3);
+  create_entry(w4, &e4);
+  create_entry(w5, &e5);
+  create_entry(w6, &e6);
+  create_entry(w7, &e7);
 
-  add_entry(elPtr, (const entry **)e1Ptr);
-  add_entry(elPtr, (const entry **)e2Ptr);
-  add_entry(elPtr, (const entry **)e3Ptr);
-  add_entry(elPtr, (const entry **)e4Ptr);
-  add_entry(elPtr, (const entry **)e5Ptr);
-  add_entry(elPtr, (const entry **)e6Ptr);
-  add_entry(elPtr, (const entry **)e7Ptr);
+  add_entry(el, e1);
+  add_entry(el, e2);
+  add_entry(el, e3);
+  add_entry(el, e4);
+  add_entry(el, e5);
+  add_entry(el, e6);
+  add_entry(el, e7);
   cout << "-- entry_list --" << endl;
   el->print();
 
   tree *ix;
-  tree **ixPtr = &ix;
-  build_entry_index((const entry_list **)elPtr, MT_HAMMING_DIST, ixPtr);
+  build_entry_index(el, MT_HAMMING_DIST, &ix);
 
   cout << "-- index --" << endl;
   ix->print();

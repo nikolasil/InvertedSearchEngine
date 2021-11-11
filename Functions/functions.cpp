@@ -38,9 +38,9 @@ unsigned int get_number_entries(const entry_list *el) {
   return el->getCount();
 }
 
-ErrorCode add_entry(entry_list **el, const entry **e) {
+ErrorCode add_entry(entry_list *el, const entry *e) {
   try {
-    (*el)->addEntry((entry *)*e);
+    el->addEntry((entry *)e);
     return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;
@@ -70,9 +70,9 @@ ErrorCode destroy_entry_list(entry_list **el) {
   }
 }
 
-ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix) {
+ErrorCode build_entry_index(const entry_list *el, MatchType type, tree **ix) {
   try {
-    linkedList *list = (*el)->generateLinkedList();
+    linkedList *list = el->generateLinkedList();
     *ix = new tree();
     switch (type) {
     case MT_HAMMING_DIST:
