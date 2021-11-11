@@ -12,6 +12,7 @@ class tree_edge {
 private:
   int weight;
   tree_node *child;
+  tree_edge *next;
 
 public:
   tree_edge(int w, tree_node *c);
@@ -21,18 +22,18 @@ public:
   tree_node *getChild();
   tree_edge *getNext();
   void print();
-  void printChild();
 };
 
 class tree_node {
 private:
   String *data;
-  tree_edge *childs[31];
+  tree_edge *childs;
 
 public:
   tree_node(String *d);
   ~tree_node();
   void addChild(int w, tree_node *c);
+  tree_edge *getFirstChild();
   tree_node *findChild(int w);
   String *getData();
   void lookup(String *word, int threshold, entry_list **foundWords);

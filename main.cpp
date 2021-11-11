@@ -5,6 +5,7 @@
 #include "Data Structures/linkedList/linkedList.h"
 #include "Data Structures/tree/tree.h"
 #include "Functions/functions.h"
+#include <ctime>
 
 using namespace std;
 
@@ -47,9 +48,18 @@ int main(int argc, char *argv[]) {
   cout << "-- started lookup --" << endl;
   entry_list *result;
   const word key("henn");
+
+  clock_t begin = clock(); // starting timer
   lookup_entry_index(key, ix, 2, &result);
+  clock_t end = clock(); // stoping timer
+
+  // Printing results
   cout << "-- lookup result --" << endl;
   result->print();
+
+  cout << "Lookup took: " << (double)(end - begin) / CLOCKS_PER_SEC << " secs" << endl;
+
+  // Cleanup
   delete el;
   return 0;
 }
