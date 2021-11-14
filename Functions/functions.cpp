@@ -15,7 +15,8 @@ ErrorCode create_entry(const word *w, entry **e) {
 
 ErrorCode destroy_entry(entry **e) {
   try {
-    delete e;
+    delete *e;
+    *e = nullptr;
     return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;
