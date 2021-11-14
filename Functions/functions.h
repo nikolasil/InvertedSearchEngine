@@ -95,7 +95,7 @@ unsigned int get_number_entries(const entry_list *el);
  * This method adds a new entry to a given entry_list and returns the proper exit code
  */
 
-ErrorCode add_entry(entry_list **el, const entry **e);
+ErrorCode add_entry(entry_list *el, const entry *e);
 
 /**
  * This method returns the first entry in the given entry list
@@ -117,7 +117,7 @@ ErrorCode destroy_entry_list(entry_list **el);
  * This method creates a new index from an existing entry list, the match type that will be applied  and returns the proper exit code.
  */
 
-ErrorCode build_entry_index(const entry_list **el, MatchType type, tree **ix);
+ErrorCode build_entry_index(const entry_list *el, MatchType type, tree **ix);
 
 /**
  * This method returns a set of entries that correspond with the given word depending of the index match type and the threshold.
