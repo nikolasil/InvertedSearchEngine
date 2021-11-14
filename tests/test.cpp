@@ -3,7 +3,7 @@
 #include "acutest.h"
 #include <cstring>
 
-void create_entry(void) {
+void create_entry(void) { // Test create_entry function
   const word *w1 = new word("hell");
 
   entry *e1;
@@ -16,7 +16,7 @@ void create_entry(void) {
   TEST_ASSERT(result == EC_SUCCESS);                         // test that result is success
 }
 
-void destroy_entry(void) {
+void destroy_entry(void) { // Test destroy_entry function
   const word *w1 = new word("hell");
 
   entry *e1;
