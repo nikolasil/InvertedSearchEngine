@@ -49,7 +49,7 @@ public:
   ~tree();
   void add(String *word);
   void print();
-  void fillLinkedList(linkedList *list, MatchType type);
+  void fillLinkedList(const entry_list *list, MatchType type);
   entry_list *lookup(String *word, int threshold);
 };
 

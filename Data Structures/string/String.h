@@ -7,9 +7,10 @@ private:
 
 public:
   String(const char *string);
+  String(const String *string);
   ~String();
   void print();
-  char *getStr();
+  char *getStr() const;
 };
 
 #endif

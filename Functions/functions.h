@@ -78,7 +78,7 @@ ErrorCode create_entry(const word *w, entry **e);
  * This method destroys a given entry and returns the proper exit code
  */
 
-ErrorCode destory_entry(entry **e);
+ErrorCode destroy_entry(entry **e);
 
 /**
  * This method creates and initializes a new entry_list and returns the proper error code

@@ -10,7 +10,9 @@ linkedList::linkedList() {
 }
 
 linkedList::~linkedList() {
-  delete this->head;
+  if (this->head != nullptr) {
+    delete this->head;
+  }
 }
 
 void linkedList::print() {
@@ -46,11 +48,13 @@ listNode *linkedList::getNode(String *word) {
 
 listNode::listNode(String *word) {
   this->word = word;
+  this->next = nullptr;
 }
 
 listNode::~listNode() {
-  delete this->word;
-  delete this->next;
+  if (this->next != nullptr) {
+    delete this->next;
+  }
 }
 
 void listNode::print() {
