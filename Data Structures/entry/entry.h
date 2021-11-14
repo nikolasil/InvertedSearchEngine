@@ -2,7 +2,6 @@
 #define ENTRY_H
 
 #include "../string/String.h"
-
 typedef String word;
 
 class entry {

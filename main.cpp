@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
   const word *w5 = new word("fell");
   const word *w6 = new word("felt");
   const word *w7 = new word("melt");
+
   create_entry_list(&el);
 
   create_entry(w1, &e1);
@@ -58,8 +59,9 @@ int main(int argc, char *argv[]) {
   result->print();
 
   cout << "Lookup took: " << (double)(end - begin) / CLOCKS_PER_SEC << " secs" << endl;
-
+  destroy_entry_index(ix);
   // Cleanup
   delete el;
+  delete result;
   return 0;
 }

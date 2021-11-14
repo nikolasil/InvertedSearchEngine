@@ -1,6 +1,6 @@
 #include "tree.h"
+#include "../entry/entry.h"
 #include "../linkedList/linkedList.h"
-#include "../string/String.h"
 #include "../utils/approximateMatching.h"
 #include <ctime>
 #include <iostream>
@@ -11,7 +11,11 @@ using namespace std;
 // Tree
 tree::tree() { this->root = nullptr; }
 
-tree::~tree() { delete this->root; }
+tree::~tree() {
+  if (this->root != nullptr) {
+    delete this->root;
+  }
+}
 
 void tree::add(String *word) {
   tree_node *current = this->root;
@@ -41,8 +45,8 @@ void tree::print() {
   cout << endl;
 }
 
-void tree::fillLinkedList(linkedList *list, MatchType type) {
-  listNode *current = list->getHead();
+void tree::fillLinkedList(const entry_list *list, MatchType type) {
+  entry *current = list->getStart();
   while (current) {
     if (type == MT_HAMMING_DIST) {
       this->add((String *)current->getWord());
@@ -53,18 +57,18 @@ void tree::fillLinkedList(linkedList *list, MatchType type) {
 
 entry_list *tree::lookup(String *word, int threshold) {
   entry_list *foundWords = new entry_list();
-  entry_list **foundWordsPtr = &foundWords;
   if (this->root == nullptr) {
     return foundWords;
   }
   int diff = hammingDistance(word, this->root->getData());
   if (diff <= threshold) {
-    foundWords->addEntry(new entry(this->root->getData(), nullptr));
+    const String *w = new String(this->root->getData());
+    foundWords->addEntry(new entry(w, nullptr));
     cout << "Added " << this->root->getData()->getStr() << " with diff " << diff
          << endl;
   }
 
-  this->root->lookup(word, threshold, foundWordsPtr);
+  this->root->lookup(word, threshold, &foundWords);
   return foundWords;
 }
 
@@ -75,8 +79,12 @@ tree_node::tree_node(String *d) {
 }
 
 tree_node::~tree_node() {
-  delete this->data;
-  delete this->childs;
+  // if (this->data != nullptr) {
+  //   delete this->data;
+  // }
+  if (this->childs != nullptr) {
+    delete this->childs;
+  }
 }
 
 String *tree_node::getData() {
@@ -158,7 +166,8 @@ void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
     cout << "Child " << child->getData()->getStr()
          << " of node:" << this->getData()->getStr() << endl;
     if (diff <= threshold) {
-      (*foundWords)->addEntry(new entry(child->getData(), nullptr));
+      const String *w = new String(child->getData());
+      (*foundWords)->addEntry(new entry(w, nullptr));
       cout << "   diff=" << diff << " from " << word->getStr()
            << " | added to found words" << endl;
     } else {
@@ -183,7 +192,14 @@ tree_edge::tree_edge(int w, tree_node *c) {
   this->child = c;
   this->next = nullptr;
 }
-tree_edge::~tree_edge() { delete this->child; }
+tree_edge::~tree_edge() {
+  if (this->child != nullptr) {
+    delete this->child;
+  }
+  if (this->next != nullptr) {
+    delete this->next;
+  }
+}
 
 int tree_edge::getWeight() { return this->weight; }
 
