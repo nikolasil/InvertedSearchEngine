@@ -45,7 +45,7 @@ void tree::print() {
   cout << endl;
 }
 
-void tree::fillLinkedList(const entry_list *list, MatchType type) {
+void tree::fillTree(const entry_list *list, MatchType type) {
   entry *current = list->getStart();
   while (current) {
     if (type == MT_HAMMING_DIST) {
