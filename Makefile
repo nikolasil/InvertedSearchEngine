@@ -1,14 +1,26 @@
 CC = g++ -std=c++11
 CFLAFS = -O3 -g
 TESTFLAGS = -O0 -g
-FILES = main.o String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
-TESTFILES =  String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
-TESTER = test.o
-# Project Files
 
-invSearchEngine: clean $(FILES)
+FILES = main.o String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
+TESTFILES = String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
+TESTER = test.o
+
+# Compile commands
+invSearchEngine: $(FILES)
 	$(CC) $(CFLAFS) -o invSearchEngine $(FILES)
 
+test: $(TESTFILES) $(TESTER)
+	$(CC) $(TESTFLAGS) -o test  $(TESTFILES) $(TESTER)
+
+# Run commands
+run:
+	./invSearchEngine
+
+run_test:
+	./test -v
+
+# Project Files
 main.o:
 	$(CC) $(CFLAFS) -c main.cpp
 
@@ -26,28 +38,20 @@ tree.o :
 
 approximateMatching.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/utils/approximateMatching.cpp
+
 linkedList.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/linkedList/linkedList.cpp
+
 functions.o :
 	$(CC) $(CFLAFS) -c Functions/functions.cpp
 
 # Testing Files
-
 test.o :
 	$(CC) $(TESTFLAGS) -c tests/test.cpp
 
-
-# Commands
-run:
-	./invSearchEngine
-
-test: clean_test $(TESTFILES) $(TESTER)
-	$(CC) $(TESTFLAGS) -o test  $(TESTFILES) $(TESTER)
-	./test
-
-
-.PHONY: clean
-clean_all: clean clean_test
+.PHONY: clean_all
+clean_all:
+	rm -f invSearchEngine test $(FILES) $(TESTER)
 clean:
 	rm -f invSearchEngine $(FILES)
 clean_test:

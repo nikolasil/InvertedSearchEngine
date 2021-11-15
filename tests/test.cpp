@@ -3,7 +3,9 @@
 #include "acutest.h"
 #include <cstring>
 #include <iostream>
+
 using namespace std;
+
 void create_entry(void) { // Test create_entry function
   const word *w1 = new word("hell");
   entry *e1;
@@ -181,17 +183,13 @@ void build_entry_index(void) { // Test build_entry_index function
   tree *ix;
   TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
   TEST_ASSERT(ix != nullptr);
-  TEST_ASSERT(ix->getRoot()->getData() == e1->getWord());                             // hell
-  TEST_ASSERT(ix->getRoot()->findChild(1)->getData() == e2->getWord());               // help
-  TEST_ASSERT(ix->getRoot()->findChild(2)->getData() == e3->getWord());               // fall
-  TEST_ASSERT(ix->getRoot()->findChild(3)->getData() == e4->getWord());               // small
-  TEST_ASSERT(ix->getRoot()->findChild(1)->findChild(2)->getData() == e5->getWord()); // fell
-  TEST_ASSERT(ix->getRoot()->findChild(2)->findChild(2)->getData() == e6->getWord()); // felt
-  TEST_ASSERT(ix->getRoot()->findChild(2)->findChild(3)->getData() == e7->getWord()); // melt
-
-  // entry_list *result;
-  // const word key("henn");
-  // TEST_ASSERT(lookup_entry_index(key, ix, 2, &result) == EC_SUCCESS);
+  TEST_ASSERT(strcmp(ix->getRoot()->getData()->getStr(), e1->getWord()->getStr()) == 0);                             // hell
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(1)->getData()->getStr(), e2->getWord()->getStr()) == 0);               // help
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(2)->getData()->getStr(), e3->getWord()->getStr()) == 0);               // fall
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(3)->getData()->getStr(), e4->getWord()->getStr()) == 0);               // small
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(1)->findChild(2)->getData()->getStr(), e5->getWord()->getStr()) == 0); // fell
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(2)->findChild(2)->getData()->getStr(), e6->getWord()->getStr()) == 0); // felt
+  TEST_ASSERT(strcmp(ix->getRoot()->findChild(2)->findChild(3)->getData()->getStr(), e7->getWord()->getStr()) == 0); // melt
 }
 
 void lookup_entry_index(void) { // Test lookup_entry_index function
@@ -233,6 +231,42 @@ void lookup_entry_index(void) { // Test lookup_entry_index function
   TEST_ASSERT(strcmp(result->getStart()->getNext()->getWord()->getStr(), e2->getWord()->getStr()) == 0);
 }
 
+void destroy_entry_index(void) { // Test destroy_entry_index function
+  entry_list *el;
+  entry *e1, *e2, *e3, *e4, *e5, *e6, *e7;
+  const word *w1 = new word("hell");
+  const word *w2 = new word("help");
+  const word *w3 = new word("fall");
+  const word *w4 = new word("small");
+  const word *w5 = new word("fell");
+  const word *w6 = new word("felt");
+  const word *w7 = new word("melt");
+
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+
+  tree *ix;
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
+
+  TEST_ASSERT(destroy_entry_index(&ix) == EC_SUCCESS);
+  TEST_ASSERT(ix == nullptr);
+}
+
 TEST_LIST = {
     {"Create Entry", create_entry},
     {"Destroy Entry", destroy_entry},
@@ -244,5 +278,6 @@ TEST_LIST = {
     {"Destroy Entry List", destroy_entry_list},
     {"Build Entry Index", build_entry_index},
     {"Lookup Entry Index", lookup_entry_index},
+    {"Destroy Entry Index", destroy_entry_index},
     {NULL, NULL} /* zeroed record marking the end of the list */
 };

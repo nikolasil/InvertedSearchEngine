@@ -49,7 +49,7 @@ void tree::fillLinkedList(const entry_list *list, MatchType type) {
   entry *current = list->getStart();
   while (current) {
     if (type == MT_HAMMING_DIST) {
-      this->add((String *)current->getWord());
+      this->add(new String(current->getWord()));
     }
     current = current->getNext();
   }
@@ -79,9 +79,9 @@ tree_node::tree_node(String *d) {
 }
 
 tree_node::~tree_node() {
-  // if (this->data != nullptr) {
-  //   delete this->data;
-  // }
+  if (this->data != nullptr) {
+    delete this->data;
+  }
   if (this->childs != nullptr) {
     delete this->childs;
   }
