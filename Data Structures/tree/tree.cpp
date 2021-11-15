@@ -68,7 +68,7 @@ entry_list *tree::lookup(String *word, int threshold) {
     //      << endl;
   }
 
-  this->root->lookup(word, threshold, &foundWords);
+  this->root->lookup(word, threshold, &foundWords, diff);
   return foundWords;
 }
 
@@ -150,9 +150,9 @@ void tree_node::print() {
   }
 }
 
-void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
+void tree_node::lookup(String *word, int threshold, entry_list **foundWords, int diff) {
   tree_node *child;
-  int diff = hammingDistance(word, this->getData());
+  // int diff = hammingDistance(word, this->getData());
   int min = diff - threshold;
   int max = diff + threshold;
   // cout << "Node " << this->getData()->getStr() << " with diff=" << diff
@@ -177,7 +177,7 @@ void tree_node::lookup(String *word, int threshold, entry_list **foundWords) {
     if (diff >= min && diff <= max) {
       // cout << "   diff was in the space=[" << min << "," << max
       //      << "] | calling subtree" << endl;
-      child->lookup(word, threshold, foundWords);
+      child->lookup(word, threshold, foundWords, diff);
     } else {
       // cout << "   diff was NOT in the space=[" << min << "," << max
       //      << "] | NOT calling subtree" << endl;

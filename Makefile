@@ -7,7 +7,7 @@ TESTFILES = String.o entry_list.o entry.o tree.o approximateMatching.o linkedLis
 TESTER = test.o
 
 # Compile commands
-invSearchEngine: $(FILES)
+compile: $(FILES)
 	$(CC) $(CFLAFS) -o invSearchEngine $(FILES)
 
 test: $(TESTFILES) $(TESTER)
@@ -18,7 +18,7 @@ run:
 	./invSearchEngine
 
 run_test:
-	./test -v
+	./test
 
 # Project Files
 main.o:
