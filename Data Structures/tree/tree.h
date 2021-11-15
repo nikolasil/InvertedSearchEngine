@@ -36,7 +36,7 @@ public:
   tree_edge *getFirstChild();
   tree_node *findChild(int w);
   String *getData();
-  void lookup(String *word, int threshold, entry_list **foundWords);
+  void lookup(String *word, int threshold, entry_list **foundWords, int diff);
   void print();
 };
 

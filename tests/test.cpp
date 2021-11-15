@@ -21,8 +21,8 @@ void destroy_entry(void) { // Test destroy_entry function
   const word *w1 = new word("hell");
   entry *e1;
 
-  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
-  TEST_ASSERT(destroy_entry(&e1) == EC_SUCCESS);    // test that result is success
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that entry can be created
+  TEST_ASSERT(destroy_entry(&e1) == EC_SUCCESS);    // test that entry can be deleted
   TEST_ASSERT(e1 == nullptr);                       // test that entry doesn't exist
 }
 
@@ -30,7 +30,11 @@ void create_entry_list(void) { // Test create_entry_list function
   entry_list *el;
 
   TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // test that result is success
-  TEST_ASSERT(el != nullptr);                        // test that entry list exist
+  TEST_ASSERT(el->getStart() == nullptr);            // test that start has been initialized
+  TEST_ASSERT(el->getEnd() == nullptr);              // test that end has been initialized
+  TEST_ASSERT(el->getCount() == 0);                  // test that count has been initialized
+
+  TEST_ASSERT(el != nullptr); // test that entry list exists
 }
 
 void get_number_entries(void) { // Test create_entry_list function
@@ -61,15 +65,19 @@ void add_entry(void) { // Test add_entry function
   TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
   TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that result is success
 
-  TEST_ASSERT(add_entry(el, nullptr) == EC_FAIL);
-  TEST_ASSERT(add_entry(nullptr, e1) == EC_FAIL);
-  TEST_ASSERT(add_entry(nullptr, nullptr) == EC_FAIL);
+  TEST_ASSERT(add_entry(el, nullptr) == EC_FAIL);      // check if addEntry fails with non-initialized entry
+  TEST_ASSERT(add_entry(nullptr, e1) == EC_FAIL);      // check if addEntry fails with non-initialized entry_list and initialized entry
+  TEST_ASSERT(add_entry(nullptr, nullptr) == EC_FAIL); // check if addEntry fails with non-declared entry_list
+
   TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // test that result is success
   TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);      // add entry e1 to list
-  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);      // add entry e2 to list
   TEST_ASSERT(get_first(el) == e1);                  // check that e1 is the first entry
-  TEST_ASSERT(get_next(el, e1) == e2);               // check that e1->next is e2
-  TEST_ASSERT(get_next(el, e2) == nullptr);          // check that e2->next is nullptr
+  TEST_ASSERT(get_next(el, e1) == nullptr);          // check that e1->next is nullptr
+
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // add entry e2 to list
+  TEST_ASSERT(get_first(el) == e1);             // check that e1 is the first entry
+  TEST_ASSERT(get_next(el, e1) == e2);          // check that e1->next is e2
+  TEST_ASSERT(get_next(el, e2) == nullptr);     // check that e2->next is nullptr
 }
 
 void get_first(void) { // Test get_first function
@@ -79,13 +87,17 @@ void get_first(void) { // Test get_first function
 
   const word *w1 = new word("hell");
   const word *w2 = new word("melt");
-  entry *e1, *e2;
+  const word *w3 = new word("felt");
+  entry *e1, *e2, *e3;
   TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
   TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // test that result is success
 
   TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // add entry e1 to list
   TEST_ASSERT(get_first(el) == e1);             // check that e1 is the first entry
   TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // add entry e2 to list
+  TEST_ASSERT(get_first(el) == e1);             // check that e1 is the first entry
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // add entry e3 to list
   TEST_ASSERT(get_first(el) == e1);             // check that e1 is the first entry
 }
 
@@ -105,50 +117,53 @@ void get_next(void) { // Test get_next function
   TEST_ASSERT(get_next(el, e1) == nullptr);      // check that e1->next is nullptr
   TEST_ASSERT(get_next(el, e2) == nullptr);      // check that e2->next is nullptr
   TEST_ASSERT(get_next(el, e3) == nullptr);      // check that e3->next is nullptr
-  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that returns nullptr
-  TEST_ASSERT(get_next(nullptr, e1) == nullptr); // check that e1->next is nullptr
+  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that get_next returns nullptr when entry doesn't exist
+  TEST_ASSERT(get_next(nullptr, e1) == nullptr); // check that e1->next is nullptr when entry_list doesn't exist
 
   TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);  // add entry e1 to list
   TEST_ASSERT(get_next(el, e1) == nullptr);      // check that e1->next is nullptr
   TEST_ASSERT(get_next(el, e2) == nullptr);      // check that e2->next is nullptr
   TEST_ASSERT(get_next(el, e3) == nullptr);      // check that e3->next is nullptr
-  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that returns nullptr
+  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that get_next returns nullptr when entry doesn't exist
 
   TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);  // add entry e2 to list
   TEST_ASSERT(get_next(el, e1) == e2);           // check that e1->next is e2
   TEST_ASSERT(get_next(el, e2) == nullptr);      // check that e2->next is nullptr
   TEST_ASSERT(get_next(el, e3) == nullptr);      // check that e3->next is nullptr
-  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that returns nullptr
+  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that get_next returns nullptr when entry doesn't exist
 
   TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);  // add entry e2 to list
   TEST_ASSERT(get_next(el, e1) == e2);           // check that e1->next is e2
   TEST_ASSERT(get_next(el, e2) == e3);           // check that e2->next is e3
   TEST_ASSERT(get_next(el, e3) == nullptr);      // check that e3->next is nullptr
-  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that returns nullptr
+  TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that get_next returns nullptr when entry doesn't exist
 }
 
 void destroy_entry_list(void) { // Test destroy_entry_list function
   entry_list *el;
 
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);  // test that result is success
-  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that result is success
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);  // test that result is success
+  // Check with empty entry_list
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);  // test that entry_list is created
+  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that entry_list is destroyed
+  TEST_ASSERT(el == nullptr);                         // check that el is nullptr
 
+  // Check with non-empty entry_list
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // test that entry_list is created
   const word *w1 = new word("hell");
   const word *w2 = new word("melt");
   const word *w3 = new word("yeah");
   entry *e1, *e2, *e3;
-  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
-  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that result is success
-  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that entry is created
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that entry is created
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // test that entry is created
 
   TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // add entry e1 to list
   TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // add entry e2 to list
   TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // add entry e3 to list
 
-  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that entry_list is destroyed
   TEST_ASSERT(el == nullptr);                         // check that el is nullptr
-  TEST_ASSERT(add_entry(el, e1) == EC_FAIL);          // add entry e3 to list
+  TEST_ASSERT(add_entry(el, e1) == EC_FAIL);          // check that entry cannot be added to deleted entry_list
 }
 
 void build_entry_index(void) { // Test build_entry_index function
@@ -162,27 +177,27 @@ void build_entry_index(void) { // Test build_entry_index function
   const word *w6 = new word("felt");
   const word *w7 = new word("melt");
 
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // check that entry_list is created
 
-  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS); // check that entry is created
 
-  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry is added
 
   tree *ix;
-  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
-  TEST_ASSERT(ix != nullptr);
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);                                            // check that index is created
+  TEST_ASSERT(ix != nullptr);                                                                                        // check that index pointer has been initialized
   TEST_ASSERT(strcmp(ix->getRoot()->getData()->getStr(), e1->getWord()->getStr()) == 0);                             // hell
   TEST_ASSERT(strcmp(ix->getRoot()->findChild(1)->getData()->getStr(), e2->getWord()->getStr()) == 0);               // help
   TEST_ASSERT(strcmp(ix->getRoot()->findChild(2)->getData()->getStr(), e3->getWord()->getStr()) == 0);               // fall
@@ -203,32 +218,32 @@ void lookup_entry_index(void) { // Test lookup_entry_index function
   const word *w6 = new word("felt");
   const word *w7 = new word("melt");
 
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // check that entry_list is created
 
-  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS); // check that entry is created
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS); // check that entry is created
 
-  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry is added
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry is added
 
   tree *ix;
-  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS); // check that index has been built
   entry_list *result;
   const word key("henn");
-  TEST_ASSERT(lookup_entry_index(key, ix, 2, &result) == EC_SUCCESS);
-  TEST_ASSERT(result != nullptr);
-  TEST_ASSERT(strcmp(result->getStart()->getWord()->getStr(), e1->getWord()->getStr()) == 0);
-  TEST_ASSERT(strcmp(result->getStart()->getNext()->getWord()->getStr(), e2->getWord()->getStr()) == 0);
+  TEST_ASSERT(lookup_entry_index(key, ix, 2, &result) == EC_SUCCESS);                                    // check that lookup has been completed successfully
+  TEST_ASSERT(result != nullptr);                                                                        // check that word has been found
+  TEST_ASSERT(strcmp(result->getStart()->getWord()->getStr(), e1->getWord()->getStr()) == 0);            // check that result list's first word is same as e1
+  TEST_ASSERT(strcmp(result->getStart()->getNext()->getWord()->getStr(), e2->getWord()->getStr()) == 0); // check that result list's second word is same as e2
 }
 
 void destroy_entry_index(void) { // Test destroy_entry_index function
@@ -242,29 +257,29 @@ void destroy_entry_index(void) { // Test destroy_entry_index function
   const word *w6 = new word("felt");
   const word *w7 = new word("melt");
 
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // check that entry_list has been created
 
-  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
-  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS); // check that entry has been created
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS); // check that entry has been created
 
-  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
-  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry has been added
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry has been added
 
   tree *ix;
-  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS); // check that entry_index is built
 
-  TEST_ASSERT(destroy_entry_index(&ix) == EC_SUCCESS);
-  TEST_ASSERT(ix == nullptr);
+  TEST_ASSERT(destroy_entry_index(&ix) == EC_SUCCESS); // check that entry_index has been deleted successfully
+  TEST_ASSERT(ix == nullptr);                          // check that index pointer is null
 }
 
 TEST_LIST = {
