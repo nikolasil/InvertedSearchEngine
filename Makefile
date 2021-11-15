@@ -34,7 +34,7 @@ functions.o :
 # Testing Files
 
 test.o :
-	$(CC) $(CFLAFS) -c tests/test.cpp
+	$(CC) $(TESTFLAGS) -c tests/test.cpp
 
 
 # Commands

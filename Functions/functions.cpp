@@ -33,8 +33,8 @@ ErrorCode create_entry_list(entry_list **el) {
 }
 
 unsigned int get_number_entries(const entry_list *el) {
-  if (!el) {
-    return -1;
+  if (el == nullptr) {
+    return 0;
   }
   return el->getCount();
 }
@@ -55,8 +55,8 @@ entry *get_first(const entry_list *el) {
   return el->getStart();
 }
 
-entry *get_next(const entry_list *el, entry *e) {
-  if (!el) {
+entry *get_next(const entry_list *el, const entry *e) {
+  if (el == nullptr || e == nullptr) {
     return nullptr;
   }
   return el->getNext(e);

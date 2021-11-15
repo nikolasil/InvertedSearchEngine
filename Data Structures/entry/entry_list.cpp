@@ -27,11 +27,7 @@ entry_list::~entry_list() {
 }
 
 unsigned int entry_list::getCount() const {
-  if (!this->count) {
-    return -1;
-  } else {
-    return this->count;
-  }
+  return this->count;
 }
 
 void entry_list::print() {
