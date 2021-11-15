@@ -78,7 +78,7 @@ ErrorCode destroy_entry_list(entry_list **el) {
 ErrorCode build_entry_index(const entry_list *el, MatchType type, tree **ix) {
   try {
     *ix = new tree();
-    (*ix)->fillLinkedList(el, type);
+    (*ix)->fillTree(el, type);
     return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;
