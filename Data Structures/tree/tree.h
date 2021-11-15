@@ -48,6 +48,7 @@ public:
   tree();
   ~tree();
   void add(String *word);
+  tree_node *getRoot() { return this->root; };
   void print();
   void fillLinkedList(const entry_list *list, MatchType type);
   entry_list *lookup(String *word, int threshold);

@@ -41,6 +41,9 @@ unsigned int get_number_entries(const entry_list *el) {
 
 ErrorCode add_entry(entry_list *el, const entry *e) {
   try {
+    if (el == nullptr || e == nullptr) {
+      return EC_FAIL;
+    }
     el->addEntry((entry *)e);
     return EC_SUCCESS;
   } catch (const exception &e) {
@@ -64,7 +67,8 @@ entry *get_next(const entry_list *el, const entry *e) {
 
 ErrorCode destroy_entry_list(entry_list **el) {
   try {
-    delete el;
+    delete *el;
+    *el = nullptr;
     return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;
@@ -74,18 +78,8 @@ ErrorCode destroy_entry_list(entry_list **el) {
 ErrorCode build_entry_index(const entry_list *el, MatchType type, tree **ix) {
   try {
     *ix = new tree();
-    switch (type) {
-    case MT_HAMMING_DIST:
-      (*ix)->fillLinkedList(el, type);
-      return EC_SUCCESS;
-    case MT_EDIT_DIST:
-
-      return EC_SUCCESS;
-    case MT_EXACT_MATCH:
-      return EC_SUCCESS;
-    default:
-      return EC_SUCCESS;
-    }
+    (*ix)->fillLinkedList(el, type);
+    return EC_SUCCESS;
   } catch (const exception &e) {
     return EC_FAIL;
   }

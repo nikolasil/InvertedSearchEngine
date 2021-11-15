@@ -53,19 +53,21 @@ void get_number_entries(void) { // Test create_entry_list function
 void add_entry(void) { // Test add_entry function
   entry_list *el;
 
-  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // test that result is success
-
   const word *w1 = new word("hell");
   const word *w2 = new word("melt");
   entry *e1, *e2;
   TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
   TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that result is success
 
-  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // add entry e1 to list
-  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // add entry e2 to list
-  TEST_ASSERT(get_first(el) == e1);             // check that e1 is the first entry
-  TEST_ASSERT(get_next(el, e1) == e2);          // check that e1->next is e2
-  TEST_ASSERT(get_next(el, e2) == nullptr);     // check that e2->next is nullptr
+  TEST_ASSERT(add_entry(el, nullptr) == EC_FAIL);
+  TEST_ASSERT(add_entry(nullptr, e1) == EC_FAIL);
+  TEST_ASSERT(add_entry(nullptr, nullptr) == EC_FAIL);
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);      // add entry e1 to list
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);      // add entry e2 to list
+  TEST_ASSERT(get_first(el) == e1);                  // check that e1 is the first entry
+  TEST_ASSERT(get_next(el, e1) == e2);               // check that e1->next is e2
+  TEST_ASSERT(get_next(el, e2) == nullptr);          // check that e2->next is nullptr
 }
 
 void get_first(void) { // Test get_first function
@@ -123,6 +125,114 @@ void get_next(void) { // Test get_next function
   TEST_ASSERT(get_next(el, nullptr) == nullptr); // check that returns nullptr
 }
 
+void destroy_entry_list(void) { // Test destroy_entry_list function
+  entry_list *el;
+
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);  // test that result is success
+  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);  // test that result is success
+
+  const word *w1 = new word("hell");
+  const word *w2 = new word("melt");
+  const word *w3 = new word("yeah");
+  entry *e1, *e2, *e3;
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS); // test that result is success
+
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS); // add entry e1 to list
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS); // add entry e2 to list
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS); // add entry e3 to list
+
+  TEST_ASSERT(destroy_entry_list(&el) == EC_SUCCESS); // test that result is success
+  TEST_ASSERT(el == nullptr);                         // check that el is nullptr
+  TEST_ASSERT(add_entry(el, e1) == EC_FAIL);          // add entry e3 to list
+}
+
+void build_entry_index(void) { // Test build_entry_index function
+  entry_list *el;
+  entry *e1, *e2, *e3, *e4, *e5, *e6, *e7;
+  const word *w1 = new word("hell");
+  const word *w2 = new word("help");
+  const word *w3 = new word("fall");
+  const word *w4 = new word("small");
+  const word *w5 = new word("fell");
+  const word *w6 = new word("felt");
+  const word *w7 = new word("melt");
+
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+
+  tree *ix;
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
+  TEST_ASSERT(ix != nullptr);
+  TEST_ASSERT(ix->getRoot()->getData() == e1->getWord());                             // hell
+  TEST_ASSERT(ix->getRoot()->findChild(1)->getData() == e2->getWord());               // help
+  TEST_ASSERT(ix->getRoot()->findChild(2)->getData() == e3->getWord());               // fall
+  TEST_ASSERT(ix->getRoot()->findChild(3)->getData() == e4->getWord());               // small
+  TEST_ASSERT(ix->getRoot()->findChild(1)->findChild(2)->getData() == e5->getWord()); // fell
+  TEST_ASSERT(ix->getRoot()->findChild(2)->findChild(2)->getData() == e6->getWord()); // felt
+  TEST_ASSERT(ix->getRoot()->findChild(2)->findChild(3)->getData() == e7->getWord()); // melt
+
+  // entry_list *result;
+  // const word key("henn");
+  // TEST_ASSERT(lookup_entry_index(key, ix, 2, &result) == EC_SUCCESS);
+}
+
+void lookup_entry_index(void) { // Test lookup_entry_index function
+  entry_list *el;
+  entry *e1, *e2, *e3, *e4, *e5, *e6, *e7;
+  const word *w1 = new word("hell");
+  const word *w2 = new word("help");
+  const word *w3 = new word("fall");
+  const word *w4 = new word("small");
+  const word *w5 = new word("fell");
+  const word *w6 = new word("felt");
+  const word *w7 = new word("melt");
+
+  TEST_ASSERT(create_entry_list(&el) == EC_SUCCESS);
+
+  TEST_ASSERT(create_entry(w1, &e1) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w2, &e2) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w3, &e3) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w4, &e4) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w5, &e5) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w6, &e6) == EC_SUCCESS);
+  TEST_ASSERT(create_entry(w7, &e7) == EC_SUCCESS);
+
+  TEST_ASSERT(add_entry(el, e1) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e2) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e3) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e4) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e5) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS);
+  TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS);
+
+  tree *ix;
+  TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);
+  entry_list *result;
+  const word key("henn");
+  TEST_ASSERT(lookup_entry_index(key, ix, 2, &result) == EC_SUCCESS);
+  TEST_ASSERT(result != nullptr);
+  TEST_ASSERT(strcmp(result->getStart()->getWord()->getStr(), e1->getWord()->getStr()) == 0);
+  TEST_ASSERT(strcmp(result->getStart()->getNext()->getWord()->getStr(), e2->getWord()->getStr()) == 0);
+}
+
 TEST_LIST = {
     {"Create Entry", create_entry},
     {"Destroy Entry", destroy_entry},
@@ -131,5 +241,8 @@ TEST_LIST = {
     {"Add Entry", add_entry},
     {"Get First", get_first},
     {"Get Next", get_next},
+    {"Destroy Entry List", destroy_entry_list},
+    {"Build Entry Index", build_entry_index},
+    {"Lookup Entry Index", lookup_entry_index},
     {NULL, NULL} /* zeroed record marking the end of the list */
 };
