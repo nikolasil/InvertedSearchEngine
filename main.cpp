@@ -59,9 +59,9 @@ int main(int argc, char *argv[]) {
   result->print();
 
   cout << "Lookup took: " << (double)(end - begin) / CLOCKS_PER_SEC << " secs" << endl;
-  destroy_entry_index(ix);
   // Cleanup
-  delete el;
-  delete result;
+  destroy_entry_index(&ix);
+  destroy_entry_list(&el);
+  destroy_entry_list(&result);
   return 0;
 }

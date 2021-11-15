@@ -130,6 +130,6 @@ ErrorCode lookup_entry_index(const word &w, tree *ix, int threshold, entry_list 
  * This method destroys the index and returns the proper exit code
  */
 
-ErrorCode destroy_entry_index(tree *ix);
+ErrorCode destroy_entry_index(tree **ix);
 
 #endif
