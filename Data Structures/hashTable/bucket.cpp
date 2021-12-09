@@ -1,28 +1,28 @@
-#include "linkedList.h"
+#include "bucket.h"
 #include <cstring>
 #include <iostream>
 using namespace std;
 // Linked List
-linkedList::linkedList() {
+Bucket::Bucket() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
 }
 
-linkedList::~linkedList() {
+Bucket::~Bucket() {
   if (this->head != nullptr) {
     delete this->head;
   }
 }
 
-void linkedList::print() {
+void Bucket::print() {
   this->head->print();
   cout << endl;
 }
 
-listNode *linkedList::addNode(String *word) {
+bucketNode *Bucket::addNode(String *word) {
 
-  listNode *newNode = new listNode(word);
+  bucketNode *newNode = new bucketNode(word);
   if (this->head == nullptr) { // no entries in entry list
     this->head = newNode;
   } else {
@@ -33,8 +33,8 @@ listNode *linkedList::addNode(String *word) {
   return 0;
 }
 
-listNode *linkedList::getNode(String *word) {
-  listNode *current = this->head;
+bucketNode *Bucket::getNode(String *word) {
+  bucketNode *current = this->head;
   while (current) {
     if (!strcmp(current->getWord()->getStr(), word->getStr())) {
       return current;
@@ -46,32 +46,32 @@ listNode *linkedList::getNode(String *word) {
 
 // List Node
 
-listNode::listNode(String *word) {
+bucketNode::bucketNode(String *word) {
   this->word = word;
   this->next = nullptr;
 }
 
-listNode::~listNode() {
+bucketNode::~bucketNode() {
   if (this->next != nullptr) {
     delete this->next;
   }
 }
 
-void listNode::print() {
+void bucketNode::print() {
   cout << this->word->getStr() << " ";
   if (this->next) {
     this->next->print();
   }
 }
 
-String *listNode::getWord() {
+String *bucketNode::getWord() {
   return this->word;
 }
 
-void listNode::setNext(listNode *next) {
+void bucketNode::setNext(bucketNode *next) {
   this->next = next;
 }
 
-listNode *listNode::getNext() {
+bucketNode *bucketNode::getNext() {
   return this->next;
 }

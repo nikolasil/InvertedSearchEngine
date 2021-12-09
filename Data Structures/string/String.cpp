@@ -5,7 +5,7 @@
 using namespace std;
 
 String::String(const char *string) {
-  this->str = new char[strlen(string) + 1];
+  this->str = new char[strlen(string)];
   this->str[strlen(string)] = '\0';
   strcpy(this->str, string);
 }

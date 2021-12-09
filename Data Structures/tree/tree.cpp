@@ -1,6 +1,5 @@
 #include "tree.h"
 #include "../entry/entry.h"
-#include "../linkedList/linkedList.h"
 #include "../utils/approximateMatching.h"
 #include <ctime>
 #include <iostream>
