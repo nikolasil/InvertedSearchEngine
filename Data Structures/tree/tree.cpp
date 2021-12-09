@@ -1,5 +1,4 @@
 #include "tree.h"
-#include "../entry/entry.h"
 #include "../utils/approximateMatching.h"
 #include <ctime>
 #include <iostream>
@@ -44,32 +43,32 @@ void tree::print() {
   cout << endl;
 }
 
-void tree::fillTree(const entry_list *list, MatchType type) {
-  entry *current = list->getStart();
-  while (current) {
-    if (type == MT_HAMMING_DIST) {
-      this->add(new String(current->getWord()));
-    }
-    current = current->getNext();
-  }
-}
+// void tree::fillTree(const entry_list *list, MatchType type) {
+//   entry *current = list->getStart();
+//   while (current) {
+//     if (type == MT_HAMMING_DIST) {
+//       this->add(new String(current->getWord()));
+//     }
+//     current = current->getNext();
+//   }
+// }
 
-entry_list *tree::lookup(String *word, int threshold) {
-  entry_list *foundWords = new entry_list();
-  if (this->root == nullptr) {
-    return foundWords;
-  }
-  int diff = hammingDistance(word, this->root->getData());
-  if (diff <= threshold) {
-    const String *w = new String(this->root->getData());
-    foundWords->addEntry(new entry(w, nullptr));
-    // cout << "Added " << this->root->getData()->getStr() << " with diff " << diff
-    //      << endl;
-  }
+// entry_list *tree::lookup(String *word, int threshold) {
+//   entry_list *foundWords = new entry_list();
+//   if (this->root == nullptr) {
+//     return foundWords;
+//   }
+//   int diff = hammingDistance(word, this->root->getData());
+//   if (diff <= threshold) {
+//     const String *w = new String(this->root->getData());
+//     foundWords->addEntry(new entry(w, nullptr));
+//     // cout << "Added " << this->root->getData()->getStr() << " with diff " << diff
+//     //      << endl;
+//   }
 
-  this->root->lookup(word, threshold, &foundWords, diff);
-  return foundWords;
-}
+//   this->root->lookup(word, threshold, &foundWords, diff);
+//   return foundWords;
+// }
 
 // Tree Node
 tree_node::tree_node(String *d) {
@@ -149,41 +148,41 @@ void tree_node::print() {
   }
 }
 
-void tree_node::lookup(String *word, int threshold, entry_list **foundWords, int diff) {
-  tree_node *child;
-  // int diff = hammingDistance(word, this->getData());
-  int min = diff - threshold;
-  int max = diff + threshold;
-  // cout << "Node " << this->getData()->getStr() << " with diff=" << diff
-  //      << ",space=[" << min << "," << max << "]" << endl;
+// void tree_node::lookup(String *word, int threshold, entry_list **foundWords, int diff) {
+//   tree_node *child;
+//   // int diff = hammingDistance(word, this->getData());
+//   int min = diff - threshold;
+//   int max = diff + threshold;
+//   // cout << "Node " << this->getData()->getStr() << " with diff=" << diff
+//   //      << ",space=[" << min << "," << max << "]" << endl;
 
-  tree_edge *currentEdge = this->getFirstChild();
+//   tree_edge *currentEdge = this->getFirstChild();
 
-  while (currentEdge != nullptr) {
-    child = currentEdge->getChild();
-    diff = hammingDistance(child->getData(), word);
-    // cout << "Child " << child->getData()->getStr()
-    //      << " of node:" << this->getData()->getStr() << endl;
-    if (diff <= threshold) {
-      const String *w = new String(child->getData());
-      (*foundWords)->addEntry(new entry(w, nullptr));
-      // cout << "   diff=" << diff << " from " << word->getStr()
-      //      << " | added to found words" << endl;
-    } else {
-      // cout << "   diff=" << diff << " from " << word->getStr()
-      //      << " | NOT added to found words" << endl;
-    }
-    if (diff >= min && diff <= max) {
-      // cout << "   diff was in the space=[" << min << "," << max
-      //      << "] | calling subtree" << endl;
-      child->lookup(word, threshold, foundWords, diff);
-    } else {
-      // cout << "   diff was NOT in the space=[" << min << "," << max
-      //      << "] | NOT calling subtree" << endl;
-    }
-    currentEdge = currentEdge->getNext();
-  }
-}
+//   while (currentEdge != nullptr) {
+//     child = currentEdge->getChild();
+//     diff = hammingDistance(child->getData(), word);
+//     // cout << "Child " << child->getData()->getStr()
+//     //      << " of node:" << this->getData()->getStr() << endl;
+//     if (diff <= threshold) {
+//       const String *w = new String(child->getData());
+//       (*foundWords)->addEntry(new entry(w, nullptr));
+//       // cout << "   diff=" << diff << " from " << word->getStr()
+//       //      << " | added to found words" << endl;
+//     } else {
+//       // cout << "   diff=" << diff << " from " << word->getStr()
+//       //      << " | NOT added to found words" << endl;
+//     }
+//     if (diff >= min && diff <= max) {
+//       // cout << "   diff was in the space=[" << min << "," << max
+//       //      << "] | calling subtree" << endl;
+//       child->lookup(word, threshold, foundWords, diff);
+//     } else {
+//       // cout << "   diff was NOT in the space=[" << min << "," << max
+//       //      << "] | NOT calling subtree" << endl;
+//     }
+//     currentEdge = currentEdge->getNext();
+//   }
+// }
 // Tree Edge
 
 tree_edge::tree_edge(int w, tree_node *c) {

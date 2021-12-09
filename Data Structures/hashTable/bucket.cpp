@@ -24,7 +24,7 @@ bucketNode *Bucket::addNode(String *word, int qId) {
   }
 
   bucketNode *newNode = new bucketNode(word, qId);
-  if (this->head == nullptr) { // no entries in entry list
+  if (this->head == nullptr) { // no entries
     this->head = newNode;
   } else {
     this->last->setNext(newNode);

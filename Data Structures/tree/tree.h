@@ -5,7 +5,7 @@ class tree_edge;
 class tree_node;
 class tree;
 
-#include "../../Functions/functions.h"
+// #include "../../Functions/functions.h"
 #include "../string/String.h"
 
 class tree_edge {
@@ -46,9 +46,9 @@ public:
   void setData(String *data) { this->data = data; }; // set new word of node
 
   // Utils
-  tree_node *findChild(int w);                                                 // Search for a child node that contains the word w
-  void lookup(String *word, int threshold, entry_list **foundWords, int diff); // Lookup word
-  void addChild(int w, tree_node *c);                                          // Add child node
+  tree_node *findChild(int w); // Search for a child node that contains the word w
+  // void lookup(String *word, int threshold, entry_list **foundWords, int diff); // Lookup word
+  void addChild(int w, tree_node *c); // Add child node
   void print();
 };
 
@@ -65,9 +65,9 @@ public:
 
   // Utils
   void print();
-  void add(String *word);                                // add word to tree
-  void fillTree(const entry_list *list, MatchType type); // fill tree based from the words of an entry list
-  entry_list *lookup(String *word, int threshold);       // lookup a word in index
+  void add(String *word); // add word to tree
+  // void fillTree(const entry_list *list, MatchType type); // fill tree based from the words of an entry list
+  // entry_list *lookup(String *word, int threshold);       // lookup a word in index
 };
 
 #endif

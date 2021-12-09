@@ -142,7 +142,8 @@ vector<Document> docs;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 HashTable *ht;
-
+// hammingArray *hamming;
+// tree *edit;
 ErrorCode InitializeIndex() {
   ht = new HashTable();
   return EC_SUCCESS;
