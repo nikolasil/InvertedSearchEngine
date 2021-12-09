@@ -26,6 +26,9 @@
  */
 
 #include "../include/core.h"
+#include "../../Data Structures/hashTable/bucket.h"
+#include "../../Data Structures/hashTable/hashTable.h"
+#include "../../Data Structures/string/String.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -138,22 +141,47 @@ vector<Document> docs;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ErrorCode InitializeIndex() { return EC_SUCCESS; }
+HashTable *ht;
+
+ErrorCode InitializeIndex() {
+  ht = new HashTable();
+  return EC_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ErrorCode DestroyIndex() { return EC_SUCCESS; }
+ErrorCode DestroyIndex() {
+  delete ht;
+  return EC_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ErrorCode StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
+ErrorCode
+StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
+
   query.query_id = query_id;
   strcpy(query.str, query_str);
   query.match_type = match_type;
   query.match_dist = match_dist;
 
-  //   cout << "StartQuery: " << query.query_id << " " << query.str << " " << query.match_type << " " << query.match_dist << endl;
+  if (match_type == MT_EXACT_MATCH) {
+    char query_str_cpy[MAX_QUERY_LENGTH];
+    strcpy(query_str_cpy, query_str);
+
+    char *temp = strtok(query_str_cpy, " ");
+    while (temp != NULL) {
+      ht->insert(new String(temp), query.query_id);
+      temp = strtok(NULL, " ");
+    }
+    // ht->print();
+  } else if (match_type == MT_EDIT_DIST) {
+    cout << "edit distance" << endl;
+  } else if (match_type == MT_HAMMING_DIST) {
+    cout << "hamming distance" << endl;
+  }
+
   // Add this query to the active query set
   queries.push_back(query);
   return EC_SUCCESS;

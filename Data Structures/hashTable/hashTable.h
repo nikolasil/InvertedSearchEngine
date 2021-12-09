@@ -13,10 +13,20 @@ private:
 public:
   HashTable(int size = TABLE_SIZE);
   ~HashTable();
-  void print();
-  void insert(String *word);
-  void generateHashString(char key[256], char *returnHash);
+  // Getters
+  int getSize() const { return this->size; };
+  Bucket **getTable() const { return this->table; };
+  // Setters
+  void setSize(int size) { this->size = size; };
+  void setTable(Bucket **table) { this->table = table; };
+  // Methods
+  Bucket *getBucket(int i) { return this->table[i]; };
+  void setBucket(Bucket *b, int i) { this->table[i] = b; };
+  void insert(String *word, int qId);
   int getIndex(char *H);
+  void print();
+  // Hashing Related Methods
+  void generateHashString(char key[256], char *returnHash);
   int hexadecimalToDecimal(char hexVal[]);
 };
 

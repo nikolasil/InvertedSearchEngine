@@ -40,19 +40,31 @@ LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-
+FILES = String.o hashTable.o bucket.o queryList.o
 # The name of the library that will be built
 LIBRARY=core
 
 # Build all programs
 all: $(PROGRAMS)
 
-lib: $(IMPL_O)
-	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O)
+lib: $(IMPL_O) $(FILES)
+	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES) -lcrypto
 
-testdriver: lib $(TEST_O)
-	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so
+testdriver: lib $(TEST_O) $(FILES)
+	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES) -lcrypto
 
+hashTable.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/hashTable.cpp
+
+bucket.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/bucket.cpp
+
+queryList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/queryList.cpp
+
+String.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/string/String.cpp
+	
 clean:
 	rm -f $(PROGRAMS) lib$(LIBRARY).so
 	find . -name '*.o' -print | xargs rm -f

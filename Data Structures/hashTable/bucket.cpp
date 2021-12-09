@@ -2,12 +2,8 @@
 #include <cstring>
 #include <iostream>
 using namespace std;
-// Linked List
-Bucket::Bucket() {
-  this->head = nullptr;
-  this->last = nullptr;
-  this->count = 0;
-}
+
+// Bucket List
 
 Bucket::~Bucket() {
   if (this->head != nullptr) {
@@ -17,12 +13,17 @@ Bucket::~Bucket() {
 
 void Bucket::print() {
   this->head->print();
-  cout << endl;
+  // cout << endl;
 }
 
-bucketNode *Bucket::addNode(String *word) {
+bucketNode *Bucket::addNode(String *word, int qId) {
+  bucketNode *exists = this->getNode(word);
+  if (exists != nullptr) {
+    exists->addToQueryList(qId);
+    return exists;
+  }
 
-  bucketNode *newNode = new bucketNode(word);
+  bucketNode *newNode = new bucketNode(word, qId);
   if (this->head == nullptr) { // no entries in entry list
     this->head = newNode;
   } else {
@@ -30,12 +31,12 @@ bucketNode *Bucket::addNode(String *word) {
   }
   this->last = newNode;
   count++;
-  return 0;
+  return newNode;
 }
 
 bucketNode *Bucket::getNode(String *word) {
   bucketNode *current = this->head;
-  while (current) {
+  while (current != nullptr) {
     if (!strcmp(current->getWord()->getStr(), word->getStr())) {
       return current;
     }
@@ -44,11 +45,13 @@ bucketNode *Bucket::getNode(String *word) {
   return nullptr;
 }
 
-// List Node
+// Bucket Node
 
-bucketNode::bucketNode(String *word) {
+bucketNode::bucketNode(String *word, int qId) {
   this->word = word;
   this->next = nullptr;
+  this->list = new queryList();
+  this->list->addQuery(qId);
 }
 
 bucketNode::~bucketNode() {
@@ -57,21 +60,14 @@ bucketNode::~bucketNode() {
   }
 }
 
+void bucketNode::addToQueryList(int qId) {
+  this->list->addQuery(qId);
+}
+
 void bucketNode::print() {
-  cout << this->word->getStr() << " ";
+  cout << "\t" << this->word->getStr() << " ";
+  this->list->print();
   if (this->next) {
     this->next->print();
   }
-}
-
-String *bucketNode::getWord() {
-  return this->word;
-}
-
-void bucketNode::setNext(bucketNode *next) {
-  this->next = next;
-}
-
-bucketNode *bucketNode::getNext() {
-  return this->next;
 }

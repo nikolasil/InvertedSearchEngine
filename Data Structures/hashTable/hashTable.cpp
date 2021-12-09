@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-// Hash Table
+// HashTable
 
 HashTable::HashTable(int size) {
   this->table = new Bucket *[size];
@@ -19,9 +19,8 @@ HashTable::~HashTable() {
   delete[] this->table;
 }
 
-void HashTable::insert(String *word) {
-
-  // hash word with SHA1
+void HashTable::insert(String *word, int qId) {
+  // Hash word with SHA1
   char *returnHash = new char[SHA_DIGEST_LENGTH];
   generateHashString(word->getStr(), returnHash);
 
@@ -34,20 +33,24 @@ void HashTable::insert(String *word) {
   }
   // Insert Word into Bucket
   cout << "Inserting " << word->getStr() << " into Bucket " << index << endl;
-  this->table[index]->addNode(word);
+  this->table[index]->addNode(word, qId);
+}
+
+int HashTable::getIndex(char *hash) {
+  return (hexadecimalToDecimal(hash) % (TABLE_SIZE - 1)) + 1;
 }
 
 void HashTable::print() {
   for (int i = 0; i < this->size; i++) {
     if (this->table[i] != NULL) {
-      cout << "Bucket " << i << ": ";
+      cout << "Bucket " << i << ": " << endl;
       this->table[i]->print();
       cout << "------------" << endl;
     }
   }
 }
 
-// Hashing Functions
+// Hashing Related Methods
 void HashTable::generateHashString(char key[256], char *returnHash) {
   size_t length = strlen(key);
   unsigned char hash[SHA_DIGEST_LENGTH];
@@ -72,8 +75,4 @@ int HashTable::hexadecimalToDecimal(char hexVal[]) {
     }
   }
   return abs(dec_val);
-}
-
-int HashTable::getIndex(char *hash) {
-  return (hexadecimalToDecimal(hash) % (TABLE_SIZE - 1)) + 1;
 }
