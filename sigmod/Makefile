@@ -48,7 +48,7 @@ LIBRARY=core
 all: $(PROGRAMS)
 
 lib: $(IMPL_O) $(FILES)
-	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES) -lcrypto
+	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)  -I /usr/local/Cellar/openssl@3/3.0.0_1/include/ -L  /usr/local/Cellar/openssl@3/3.0.0_1/lib/ -lcrypto
 
 testdriver: lib $(TEST_O) $(FILES)
 	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES) -lcrypto

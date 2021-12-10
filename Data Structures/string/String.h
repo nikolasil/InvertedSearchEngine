@@ -14,9 +14,9 @@ public:
   // Setters
   void setStr(char *string) { this->str = string; };
   // Distances
-  bool exactMatch(String *s); // Exact match
-  int hammingDist(String *s); // same size words
-  int editDist(String *s);    // different size words
+  bool exactMatch(String *s);     // Exact match
+  int hammingDistance(String *s); // same size words
+  int editDistance(String *s);    // different size words
   // Methods
   void print();
 };

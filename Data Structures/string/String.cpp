@@ -26,7 +26,7 @@ bool String::exactMatch(String *s) {
   return *s1 == *s2;
 }
 
-int String::hammingDist(String *s) {
+int String::hammingDistance(String *s) {
   char *str1 = this->getStr();
   char *str2 = s->getStr();
   int count = 0;
@@ -37,7 +37,8 @@ int String::hammingDist(String *s) {
   return count;
 }
 
-int String::editDist(String *s) {
+int String::editDistance(String *s) {
+  return 0;
 }
 
 void String::print() { cout << this->str; }

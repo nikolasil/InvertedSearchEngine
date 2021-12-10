@@ -26,6 +26,7 @@
  */
 
 #include "../include/core.h"
+#include "../../Data Structures/MatchArray/MatchArray.h"
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
 #include "../../Data Structures/string/String.h"
@@ -114,14 +115,6 @@ unsigned int HammingDistance(char *a, int na, char *b, int nb) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-// Keeps all information related to an active query
-struct Query {
-  QueryID query_id;
-  char str[MAX_QUERY_LENGTH];
-  MatchType match_type;
-  unsigned int match_dist;
-};
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // Keeps all query ID results associated with a dcoument
@@ -167,7 +160,8 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   query.match_type = match_type;
   query.match_dist = match_dist;
 
-  if (match_type == MT_EXACT_MATCH) {
+  switch (match_type) {
+  case MT_EXACT_MATCH: {
     char query_str_cpy[MAX_QUERY_LENGTH];
     strcpy(query_str_cpy, query_str);
 
@@ -177,15 +171,26 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
       temp = strtok(NULL, " ");
     }
     // ht->print();
-  } else if (match_type == MT_EDIT_DIST) {
-    cout << "edit distance" << endl;
-  } else if (match_type == MT_HAMMING_DIST) {
-    cout << "hamming distance" << endl;
+    break;
   }
+  case MT_EDIT_DIST: {
+    cout << "edit distance" << endl;
+    break;
+  }
+  case MT_HAMMING_DIST: {
+    cout << "hamming distance" << endl;
+    break;
+  }
+  default: {
+    cout << "invalid match type" << endl;
+    return EC_INVALID_PARAM;
+  }
+  }
+}
 
-  // Add this query to the active query set
-  queries.push_back(query);
-  return EC_SUCCESS;
+// Add this query to the active query set
+queries.push_back(query);
+return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 #include "tree.h"
-#include "../utils/approximateMatching.h"
+#include "../string/String.h"
 #include <ctime>
 #include <iostream>
 #include <random>
@@ -25,7 +25,7 @@ void tree::add(String *word) {
   }
   while (true) {
     // Compare word with node data
-    int diff = hammingDistance(word, current->getData());
+    int diff = word->hammingDistance(current->getData());
 
     // cout << "Difference is " << diff << " -> " << word->getStr() << endl;
     // Search for child node with equal weight in edge
@@ -212,8 +212,6 @@ void tree_edge::setNext(tree_edge *next) {
 tree_node *tree_edge::getChild() { return this->child; }
 
 void tree_edge::print() {
-
-  tree_edge *current = this;
   cout << "[" << this->weight << "->" << this->child->getData()->getStr()
        << "], ";
   if (this->next != nullptr) {

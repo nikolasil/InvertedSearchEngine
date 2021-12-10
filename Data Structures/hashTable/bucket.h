@@ -33,7 +33,7 @@ private:
   int count;
 
 public:
-  Bucket() : head(nullptr), last(nullptr), count(0){};
+  Bucket();
   ~Bucket();
   // Getters
   bucketNode *getHead() const { return this->head; };

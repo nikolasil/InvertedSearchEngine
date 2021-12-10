@@ -7,7 +7,7 @@ private:
   queryNode *next;
 
 public:
-  queryNode(int id) : id(id) { this->next = nullptr; };
+  queryNode(int id);
   ~queryNode();
   //  Getters
   int getId() const { return this->id; };
@@ -25,7 +25,7 @@ private:
   int count;
 
 public:
-  queryList() : head(nullptr), count(0){};
+  queryList();
   ~queryList();
   // Getters
   queryNode *getHead() const { return this->head; };

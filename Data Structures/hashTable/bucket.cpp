@@ -5,6 +5,12 @@ using namespace std;
 
 // Bucket List
 
+Bucket::Bucket() {
+  this->head = nullptr;
+  this->last = nullptr;
+  this->count = 0;
+}
+
 Bucket::~Bucket() {
   if (this->head != nullptr) {
     delete this->head;
