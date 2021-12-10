@@ -24,7 +24,7 @@ public:
   // Methods
   Bucket *getBucket(int i) { return this->table[i]; };
   void setBucket(Bucket *b, int i) { this->table[i] = b; };
-  void insert(String *word, Query *query);
+  void insert(WordInfo wordInfo);
   int getIndex(char *H);
   void print();
   // Hashing Related Methods

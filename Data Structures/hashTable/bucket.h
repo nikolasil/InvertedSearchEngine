@@ -1,6 +1,7 @@
 #ifndef Bucket_H
 #define Bucket_H
 
+#include "../../sigmod/include/core.h"
 #include "../string/String.h"
 #include "queryList.h"
 
@@ -11,7 +12,7 @@ private:
   bucketNode *next;
 
 public:
-  bucketNode(String *word, int qId);
+  bucketNode(WordInfo wordInfo);
   ~bucketNode();
   // Getters
   String *getWord() const { return this->word; };
@@ -22,7 +23,7 @@ public:
   void setList(queryList *list) { this->list = list; };
   void setNext(bucketNode *next) { this->next = next; };
   // Methods
-  void addToQueryList(int qId);
+  void addToQueryList(WordInfo wordInfo);
   void print();
 };
 
@@ -44,7 +45,7 @@ public:
   void setLast(bucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  bucketNode *addNode(String *word, int qId);
+  bucketNode *addNode(WordInfo wordInfo);
   bucketNode *getNode(String *word);
   void print();
 };

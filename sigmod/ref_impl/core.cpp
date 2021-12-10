@@ -132,6 +132,8 @@ vector<Query> queries;
 // Keeps all currently available results that has not been returned yet
 vector<Document> docs;
 
+// Keeps all currently matched words of the queries
+MatchArray *matchArray = nullptr;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 HashTable *ht;
@@ -162,13 +164,22 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 
   switch (match_type) {
   case MT_EXACT_MATCH: {
-    char query_str_cpy[MAX_QUERY_LENGTH];
-    strcpy(query_str_cpy, query_str);
+    int maxQueryWords = 0;
+    char *wordToken;
+    while ((wordToken = strtok(query_str, " ")) != NULL) {
+      maxQueryWords++;
+      wordToken = strtok(query_str, " ");
+    }
 
-    char *temp = strtok(query_str_cpy, " ");
-    while (temp != NULL) {
-      ht->insert(new String(temp), query.query_id);
-      temp = strtok(NULL, " ");
+    char queryWord[MAX_QUERY_LENGTH];
+    queryWord = strtok((char *)query_str, " ");
+    while (queryWord != NULL) {
+      WordInfo wordInfo;
+      wordInfo.query_id = query_id;
+      wordInfo.maxQueryWords = maxQueryWords;
+      wordInfo.word = new String(queryWord);
+      ht->insert(wordInfo);
+      queryWord = strtok(NULL, " ");
     }
     // ht->print();
     break;

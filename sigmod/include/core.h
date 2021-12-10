@@ -71,6 +71,13 @@ typedef struct Query {
   MatchType match_type;
   unsigned int match_dist;
 } Query;
+
+typedef struct WordInfo {
+  QueryID query_id;
+  String word;
+  unsigned int maxQueryWords;
+} WordInfo;
+
 /// Matching types:
 typedef enum {
   /**

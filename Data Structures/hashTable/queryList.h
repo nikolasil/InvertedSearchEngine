@@ -1,13 +1,15 @@
 #ifndef queryList_H
 #define queryList_H
 
+#include "../../sigmod/include/core.h"
 class queryNode {
 private:
   int id;
+  int maxQueryWords;
   queryNode *next;
 
 public:
-  queryNode(int id);
+  queryNode(int id, int maxQueryWords);
   ~queryNode();
   //  Getters
   int getId() const { return this->id; };
@@ -36,7 +38,7 @@ public:
   void setLast(queryNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  void addQuery(int id);
+  void addQuery(WordInfo wordInfo);
   void print();
 };
 
