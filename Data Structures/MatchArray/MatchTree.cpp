@@ -39,6 +39,14 @@ void MatchTree::insert(String *word) {
     }
   }
 }
+bool MatchTree::matched() {
+  if (this->count == this->maxWords) {
+    this->count++; // to avoid return it to the future again
+    return true;
+  }
+  return false;
+}
+
 MatchTreeNode::~MatchTreeNode() {}
 MatchTreeNode::MatchTreeNode(String *d) {
   this->data = d;

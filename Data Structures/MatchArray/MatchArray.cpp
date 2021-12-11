@@ -8,6 +8,7 @@ using namespace std;
 MatchArray::MatchArray(int size) {
   this->array = new MatchTree *[size](); // initialize MatchArray to null
   this->size = size;
+  this->matchedIds = new ResultList();
 }
 
 MatchArray::~MatchArray() {
@@ -17,10 +18,6 @@ MatchArray::~MatchArray() {
   delete[] this->array;
 }
 
-int MatchArray::getSize() {
-  return this->size;
-}
-
 void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   MatchTree *matchTree = this->array[queryId];
 
@@ -28,8 +25,12 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
     this->array[queryId] = new MatchTree(maxQueryWords); // create and initialize matchTree
     matchTree = this->array[queryId];
   }
-
   matchTree->insert(queryWord); // insert query word to matchTree
+
+  // check if the query word is matched
+  if (matchTree->matched()) {
+    this->matchedIds->add(queryId);
+  }
 }
 
 void MatchArray::deleteMatchTree(int queryId) {

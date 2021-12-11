@@ -41,6 +41,7 @@ public:
   void setMaxWords(int maxWords) { this->maxWords = maxWords; };
   // Utils
   void insert(String *word);
+  bool matched();
 };
 
 #endif
