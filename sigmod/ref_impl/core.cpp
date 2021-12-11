@@ -138,7 +138,7 @@ MatchArray *matchArray = nullptr;
 
 HashTable *ht;
 // hammingArray *hamming;
-// tree *edit;
+// BK_Tree *edit;
 ErrorCode InitializeIndex() {
   ht = new HashTable();
   return EC_SUCCESS;
@@ -152,7 +152,7 @@ ErrorCode DestroyIndex() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+int k = 0;
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
@@ -164,44 +164,45 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 
   switch (match_type) {
   case MT_EXACT_MATCH: {
+    char query_str0[MAX_QUERY_LENGTH];
+    strcpy(query_str0, query_str);
     int maxQueryWords = 0;
-    char *wordToken;
-    while ((wordToken = strtok(query_str, " ")) != NULL) {
+    char *wordToken = strtok(query_str0, " ");
+    while (wordToken != NULL) {
       maxQueryWords++;
-      wordToken = strtok(query_str, " ");
+      wordToken = strtok(NULL, " ");
     }
-
-    char queryWord[MAX_QUERY_LENGTH];
-    queryWord = strtok((char *)query_str, " ");
-    while (queryWord != NULL) {
+    strcpy(query_str0, query_str);
+    wordToken = strtok(query_str0, " ");
+    while (wordToken != NULL) {
+      // cout << "." << wordToken << "." << endl;
       WordInfo wordInfo;
       wordInfo.query_id = query_id;
       wordInfo.maxQueryWords = maxQueryWords;
-      wordInfo.word = new String(queryWord);
-      ht->insert(wordInfo);
-      queryWord = strtok(NULL, " ");
+      ht->insert(new String(wordToken), wordInfo);
+      wordToken = strtok(NULL, " ");
     }
+    // cout << "HashTable print" << endl;
     // ht->print();
+    // if (k++ == 10) {
+    //   cout << query_id << "." << query_str << "." << endl;
+    //   exit(0);
+    // }
     break;
   }
   case MT_EDIT_DIST: {
-    cout << "edit distance" << endl;
+    // cout << "edit distance" << endl;
     break;
   }
   case MT_HAMMING_DIST: {
-    cout << "hamming distance" << endl;
+    // cout << "hamming distance" << endl;
     break;
   }
-  default: {
-    cout << "invalid match type" << endl;
-    return EC_INVALID_PARAM;
   }
-  }
-}
 
-// Add this query to the active query set
-queries.push_back(query);
-return EC_SUCCESS;
+  // Add this query to the active query set
+  queries.push_back(query);
+  return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -40,13 +40,12 @@ LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-FILES = String.o hashTable.o bucket.o queryList.o tree.o hammingArray.o
+FILES = String.o hashTable.o bucket.o queryList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o
 # The name of the library that will be built
 LIBRARY=core
 
 # Build all programs
-all: $(PROGRAMS)
-
+all: clean $(PROGRAMS)
 lib: $(IMPL_O) $(FILES)
 	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)  -I /usr/local/Cellar/openssl@3/3.0.0_1/include/ -L  /usr/local/Cellar/openssl@3/3.0.0_1/lib/ -lcrypto
 
@@ -62,11 +61,17 @@ bucket.o:
 queryList.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/queryList.cpp
 
-tree.o:
-	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/tree.cpp
+BK_Tree.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/BK_Tree.cpp
 	
 hammingArray.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/hammingArray.cpp
+
+MatchArray.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/MatchArray.cpp
+
+MatchTree.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/MatchTree.cpp
 
 String.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/string/String.cpp

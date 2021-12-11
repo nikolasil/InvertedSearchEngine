@@ -3,18 +3,18 @@
 
 #include "../../sigmod/include/core.h"
 #include "../string/String.h"
-#include "../tree/tree.h"
+#include "MatchTree.h"
 
 class MatchArray {
 private:
-  tree **array;
+  MatchTree **array;
   int size;
 
 public:
   MatchArray(int size);
   ~MatchArray();
   int getSize();
-  void insert(String queryWord, int queryId, int maxQueryWords);
+  void insert(String *queryWord, int queryId, int maxQueryWords);
   void deleteMatchTree(int queryId);
 };
 

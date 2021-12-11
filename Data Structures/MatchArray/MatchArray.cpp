@@ -1,11 +1,12 @@
 #include "MatchArray.h"
+#include "MatchTree.h"
 #include <cstring>
 #include <iostream>
 
 using namespace std;
 
 MatchArray::MatchArray(int size) {
-  this->array = new tree *[size](); // initialize MatchArray to null
+  this->array = new MatchTree *[size](); // initialize MatchArray to null
   this->size = size;
 }
 
@@ -20,11 +21,12 @@ int MatchArray::getSize() {
   return this->size;
 }
 
-void MatchArray::insert(String queryWord, int queryId, int maxQueryWords) {
-  tree *matchTree = this->array[queryId];
+void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
+  MatchTree *matchTree = this->array[queryId];
 
   if (matchTree == NULL) {
-    matchTree = new tree(queryId, maxQueryWords); // create and initialize matchTree
+    this->array[queryId] = new MatchTree(maxQueryWords); // create and initialize matchTree
+    matchTree = this->array[queryId];
   }
 
   matchTree->insert(queryWord); // insert query word to matchTree

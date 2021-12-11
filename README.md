@@ -35,17 +35,17 @@ The project is divided into 3 distinct categories :
         unsigned int count;
     };
     ```
-  - **Tree Index** A tree index (BK Tree) is used for searching words that have a specific matching distance from a key word.
+  - **Tree Index** A BK_Tree index (BK Tree) is used for searching words that have a specific matching distance from a key word.
    
 
-- **Functions** The Functions Directory is mainly based from the SIGMOD 2013 Contest and contains an interface for managing the data structures listed above. The main use of functions is to create a tree index to be used as an inverted search engine.
+- **Functions** The Functions Directory is mainly based from the SIGMOD 2013 Contest and contains an interface for managing the data structures listed above. The main use of functions is to create a BK_Tree index to be used as an inverted search engine.
 - **Tests** The Tests Directory contains a testing suite using the [Acutest Testing Framework](https://github.com/mity/acutest). It tests all the data structures for creation,lookup and deletion by using the project's functions.
 
 
 
 ### Default Behavior by Main Function
 
-The Main Function creates 7 entries from the words : [hell,help,fall,small,fell,felt,melt] and initializes an entry list from these words. It then builds a tree index from the entry list and executes the lookup function using the word "henn" as key. The result array contains the words [hell,help].
+The Main Function creates 7 entries from the words : [hell,help,fall,small,fell,felt,melt] and initializes an entry list from these words. It then builds a BK_Tree index from the entry list and executes the lookup function using the word "henn" as key. The result array contains the words [hell,help].
 
 
 ### :grey_exclamation: Additional Information

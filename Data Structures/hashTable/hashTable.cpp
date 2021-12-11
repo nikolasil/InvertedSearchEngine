@@ -19,9 +19,8 @@ HashTable::~HashTable() {
   delete[] this->table;
 }
 
-void HashTable::insert(WordInfo wordInfo) {
+void HashTable::insert(String *word, WordInfo wordInfo) {
   // Hash word with SHA1
-  String word = wordInfo.word;
   char *returnHash = new char[SHA_DIGEST_LENGTH];
   generateHashString(word->getStr(), returnHash);
 
@@ -34,8 +33,8 @@ void HashTable::insert(WordInfo wordInfo) {
   }
 
   // Insert Word into Bucket
-  cout << "Inserting " << word->getStr() << " into Bucket " << index << endl;
-  this->table[index]->addNode(wordInfo);
+  // cout << "Inserting " << word->getStr() << " into Bucket " << index << endl;
+  this->table[index]->addNode(word, wordInfo);
 }
 
 int HashTable::getIndex(char *hash) {

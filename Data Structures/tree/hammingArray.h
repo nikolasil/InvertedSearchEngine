@@ -2,21 +2,21 @@
 #define hammingArray_H
 
 #include "../string/String.h"
-#include "tree.h"
+#include "BK_Tree.h"
 
 #define ARRAY_SIZE 28
 
 class hammingArray {
 private:
-  tree **array;
+  BK_Tree **array;
 
 public:
   hammingArray();
   ~hammingArray();
   // Getters
-  tree *getTree(int index) { return array[index]; };
+  BK_Tree *getTree(int index) { return array[index]; };
   // Setters
-  void setTree(int index, tree *t) { array[index] = t; };
+  void setTree(int index, BK_Tree *t) { array[index] = t; };
   // Methods
   void insert(String *word);
 };

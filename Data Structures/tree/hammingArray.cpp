@@ -6,7 +6,7 @@
 using namespace std;
 // hammingArray
 hammingArray::hammingArray() {
-  this->array = new tree *[ARRAY_SIZE];
+  this->array = new BK_Tree *[ARRAY_SIZE];
 }
 
 void hammingArray::insert(String *word) {

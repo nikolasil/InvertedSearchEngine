@@ -22,15 +22,14 @@ void Bucket::print() {
   // cout << endl;
 }
 
-bucketNode *Bucket::addNode(WordInfo wordInfo) {
-  String word = wordInfo.word;
-  bucketNode *exists = this->getNode(&word);
+bucketNode *Bucket::addNode(String *word, WordInfo wordInfo) {
+  bucketNode *exists = this->getNode(word);
   if (exists != nullptr) {
     exists->addToQueryList(wordInfo);
     return exists;
   }
 
-  bucketNode *newNode = new bucketNode(wordInfo);
+  bucketNode *newNode = new bucketNode(word, wordInfo);
   if (this->head == nullptr) { // no entries
     this->head = newNode;
   } else {
@@ -54,11 +53,11 @@ bucketNode *Bucket::getNode(String *word) {
 
 // Bucket Node
 
-bucketNode::bucketNode(WordInfo wordInfo) {
+bucketNode::bucketNode(String *word, WordInfo wordInfo) {
   this->word = word;
   this->next = nullptr;
   this->list = new queryList();
-  this->list->addQuery(wordInfo);
+  this->addToQueryList(wordInfo);
 }
 
 bucketNode::~bucketNode() {

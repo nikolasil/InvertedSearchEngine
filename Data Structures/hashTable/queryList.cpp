@@ -13,7 +13,7 @@ queryList::~queryList() {
   delete this->head;
 }
 void queryList::addQuery(WordInfo wordInfo) {
-  queryNode *newNode = new queryNode(wordInfo.query_id, wordInfo.maxQueryWords);
+  queryNode *newNode = new queryNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
     this->head = newNode;
@@ -30,16 +30,15 @@ void queryList::print() {
 }
 // queryNode
 
-queryNode::queryNode(int id, int maxQueryWords) {
-  this->id = id;
-  this->maxQueryWords = maxQueryWords;
+queryNode::queryNode(WordInfo info) {
+  this->info = info;
   this->next = nullptr;
 }
 queryNode::~queryNode() {
   delete this->next;
 }
 void queryNode::print() {
-  cout << this->id << " ";
+  cout << "{" << this->getId() << "," << this->getMaxQueryWords() << "}";
   if (this->next) {
     this->next->print();
   }

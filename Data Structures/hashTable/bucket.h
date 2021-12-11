@@ -12,7 +12,7 @@ private:
   bucketNode *next;
 
 public:
-  bucketNode(WordInfo wordInfo);
+  bucketNode(String *word, WordInfo wordInfo);
   ~bucketNode();
   // Getters
   String *getWord() const { return this->word; };
@@ -45,7 +45,7 @@ public:
   void setLast(bucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  bucketNode *addNode(WordInfo wordInfo);
+  bucketNode *addNode(String *word, WordInfo wordInfo);
   bucketNode *getNode(String *word);
   void print();
 };

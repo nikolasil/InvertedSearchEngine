@@ -64,20 +64,6 @@ typedef unsigned int QueryID;
 /// Document ID type.
 typedef unsigned int DocID;
 
-// Keeps all information related to an active query
-typedef struct Query {
-  QueryID query_id;
-  char str[MAX_QUERY_LENGTH];
-  MatchType match_type;
-  unsigned int match_dist;
-} Query;
-
-typedef struct WordInfo {
-  QueryID query_id;
-  String word;
-  unsigned int maxQueryWords;
-} WordInfo;
-
 /// Matching types:
 typedef enum {
   /**
@@ -116,6 +102,19 @@ typedef enum {
    */
   EC_FAIL
 } ErrorCode;
+
+// Keeps all information related to an active query
+typedef struct Query {
+  QueryID query_id;
+  char str[MAX_QUERY_LENGTH];
+  MatchType match_type;
+  unsigned int match_dist;
+} Query;
+
+typedef struct WordInfo {
+  QueryID query_id;
+  unsigned int maxQueryWords;
+} WordInfo;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //*********************************************************************************************
