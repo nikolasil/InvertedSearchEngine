@@ -49,32 +49,33 @@ void BK_Tree::print() {
   cout << endl;
 }
 
-// void BK_Tree::fillTree(const entry_list *list, MatchType type) {
-//   entry *current = list->getStart();
-//   while (current) {
-//     if (type == MT_HAMMING_DIST) {
-//       this->add(new String(current->getWord()));
-//     }
-//     current = current->getNext();
-//   }
-// }
+heInfoList *BK_Tree::lookup(String *word) {
+  heInfoList *foundWords = new heInfoList();
+  if (this->root == nullptr) {
+    return foundWords;
+  }
+  int diff = word->hammingDistance(this->root->getData());
+  for (int i = 1; i <= 3; i++) {
+    if (diff <= i) {
+      const String *w = new String(this->root->getData());
+      cout << "key ";
+      word->print();
+      cout << endl;
+      cout << "parent ";
+      this->root->getData()->print();
+      cout << endl;
+      foundWords->mergeLists(this->root->getInfo(), i);
+      break;
+    }
+  }
 
-// entry_list *BK_Tree::lookup(String *word, int threshold) {
-//   entry_list *foundWords = new entry_list();
-//   if (this->root == nullptr) {
-//     return foundWords;
-//   }
-//   int diff = hammingDistance(word, this->root->getData());
-//   if (diff <= threshold) {
-//     const String *w = new String(this->root->getData());
-//     foundWords->addEntry(new entry(w, nullptr));
-//     // cout << "Added " << this->root->getData()->getStr() << " with diff " << diff
-//     //      << endl;
-//   }
-
-//   this->root->lookup(word, threshold, &foundWords, diff);
-//   return foundWords;
-// }
+  this->root->lookup(word, 1, &foundWords, diff);
+  if (foundWords->getCount() == 0) {
+    delete foundWords;
+    return nullptr;
+  }
+  return foundWords;
+}
 
 // Tree Node
 BK_TreeNode::BK_TreeNode(String *d, HEInfo info) {
@@ -157,41 +158,31 @@ void BK_TreeNode::print() {
   cout << endl;
 }
 
-// void BK_TreeNode::lookup(String *word, int threshold, entry_list **foundWords, int diff) {
-//   BK_TreeNode *child;
-//   // int diff = hammingDistance(word, this->getData());
-//   int min = diff - threshold;
-//   int max = diff + threshold;
-//   // cout << "Node " << this->getData()->getStr() << " with diff=" << diff
-//   //      << ",space=[" << min << "," << max << "]" << endl;
+void BK_TreeNode::lookup(String *word, int initialThreshold, heInfoList **foundWords, int diff) {
+  BK_TreeNode *child;
+  BK_TreeEdge *currentEdge = this->getFirstChild();
+  while (currentEdge != nullptr) {
+    int threshold = initialThreshold;
+    child = currentEdge->getChild();
+    diff = child->getData()->hammingDistance(word);
+    for (int i = threshold; i <= 3; i++) {
+      if (diff <= threshold) {
+        const String *w = new String(child->getData());
+        (*foundWords)->mergeLists(this->getInfo(), i);
+        break;
+      }
+    }
 
-//   BK_TreeEdge *currentEdge = this->getFirstChild();
+    for (int i = threshold; i <= 3; i++) {
+      if (threshold < 0 && diff <= (threshold / 2)) {
+        child->lookup(word, threshold, foundWords, diff);
+        break;
+      }
+    }
 
-//   while (currentEdge != nullptr) {
-//     child = currentEdge->getChild();
-//     diff = hammingDistance(child->getData(), word);
-//     // cout << "Child " << child->getData()->getStr()
-//     //      << " of node:" << this->getData()->getStr() << endl;
-//     if (diff <= threshold) {
-//       const String *w = new String(child->getData());
-//       (*foundWords)->addEntry(new entry(w, nullptr));
-//       // cout << "   diff=" << diff << " from " << word->getStr()
-//       //      << " | added to found words" << endl;
-//     } else {
-//       // cout << "   diff=" << diff << " from " << word->getStr()
-//       //      << " | NOT added to found words" << endl;
-//     }
-//     if (diff >= min && diff <= max) {
-//       // cout << "   diff was in the space=[" << min << "," << max
-//       //      << "] | calling subtree" << endl;
-//       child->lookup(word, threshold, foundWords, diff);
-//     } else {
-//       // cout << "   diff was NOT in the space=[" << min << "," << max
-//       //      << "] | NOT calling subtree" << endl;
-//     }
-//     currentEdge = currentEdge->getNext();
-//   }
-// }
+    currentEdge = currentEdge->getNext();
+  }
+}
 // Tree Edge
 
 BK_TreeEdge::BK_TreeEdge(int w, BK_TreeNode *c) {

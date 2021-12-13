@@ -26,7 +26,7 @@ exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
-      cout << "Found exact match" << endl;
+      // cout << "Found exact match" << endl;
       (*matchedWord)->setStr(temp->getWord()->getStr());
       cout << "matched key=" << word->getStr() << " word=" << (*matchedWord)->getStr() << endl;
       return temp->getList();

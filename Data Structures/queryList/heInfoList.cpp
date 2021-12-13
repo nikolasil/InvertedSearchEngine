@@ -24,9 +24,25 @@ void heInfoList::addQuery(HEInfo wordInfo) {
   count++;
 }
 
+void heInfoList::mergeLists(heInfoList *list, int threshold) {
+  heInfoNode *curr = list->getHead();
+  if (curr != nullptr) {
+    while (curr != nullptr) {
+      if (curr->getWordInfo().matchDist < threshold) {
+        this->addQuery(curr->getWordInfo());
+      } else {
+        cout << 'Did not add: ' << curr->getId() << " " << threshold << " " << curr->getMatchDist() << endl;
+      }
+      curr = curr->getNext();
+    }
+  }
+}
+
 void heInfoList::print() {
-  this->head->print();
-  cout << endl;
+  if (this->head != nullptr) {
+    this->head->print();
+    cout << endl;
+  }
 }
 // heInfoNode
 

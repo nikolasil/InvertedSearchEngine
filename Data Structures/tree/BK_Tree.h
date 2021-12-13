@@ -49,9 +49,9 @@ public:
   void setData(String *data) { this->data = data; }; // set new word of node
 
   // Utils
-  BK_TreeNode *findChild(int w); // Search for a child node that contains the word w
-  // void lookup(String *word, int threshold, entry_list **foundWords, int diff); // Lookup word
-  void addChild(int w, BK_TreeNode *c); // Add child node
+  BK_TreeNode *findChild(int w);                                               // Search for a child node that contains the word w
+  void lookup(String *word, int threshold, heInfoList **foundWords, int diff); // Lookup word
+  void addChild(int w, BK_TreeNode *c);                                        // Add child node
   void print();
 };
 
@@ -69,8 +69,7 @@ public:
   // Utils
   void print();
   void add(String *word, HEInfo info); // add word to BK_Tree
-  // void fillTree(const entry_list *list, MatchType type); // fill BK_Tree based from the words of an entry list
-  // entry_list *lookup(String *word, int threshold);       // lookup a word in index
+  heInfoList *lookup(String *word);    // lookup a word in index
 };
 
 #endif

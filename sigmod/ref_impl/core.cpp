@@ -261,35 +261,47 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
 
   char *wordToken = strtok(cur_doc_str, " ");
   while (wordToken != NULL) {
-    cout << wordToken << endl;
-    // hashTable
-    String *matchedWord = new String("");
-
-    exactInfoList *exactList = ht->lookup(new String(wordToken), &matchedWord);
-    if (exactList != nullptr) {
-      exactInfoNode *cur = exactList->getHead();
-      while (cur != nullptr) {
-        matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
-        cur = cur->getNext();
-      }
-      matchArray->print(cur->getId());
-    }
+    String *word = new String(wordToken);
+    // String *matchedWord = new String("");
+    // // hashTable
+    // exactInfoList *exactList = ht->lookup(word, &matchedWord);
+    // if (exactList != nullptr) {
+    //   cout << "Lookup Success" << endl;
+    //   exactList->print();
+    //   exactInfoNode *cur = exactList->getHead();
+    //   while (cur != nullptr) {
+    //     matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
+    //     cur = cur->getNext();
+    //   }
+    // }
     // editDistance
 
+    heInfoList *editList = edit->lookup(word);
+    if (editList != nullptr) {
+      cout << "Lookup Success ";
+      word->print();
+      cout << endl;
+
+      editList->print();
+    }
     // hammingDistance
+
     wordToken = strtok(NULL, " ");
   }
 
-  // Document doc;
-  // doc.doc_id = doc_id;
-  // doc.num_res = query_ids.size();
-  // doc.query_ids = 0;
-  // if (doc.num_res)
-  //   doc.query_ids = (unsigned int *)malloc(doc.num_res * sizeof(unsigned int));
-  // for (i = 0; i < doc.num_res; i++)
-  //   doc.query_ids[i] = query_ids[i];
-  // Add this result to the set of undelivered results
-  // docs.push_back(doc);
+  ResultList *rl = matchArray->getMatchedIds();
+  Document doc;
+  doc.doc_id = doc_id;
+  doc.num_res = rl->getCount();
+  doc.query_ids = 0;
+  ResultListNode *cur = rl->getHead();
+  int k = 0;
+  while (cur != nullptr) {
+    doc.query_ids[k++] = cur->getId();
+    cur = cur->getNext();
+  }
+
+  docs.push_back(doc);
   delete matchArray;
   return EC_SUCCESS;
 }

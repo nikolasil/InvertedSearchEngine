@@ -92,6 +92,6 @@ exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
   }
 
   // Lookup Word in Bucket
-  cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
+  // cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
   return this->table[index]->lookup(H, matchedWord);
 }

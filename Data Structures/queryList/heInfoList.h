@@ -14,13 +14,13 @@ public:
   int getId() const { return this->info.query_id; };
   unsigned int getMaxQueryWords() const { return this->info.maxQueryWords; };
   HEInfo getWordInfo() const { return this->info; };
-  heInfoNode *getNext(heInfoNode *next) const { return this->next; };
+  heInfoNode *getNext() const { return this->next; };
   unsigned int getMatchDist() const { return this->info.matchDist; };
   // Setters
   void setId(int id) { this->info.query_id = id; };
   void setMaxQueryWords(int max) { this->info.maxQueryWords = max; };
   void setWordInfo(HEInfo wi) { this->info = wi; };
-  void setNext(heInfoNode *next) { this->next = next; };
+  void setNext(heInfoNode *n) { this->next = n; };
   void setMatchDist(unsigned int dist) { this->info.matchDist = dist; };
   void print();
 };
@@ -44,6 +44,7 @@ public:
   void setCount(int count) { this->count = count; };
   // Methods
   void addQuery(HEInfo wordInfo);
+  void mergeLists(heInfoList *list, int threshold);
   void print();
 };
 
