@@ -77,3 +77,23 @@ int HashTable::hexadecimalToDecimal(char hexVal[]) {
   }
   return abs(dec_val);
 }
+
+exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
+  // Hash word with SHA1
+  char *returnHash = new char[SHA_DIGEST_LENGTH];
+  generateHashString(H->getStr(), returnHash);
+
+  // Get Bucket Index in Hash Table
+  int index = getIndex(returnHash);
+
+  // If Bucket is Empty, Create a new Bucket
+  if (this->table[index] == NULL) {
+    // cout << "Bucket was empty" << endl;
+    *matchedWord = NULL;
+    return NULL;
+  }
+
+  // Lookup Word in Bucket
+  // cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
+  return this->table[index]->lookup(H, *matchedWord);
+}

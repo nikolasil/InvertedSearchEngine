@@ -142,6 +142,7 @@ MatchArray *matchArray = nullptr;
 HashTable *ht;
 hammingArray *hamming;
 BK_Tree *edit;
+int maxQueryId = 0;
 
 ErrorCode InitializeIndex() {
   ht = new HashTable();
@@ -158,7 +159,6 @@ ErrorCode DestroyIndex() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-int k = 0;
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
@@ -219,17 +219,20 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   }
   }
 
-  cout << "______________ EXACT"
-       << "_______________" << endl;
-  ht->print();
-  cout << "______________ EDIT"
-       << "_______________" << endl;
-  edit->print();
-  cout << "______________ HAMMING"
-       << "_______________" << endl;
-  hamming->print();
+  // cout << "______________ EXACT"
+  //      << "_______________" << endl;
+  // ht->print();
+  // cout << "______________ EDIT"
+  //      << "_______________" << endl;
+  // edit->print();
+  // cout << "______________ HAMMING"
+  //      << "_______________" << endl;
+  // hamming->print();
 
   // Add this query to the active query set
+  if (maxQueryId < query_id)
+    maxQueryId = query_id;
+
   queries.push_back(query);
   return EC_SUCCESS;
 }
@@ -254,88 +257,39 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
-  unsigned int i, n = queries.size();
-  vector<unsigned int> query_ids;
+  MatchArray *matchArray = new MatchArray(maxQueryId);
 
-  // Iterate on all active queries to compare them with this new document
-  for (i = 0; i < n; i++) {
-    bool matching_query = true;
-    Query *quer = &queries[i];
+  char *wordToken = strtok(cur_doc_str, " ");
+  while (wordToken != NULL) {
+    // cout << wordToken << endl;
+    // hashTable
+    String *matchedWord = new String("");
 
-    int iq = 0;
-    while (quer->str[iq] && matching_query) {
-      while (quer->str[iq] == ' ')
-        iq++;
-      if (!quer->str[iq])
-        break;
-      char *qword = &quer->str[iq];
-
-      int lq = iq;
-      while (quer->str[iq] && quer->str[iq] != ' ')
-        iq++;
-      char qt = quer->str[iq];
-      quer->str[iq] = 0;
-      lq = iq - lq;
-
-      bool matching_word = false;
-
-      int id = 0;
-      while (cur_doc_str[id] && !matching_word) {
-        while (cur_doc_str[id] == ' ')
-          id++;
-        if (!cur_doc_str[id])
-          break;
-        char *dword = &cur_doc_str[id];
-
-        int ld = id;
-        while (cur_doc_str[id] && cur_doc_str[id] != ' ')
-          id++;
-        char dt = cur_doc_str[id];
-        cur_doc_str[id] = 0;
-
-        ld = id - ld;
-
-        if (quer->match_type == MT_EXACT_MATCH) {
-          if (strcmp(qword, dword) == 0)
-            matching_word = true;
-        } else if (quer->match_type == MT_HAMMING_DIST) {
-          unsigned int num_mismatches = HammingDistance(qword, lq, dword, ld);
-          if (num_mismatches <= quer->match_dist)
-            matching_word = true;
-        } else if (quer->match_type == MT_EDIT_DIST) {
-          unsigned int edit_dist = EditDistance(qword, lq, dword, ld);
-          if (edit_dist <= quer->match_dist)
-            matching_word = true;
-        }
-
-        cur_doc_str[id] = dt;
+    exactInfoList *exactList = ht->lookup(new String(wordToken), &matchedWord);
+    if (exactList != nullptr) {
+      exactInfoNode *cur = exactList->getHead();
+      while (cur != nullptr) {
+        cout << "{" << cur->getWordInfo().query_id << " " << cur->getWordInfo().maxQueryWords << "} ";
+        
+        cur = cur->getNext();
       }
-
-      quer->str[iq] = qt;
-
-      if (!matching_word) {
-        // This query has a word that does not match any word in the document
-        matching_query = false;
-      }
+      cout << endl;
     }
-
-    if (matching_query) {
-      // This query matches the document
-      query_ids.push_back(quer->query_id);
-    }
+    // editDistance
+    // hammingDistance
+    wordToken = strtok(NULL, " ");
   }
-
-  Document doc;
-  doc.doc_id = doc_id;
-  doc.num_res = query_ids.size();
-  doc.query_ids = 0;
-  if (doc.num_res)
-    doc.query_ids = (unsigned int *)malloc(doc.num_res * sizeof(unsigned int));
-  for (i = 0; i < doc.num_res; i++)
-    doc.query_ids[i] = query_ids[i];
+  // Document doc;
+  // doc.doc_id = doc_id;
+  // doc.num_res = query_ids.size();
+  // doc.query_ids = 0;
+  // if (doc.num_res)
+  //   doc.query_ids = (unsigned int *)malloc(doc.num_res * sizeof(unsigned int));
+  // for (i = 0; i < doc.num_res; i++)
+  //   doc.query_ids[i] = query_ids[i];
   // Add this result to the set of undelivered results
-  docs.push_back(doc);
-
+  // docs.push_back(doc);
+  delete matchArray;
   return EC_SUCCESS;
 }
 

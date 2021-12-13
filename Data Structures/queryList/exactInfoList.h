@@ -14,7 +14,7 @@ public:
   int getId() const { return this->info.query_id; };
   unsigned int getMaxQueryWords() const { return this->info.maxQueryWords; };
   ExactInfo getWordInfo() const { return this->info; };
-  exactInfoNode *getNext(exactInfoNode *next) const { return this->next; };
+  exactInfoNode *getNext() const { return this->next; };
   // Setters
   void setId(int id) { this->info.query_id = id; };
   void setMaxQueryWords(int max) { this->info.maxQueryWords = max; };

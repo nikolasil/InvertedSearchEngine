@@ -27,7 +27,7 @@ void BK_Tree::add(String *word, HEInfo info) {
     // Compare word with node data
     int diff = word->hammingDistance(current->getData());
     if (diff == 0) {
-      cout << "same : " << word->getStr() << endl;
+      // cout << "same : " << word->getStr() << endl;
       current->getInfo()->addQuery(info);
       return;
     }

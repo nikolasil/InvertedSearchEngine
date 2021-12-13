@@ -45,6 +45,7 @@ public:
   void setLast(bucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
+  exactInfoList *lookup(String *word, String *matchedWord);
   bucketNode *addNode(String *word, ExactInfo wordInfo);
   bucketNode *getNode(String *word);
   void print();
