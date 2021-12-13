@@ -56,7 +56,7 @@ bucketNode *Bucket::getNode(String *word) {
 bucketNode::bucketNode(String *word, ExactInfo wordInfo) {
   this->word = word;
   this->next = nullptr;
-  this->list = new queryList();
+  this->list = new exactInfoList();
   this->addToQueryList(wordInfo);
 }
 

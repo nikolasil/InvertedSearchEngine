@@ -1,44 +1,44 @@
-#ifndef queryList_H
-#define queryList_H
+#ifndef EXACTINFOLIST_H
+#define EXACTINFOLIST_H
 
 #include "../../sigmod/include/core.h"
-class queryNode {
+class exactInfoNode {
 private:
   ExactInfo info;
-  queryNode *next;
+  exactInfoNode *next;
 
 public:
-  queryNode(ExactInfo info);
-  ~queryNode();
+  exactInfoNode(ExactInfo info);
+  ~exactInfoNode();
   //  Getters
   int getId() const { return this->info.query_id; };
   unsigned int getMaxQueryWords() const { return this->info.maxQueryWords; };
   ExactInfo getWordInfo() const { return this->info; };
-  queryNode *getNext(queryNode *next) const { return this->next; };
+  exactInfoNode *getNext(exactInfoNode *next) const { return this->next; };
   // Setters
   void setId(int id) { this->info.query_id = id; };
   void setMaxQueryWords(int max) { this->info.maxQueryWords = max; };
   void setWordInfo(ExactInfo wi) { this->info = wi; };
-  void setNext(queryNode *next) { this->next = next; };
+  void setNext(exactInfoNode *next) { this->next = next; };
   void print();
 };
 
-class queryList {
+class exactInfoList {
 private:
-  queryNode *head;
-  queryNode *last;
+  exactInfoNode *head;
+  exactInfoNode *last;
   int count;
 
 public:
-  queryList();
-  ~queryList();
+  exactInfoList();
+  ~exactInfoList();
   // Getters
-  queryNode *getHead() const { return this->head; };
-  queryNode *getLast() const { return this->last; };
+  exactInfoNode *getHead() const { return this->head; };
+  exactInfoNode *getLast() const { return this->last; };
   int getCount() const { return this->count; };
   // Setters
-  void setHead(queryNode *head) { this->head = head; };
-  void setLast(queryNode *last) { this->last = last; };
+  void setHead(exactInfoNode *head) { this->head = head; };
+  void setLast(exactInfoNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
   void addQuery(ExactInfo wordInfo);

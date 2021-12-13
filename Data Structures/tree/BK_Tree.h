@@ -7,6 +7,7 @@ class BK_Tree;
 
 // #include "../../Functions/functions.h"
 #include "../../sigmod/include/core.h"
+#include "../queryList/heInfoList.h"
 #include "../string/String.h"
 
 class BK_TreeEdge {
@@ -34,16 +35,16 @@ class BK_TreeNode {
 private:
   String *data;
   BK_TreeEdge *childs;
-  HEInfo info;
+  heInfoList *info;
 
 public:
   BK_TreeNode(String *d, HEInfo info);
   ~BK_TreeNode();
 
   // Getters
-  BK_TreeEdge *getFirstChild(); // get first child edge of node
-  String *getData();            // get word of node
-
+  BK_TreeEdge *getFirstChild();                       // get first child edge of node
+  String *getData();                                  // get word of node
+  heInfoList *getInfo() const { return this->info; }; // get info list of node
   // Setters
   void setData(String *data) { this->data = data; }; // set new word of node
 

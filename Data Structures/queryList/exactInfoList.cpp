@@ -1,19 +1,19 @@
-#include "queryList.h"
+#include "exactInfoList.h"
 #include <cstring>
 #include <iostream>
 using namespace std;
 
-// queryList
-queryList::queryList() {
+// exactInfoList
+exactInfoList::exactInfoList() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
 }
-queryList::~queryList() {
+exactInfoList::~exactInfoList() {
   delete this->head;
 }
-void queryList::addQuery(ExactInfo wordInfo) {
-  queryNode *newNode = new queryNode(wordInfo);
+void exactInfoList::addQuery(ExactInfo wordInfo) {
+  exactInfoNode *newNode = new exactInfoNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
     this->head = newNode;
@@ -24,21 +24,21 @@ void queryList::addQuery(ExactInfo wordInfo) {
   count++;
 }
 
-void queryList::print() {
+void exactInfoList::print() {
   this->head->print();
   cout << endl;
 }
-// queryNode
+// exactInfoNode
 
-queryNode::queryNode(ExactInfo info) {
+exactInfoNode::exactInfoNode(ExactInfo info) {
   this->info = info;
   this->next = nullptr;
 }
-queryNode::~queryNode() {
+exactInfoNode::~exactInfoNode() {
   delete this->next;
 }
-void queryNode::print() {
-  cout << "{" << this->getId() << "," << this->getMaxQueryWords() << "}";
+void exactInfoNode::print() {
+  cout << "{" << this->getId() << "," << this->getMaxQueryWords() << "}  ";
   if (this->next) {
     this->next->print();
   }

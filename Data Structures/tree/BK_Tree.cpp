@@ -26,11 +26,16 @@ void BK_Tree::add(String *word, HEInfo info) {
   while (true) {
     // Compare word with node data
     int diff = word->hammingDistance(current->getData());
-
+    if (diff == 0) {
+      cout << "same : " << word->getStr() << endl;
+      current->getInfo()->addQuery(info);
+      return;
+    }
     // cout << "Difference is " << diff << " -> " << word->getStr() << endl;
     // Search for child node with equal weight in edge
     BK_TreeNode *childNode = nullptr;
     if ((childNode = current->findChild(diff)) == nullptr) {
+
       current->addChild(diff, new BK_TreeNode(word, info));
       return;
     }
@@ -39,7 +44,8 @@ void BK_Tree::add(String *word, HEInfo info) {
 }
 
 void BK_Tree::print() {
-  this->root->print();
+  if (this->root)
+    this->root->print();
   cout << endl;
 }
 
@@ -74,7 +80,8 @@ void BK_Tree::print() {
 BK_TreeNode::BK_TreeNode(String *d, HEInfo info) {
   this->data = d;
   this->childs = nullptr;
-  this->info = info;
+  this->info = new heInfoList();
+  this->info->addQuery(info);
 }
 
 BK_TreeNode::~BK_TreeNode() {
@@ -140,13 +147,14 @@ void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
 }
 
 void BK_TreeNode::print() {
+  cout << "Node : " << this->data->getStr();
+  this->info->print();
+  cout << endl;
 
-  cout << endl;
-  cout << endl;
-  cout << this->data->getStr() << " ";
   if (this->childs != nullptr) {
     this->childs->print();
   }
+  cout << endl;
 }
 
 // void BK_TreeNode::lookup(String *word, int threshold, entry_list **foundWords, int diff) {
@@ -213,11 +221,8 @@ void BK_TreeEdge::setNext(BK_TreeEdge *next) {
 BK_TreeNode *BK_TreeEdge::getChild() { return this->child; }
 
 void BK_TreeEdge::print() {
-  cout << "[" << this->weight << "->" << this->child->getData()->getStr()
-       << "], ";
   if (this->next != nullptr) {
     this->next->print();
   }
-  // cout << endl;
   this->child->print();
 }

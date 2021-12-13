@@ -2,13 +2,13 @@
 #define Bucket_H
 
 #include "../../sigmod/include/core.h"
+#include "../queryList/exactInfoList.h"
 #include "../string/String.h"
-#include "queryList.h"
 
 class bucketNode {
 private:
   String *word;
-  queryList *list;
+  exactInfoList *list;
   bucketNode *next;
 
 public:
@@ -16,11 +16,11 @@ public:
   ~bucketNode();
   // Getters
   String *getWord() const { return this->word; };
-  queryList *getList() const { return this->list; };
+  exactInfoList *getList() const { return this->list; };
   bucketNode *getNext() const { return this->next; };
   // Setters
   void setWord(String *word) { this->word = word; };
-  void setList(queryList *list) { this->list = list; };
+  void setList(exactInfoList *list) { this->list = list; };
   void setNext(bucketNode *next) { this->next = next; };
   // Methods
   void addToQueryList(ExactInfo wordInfo);

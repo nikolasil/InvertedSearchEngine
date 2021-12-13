@@ -6,7 +6,7 @@ using namespace std;
 // HashTable
 
 HashTable::HashTable(int size) {
-  this->table = new Bucket *[size];
+  this->table = new Bucket *[size]();
   this->size = size;
 }
 

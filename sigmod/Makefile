@@ -40,7 +40,7 @@ LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-FILES = String.o hashTable.o bucket.o queryList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o
+FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o
 # The name of the library that will be built
 LIBRARY=core
 
@@ -58,9 +58,12 @@ hashTable.o:
 bucket.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/bucket.cpp
 
-queryList.o:
-	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/queryList.cpp
+exactInfoList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/queryList/exactInfoList.cpp
 
+heInfoList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/queryList/heInfoList.cpp
+	
 BK_Tree.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/BK_Tree.cpp
 	

@@ -219,6 +219,16 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   }
   }
 
+  cout << "______________ EXACT"
+       << "_______________" << endl;
+  ht->print();
+  cout << "______________ EDIT"
+       << "_______________" << endl;
+  edit->print();
+  cout << "______________ HAMMING"
+       << "_______________" << endl;
+  hamming->print();
+
   // Add this query to the active query set
   queries.push_back(query);
   return EC_SUCCESS;
