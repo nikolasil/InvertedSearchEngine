@@ -12,7 +12,7 @@ queryList::queryList() {
 queryList::~queryList() {
   delete this->head;
 }
-void queryList::addQuery(WordInfo wordInfo) {
+void queryList::addQuery(ExactInfo wordInfo) {
   queryNode *newNode = new queryNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
@@ -30,7 +30,7 @@ void queryList::print() {
 }
 // queryNode
 
-queryNode::queryNode(WordInfo info) {
+queryNode::queryNode(ExactInfo info) {
   this->info = info;
   this->next = nullptr;
 }

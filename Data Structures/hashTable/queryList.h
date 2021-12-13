@@ -4,21 +4,21 @@
 #include "../../sigmod/include/core.h"
 class queryNode {
 private:
-  WordInfo info;
+  ExactInfo info;
   queryNode *next;
 
 public:
-  queryNode(WordInfo info);
+  queryNode(ExactInfo info);
   ~queryNode();
   //  Getters
   int getId() const { return this->info.query_id; };
   unsigned int getMaxQueryWords() const { return this->info.maxQueryWords; };
-  WordInfo getWordInfo() const { return this->info; };
+  ExactInfo getWordInfo() const { return this->info; };
   queryNode *getNext(queryNode *next) const { return this->next; };
   // Setters
   void setId(int id) { this->info.query_id = id; };
   void setMaxQueryWords(int max) { this->info.maxQueryWords = max; };
-  void setWordInfo(WordInfo wi) { this->info = wi; };
+  void setWordInfo(ExactInfo wi) { this->info = wi; };
   void setNext(queryNode *next) { this->next = next; };
   void print();
 };
@@ -41,7 +41,7 @@ public:
   void setLast(queryNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  void addQuery(WordInfo wordInfo);
+  void addQuery(ExactInfo wordInfo);
   void print();
 };
 

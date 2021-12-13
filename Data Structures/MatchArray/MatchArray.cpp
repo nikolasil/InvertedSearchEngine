@@ -30,6 +30,7 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   // check if the query word is matched
   if (matchTree->matched()) {
     this->matchedIds->add(queryId);
+    // test
   }
 }
 

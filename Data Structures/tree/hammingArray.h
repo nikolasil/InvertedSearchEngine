@@ -1,6 +1,7 @@
 #ifndef hammingArray_H
 #define hammingArray_H
 
+#include "../../sigmod/include/core.h"
 #include "../string/String.h"
 #include "BK_Tree.h"
 
@@ -18,7 +19,7 @@ public:
   // Setters
   void setTree(int index, BK_Tree *t) { array[index] = t; };
   // Methods
-  void insert(String *word);
+  void insert(String *word, HEInfo info);
 };
 
 #endif

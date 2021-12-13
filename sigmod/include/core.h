@@ -111,10 +111,16 @@ typedef struct Query {
   unsigned int match_dist;
 } Query;
 
-typedef struct WordInfo {
+typedef struct ExactInfo {
   QueryID query_id;
   unsigned int maxQueryWords;
-} WordInfo;
+} ExactInfo;
+
+typedef struct HEInfo {
+  QueryID query_id;
+  unsigned int maxQueryWords;
+  unsigned int matchDist;
+} HEInfo;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //*********************************************************************************************

@@ -6,6 +6,7 @@ class BK_TreeNode;
 class BK_Tree;
 
 // #include "../../Functions/functions.h"
+#include "../../sigmod/include/core.h"
 #include "../string/String.h"
 
 class BK_TreeEdge {
@@ -33,9 +34,10 @@ class BK_TreeNode {
 private:
   String *data;
   BK_TreeEdge *childs;
+  HEInfo info;
 
 public:
-  BK_TreeNode(String *d);
+  BK_TreeNode(String *d, HEInfo info);
   ~BK_TreeNode();
 
   // Getters
@@ -65,7 +67,7 @@ public:
 
   // Utils
   void print();
-  void add(String *word); // add word to BK_Tree
+  void add(String *word, HEInfo info); // add word to BK_Tree
   // void fillTree(const entry_list *list, MatchType type); // fill BK_Tree based from the words of an entry list
   // entry_list *lookup(String *word, int threshold);       // lookup a word in index
 };

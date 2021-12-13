@@ -19,7 +19,7 @@ HashTable::~HashTable() {
   delete[] this->table;
 }
 
-void HashTable::insert(String *word, WordInfo wordInfo) {
+void HashTable::insert(String *word, ExactInfo wordInfo) {
   // Hash word with SHA1
   char *returnHash = new char[SHA_DIGEST_LENGTH];
   generateHashString(word->getStr(), returnHash);

@@ -30,11 +30,14 @@
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
 #include "../../Data Structures/string/String.h"
+#include "../../Data Structures/tree/BK_Tree.h"
+#include "../../Data Structures/tree/hammingArray.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,10 +140,13 @@ MatchArray *matchArray = nullptr;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 HashTable *ht;
-// hammingArray *hamming;
-// BK_Tree *edit;
+hammingArray *hamming;
+BK_Tree *edit;
+
 ErrorCode InitializeIndex() {
   ht = new HashTable();
+  hamming = new hammingArray();
+  edit = new BK_Tree();
   return EC_SUCCESS;
 }
 
@@ -162,40 +168,52 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   query.match_type = match_type;
   query.match_dist = match_dist;
 
+  char temp_query_str[MAX_QUERY_LENGTH];
+  strcpy(temp_query_str, query_str);
+  int maxQueryWords = 0;
+  char *wordToken = strtok(temp_query_str, " ");
+  while (wordToken != NULL) {
+    maxQueryWords++;
+    wordToken = strtok(NULL, " ");
+  }
+  strcpy(temp_query_str, query_str);
+  wordToken = strtok(temp_query_str, " ");
+
   switch (match_type) {
   case MT_EXACT_MATCH: {
-    char query_str0[MAX_QUERY_LENGTH];
-    strcpy(query_str0, query_str);
-    int maxQueryWords = 0;
-    char *wordToken = strtok(query_str0, " ");
+    ExactInfo exactInfo;
+    exactInfo.query_id = query_id;
+    exactInfo.maxQueryWords = maxQueryWords;
+
     while (wordToken != NULL) {
-      maxQueryWords++;
+      ht->insert(new String(wordToken), exactInfo);
       wordToken = strtok(NULL, " ");
     }
-    strcpy(query_str0, query_str);
-    wordToken = strtok(query_str0, " ");
-    while (wordToken != NULL) {
-      // cout << "." << wordToken << "." << endl;
-      WordInfo wordInfo;
-      wordInfo.query_id = query_id;
-      wordInfo.maxQueryWords = maxQueryWords;
-      ht->insert(new String(wordToken), wordInfo);
-      wordToken = strtok(NULL, " ");
-    }
-    // cout << "HashTable print" << endl;
-    // ht->print();
-    // if (k++ == 10) {
-    //   cout << query_id << "." << query_str << "." << endl;
-    //   exit(0);
-    // }
     break;
   }
   case MT_EDIT_DIST: {
     // cout << "edit distance" << endl;
+    HEInfo heInfo;
+    heInfo.query_id = query_id;
+    heInfo.maxQueryWords = maxQueryWords;
+    heInfo.matchDist = match_dist;
+
+    while (wordToken != NULL) {
+      edit->add(new String(wordToken), heInfo);
+      wordToken = strtok(NULL, " ");
+    }
     break;
   }
   case MT_HAMMING_DIST: {
-    // cout << "hamming distance" << endl;
+    HEInfo heInfo;
+    heInfo.query_id = query_id;
+    heInfo.maxQueryWords = maxQueryWords;
+    heInfo.matchDist = match_dist;
+
+    while (wordToken != NULL) {
+      hamming->insert(new String(wordToken), heInfo);
+      wordToken = strtok(NULL, " ");
+    }
     break;
   }
   }

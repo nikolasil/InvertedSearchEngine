@@ -15,12 +15,12 @@ BK_Tree::~BK_Tree() {
   }
 }
 
-void BK_Tree::add(String *word) {
+void BK_Tree::add(String *word, HEInfo info) {
   BK_TreeNode *current = this->root;
 
   if (current == nullptr) {
     // cout << "root : " << word->getStr() << endl;
-    this->root = new BK_TreeNode(word);
+    this->root = new BK_TreeNode(word, info);
     return;
   }
   while (true) {
@@ -31,7 +31,7 @@ void BK_Tree::add(String *word) {
     // Search for child node with equal weight in edge
     BK_TreeNode *childNode = nullptr;
     if ((childNode = current->findChild(diff)) == nullptr) {
-      current->addChild(diff, new BK_TreeNode(word));
+      current->addChild(diff, new BK_TreeNode(word, info));
       return;
     }
     current = childNode;
@@ -71,9 +71,10 @@ void BK_Tree::print() {
 // }
 
 // Tree Node
-BK_TreeNode::BK_TreeNode(String *d) {
+BK_TreeNode::BK_TreeNode(String *d, HEInfo info) {
   this->data = d;
   this->childs = nullptr;
+  this->info = info;
 }
 
 BK_TreeNode::~BK_TreeNode() {

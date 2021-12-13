@@ -26,6 +26,7 @@ class MatchTree {
 private:
   MatchTreeNode *root;
   int maxWords;
+  bool flag;
   int count;
 
 public:

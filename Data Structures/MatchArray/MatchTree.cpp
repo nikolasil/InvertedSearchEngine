@@ -6,6 +6,7 @@ using namespace std;
 
 MatchTree::MatchTree(int maxWords) {
   this->count = 0;
+  this->flag = false;
   this->maxWords = maxWords;
   this->root = nullptr;
 }
@@ -40,9 +41,8 @@ void MatchTree::insert(String *word) {
   }
 }
 bool MatchTree::matched() {
-  if (this->count == this->maxWords) {
-    this->count++; // to avoid return it to the future again
-    return true;
+  if ((this->count == this->maxWords) && !flag) {
+    return this->flag = true; // to avoid return it to the future again
   }
   return false;
 }

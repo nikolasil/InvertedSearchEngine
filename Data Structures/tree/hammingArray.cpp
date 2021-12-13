@@ -9,6 +9,6 @@ hammingArray::hammingArray() {
   this->array = new BK_Tree *[ARRAY_SIZE];
 }
 
-void hammingArray::insert(String *word) {
-  this->array[strlen(word->getStr()) - 4]->add(word);
+void hammingArray::insert(String *word, HEInfo info) {
+  this->array[strlen(word->getStr()) - 4]->add(word, info);
 }
