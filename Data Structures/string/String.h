@@ -17,6 +17,7 @@ public:
   bool exactMatch(String *s);     // Exact match
   int hammingDistance(String *s); // same size words
   int editDistance(String *s);    // different size words
+  int compare(String *s);         // compare two strings
   // Methods
   void print();
 };

@@ -26,6 +26,7 @@ public:
   // Methods
   void insert(String *queryWord, int queryId, int maxQueryWords);
   void deleteMatchTree(int queryId);
+  void print(int queryId);
 };
 
 #endif

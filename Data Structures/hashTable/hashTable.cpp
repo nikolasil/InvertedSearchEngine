@@ -88,12 +88,10 @@ exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
 
   // If Bucket is Empty, Create a new Bucket
   if (this->table[index] == NULL) {
-    // cout << "Bucket was empty" << endl;
-    *matchedWord = NULL;
     return NULL;
   }
 
   // Lookup Word in Bucket
-  // cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
-  return this->table[index]->lookup(H, *matchedWord);
+  cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
+  return this->table[index]->lookup(H, matchedWord);
 }

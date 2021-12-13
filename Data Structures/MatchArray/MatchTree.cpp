@@ -12,6 +12,11 @@ MatchTree::MatchTree(int maxWords) {
 }
 MatchTree::~MatchTree() {}
 
+void MatchTree::print() {
+  if (this->root != nullptr) {
+    this->root->print();
+  }
+}
 void MatchTree::insert(String *word) {
   if (this->root == nullptr) {
     this->root = new MatchTreeNode(word);
@@ -20,10 +25,10 @@ void MatchTree::insert(String *word) {
   }
   MatchTreeNode *current = this->root;
   while (current != nullptr) {
-    if (!strcmp(word->getStr(), current->getData()->getStr())) {
+    if (word->exactMatch(current->getData())) {
       return;
     }
-    if (!strcmp(word->getStr(), current->getData()->getStr())) {
+    if (word->compare(current->getData()) < 0) {
       if (current->getLeft() == nullptr) {
         current->setLeft(new MatchTreeNode(word));
         this->count++;
@@ -52,4 +57,14 @@ MatchTreeNode::MatchTreeNode(String *d) {
   this->data = d;
   this->left = nullptr;
   this->right = nullptr;
+}
+
+void MatchTreeNode::print() {
+  cout << this->data->getStr() << endl;
+  if (this->left != nullptr) {
+    this->left->print();
+  }
+  if (this->right != nullptr) {
+    this->right->print();
+  }
 }

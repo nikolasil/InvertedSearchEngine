@@ -19,18 +19,14 @@ MatchArray::~MatchArray() {
 }
 
 void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
-  MatchTree *matchTree = this->array[queryId];
-
-  if (matchTree == NULL) {
+  if (this->array[queryId] == NULL) {
     this->array[queryId] = new MatchTree(maxQueryWords); // create and initialize matchTree
-    matchTree = this->array[queryId];
   }
-  matchTree->insert(queryWord); // insert query word to matchTree
-
+  this->array[queryId]->insert(queryWord); // insert query word to matchTree
+  cout << "Query word: " << queryWord->getStr() << " inserted to matchTree " << queryId << endl;
   // check if the query word is matched
-  if (matchTree->matched()) {
+  if (this->array[queryId]->matched()) {
     this->matchedIds->add(queryId);
-    // test
   }
 }
 
@@ -40,4 +36,8 @@ void MatchArray::deleteMatchTree(int queryId) {
 
   // soft delete
   //   this->array[queryId]->setDeleted(true);
+}
+
+void MatchArray::print(int queryId) {
+  this->array[queryId]->print();
 }

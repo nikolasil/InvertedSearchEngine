@@ -20,6 +20,9 @@ public:
   void setData(String *d) { this->data = d; };
   void setLeft(MatchTreeNode *l) { this->left = l; };
   void setRight(MatchTreeNode *r) { this->right = r; };
+
+  // Utils
+  void print();
 };
 
 class MatchTree {
@@ -43,6 +46,7 @@ public:
   // Utils
   void insert(String *word);
   bool matched();
+  void print();
 };
 
 #endif

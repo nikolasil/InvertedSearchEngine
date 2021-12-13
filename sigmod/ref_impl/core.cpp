@@ -142,7 +142,7 @@ MatchArray *matchArray = nullptr;
 HashTable *ht;
 hammingArray *hamming;
 BK_Tree *edit;
-int maxQueryId = 0;
+unsigned int maxQueryId = 0;
 
 ErrorCode InitializeIndex() {
   ht = new HashTable();
@@ -261,7 +261,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
 
   char *wordToken = strtok(cur_doc_str, " ");
   while (wordToken != NULL) {
-    // cout << wordToken << endl;
+    cout << wordToken << endl;
     // hashTable
     String *matchedWord = new String("");
 
@@ -269,16 +269,17 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     if (exactList != nullptr) {
       exactInfoNode *cur = exactList->getHead();
       while (cur != nullptr) {
-        cout << "{" << cur->getWordInfo().query_id << " " << cur->getWordInfo().maxQueryWords << "} ";
-        
+        matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
         cur = cur->getNext();
       }
-      cout << endl;
+      matchArray->print(cur->getId());
     }
     // editDistance
+
     // hammingDistance
     wordToken = strtok(NULL, " ");
   }
+
   // Document doc;
   // doc.doc_id = doc_id;
   // doc.num_res = query_ids.size();

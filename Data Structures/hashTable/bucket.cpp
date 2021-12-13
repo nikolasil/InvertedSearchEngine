@@ -22,12 +22,13 @@ void Bucket::print() {
   // cout << endl;
 }
 
-exactInfoList *Bucket::lookup(String *word, String *matchedWord) {
+exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
-      matchedWord->setStr(temp->getWord()->getStr());
-      cout << "matched key=" << word->getStr() << " word=" << matchedWord->getStr() << endl;
+      cout << "Found exact match" << endl;
+      (*matchedWord)->setStr(temp->getWord()->getStr());
+      cout << "matched key=" << word->getStr() << " word=" << (*matchedWord)->getStr() << endl;
       return temp->getList();
     }
     temp = temp->getNext();

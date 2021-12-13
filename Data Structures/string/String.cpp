@@ -25,6 +25,15 @@ bool String::exactMatch(String *s) {
   }
   return *s1 == *s2;
 }
+int String::compare(String *s) {
+  char *s1 = this->str;
+  char *s2 = s->getStr();
+  while (*s1 == *s2 && *s1 && *s2) {
+    s1++;
+    s2++;
+  }
+  return *s1 - *s2;
+}
 
 int String::hammingDistance(String *s) {
   char *str1 = this->getStr();
