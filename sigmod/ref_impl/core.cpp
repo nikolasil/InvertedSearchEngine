@@ -176,6 +176,7 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
     maxQueryWords++;
     wordToken = strtok(NULL, " ");
   }
+
   strcpy(temp_query_str, query_str);
   wordToken = strtok(temp_query_str, " ");
 
