@@ -12,12 +12,33 @@ ResultList::~ResultList() {
 }
 void ResultList::add(int id) {
   ResultListNode *newNode = new ResultListNode(id);
-  if (this->head == nullptr) {
+  ResultListNode *curr = this->head;
+  ResultListNode *prev = nullptr;
+  if (curr == NULL) {
     this->head = newNode;
-  } else {
-    this->last->setNext(newNode);
+    this->last = newNode;
+    count++;
+    return;
+  }
+  while (curr != nullptr) {
+    if (curr->getId() > id) {
+      if (prev == nullptr) {
+        this->head = newNode;
+        newNode->setNext(curr);
+        count++;
+        return;
+      }
+      newNode->setNext(curr);
+      prev->setNext(newNode);
+      count++;
+      return;
+    }
+    prev = curr;
+    curr = curr->getNext();
   }
   this->last = newNode;
+  prev->setNext(newNode);
+
   count++;
 }
 

@@ -283,18 +283,21 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   }
 
   ResultList *rl = matchArray->getMatchedIds();
-  Document doc;
-  doc.doc_id = doc_id;
-  doc.num_res = rl->getCount();
-  doc.query_ids = 0;
-  ResultListNode *cur = rl->getHead();
-  int k = 0;
-  while (cur != nullptr) {
-    doc.query_ids[k++] = cur->getId();
-    cur = cur->getNext();
-  }
+  rl->print();
+  ht->print();
+  matchArray->print();
+  // Document doc;
+  // doc.doc_id = doc_id;
+  // doc.num_res = rl->getCount();
+  // doc.query_ids = 0;
+  // ResultListNode *cur = rl->getHead();
+  // int k = 0;
+  // while (cur != nullptr) {
+  //   doc.query_ids[k++] = cur->getId();
+  //   cur = cur->getNext();
+  // }
 
-  docs.push_back(doc);
+  // docs.push_back(doc);
   delete matchArray;
   return EC_SUCCESS;
 }

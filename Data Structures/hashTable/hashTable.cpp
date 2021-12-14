@@ -26,7 +26,9 @@ void HashTable::insert(String *word, ExactInfo wordInfo) {
 
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);
-
+  if (!strcmp(word->getStr(), "anderson")) {
+    cout << "Index: " << index << " " << returnHash << endl;
+  }
   // If Bucket is Empty, Create a new Bucket
   if (this->table[index] == NULL) {
     this->table[index] = new Bucket();
