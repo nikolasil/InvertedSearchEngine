@@ -195,7 +195,7 @@ void build_entry_index(void) { // Test build_entry_index function
   TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry is added
   TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry is added
 
-  tree *ix;
+  BK_Tree *ix;
   TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS);                                            // check that index is created
   TEST_ASSERT(ix != nullptr);                                                                                        // check that index pointer has been initialized
   TEST_ASSERT(strcmp(ix->getRoot()->getData()->getStr(), e1->getWord()->getStr()) == 0);                             // hell
@@ -236,7 +236,7 @@ void lookup_entry_index(void) { // Test lookup_entry_index function
   TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry is added
   TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry is added
 
-  tree *ix;
+  BK_Tree *ix;
   TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS); // check that index has been built
   entry_list *result;
   const word key("henn");
@@ -275,7 +275,7 @@ void destroy_entry_index(void) { // Test destroy_entry_index function
   TEST_ASSERT(add_entry(el, e6) == EC_SUCCESS); // check that entry has been added
   TEST_ASSERT(add_entry(el, e7) == EC_SUCCESS); // check that entry has been added
 
-  tree *ix;
+  BK_Tree *ix;
   TEST_ASSERT(build_entry_index(el, MT_HAMMING_DIST, &ix) == EC_SUCCESS); // check that entry_index is built
 
   TEST_ASSERT(destroy_entry_index(&ix) == EC_SUCCESS); // check that entry_index has been deleted successfully

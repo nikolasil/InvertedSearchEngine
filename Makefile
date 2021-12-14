@@ -2,8 +2,8 @@ CC = g++ -std=c++11
 CFLAFS = -O3 -g
 TESTFLAGS = -O0 -g
 
-FILES = main.o String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
-TESTFILES = String.o entry_list.o entry.o tree.o approximateMatching.o linkedList.o functions.o 
+FILES = main.o String.o entry_list.o entry.o BK_Tree.o approximateMatching.o linkedList.o functions.o 
+TESTFILES = String.o entry_list.o entry.o BK_Tree.o approximateMatching.o linkedList.o functions.o 
 TESTER = test.o
 
 # Compile commands
@@ -33,7 +33,7 @@ entry_list.o :
 entry.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/entry/entry.cpp
 
-tree.o :
+BK_Tree.o :
 	$(CC) $(CFLAFS) -c Data\ Structures/tree/tree.cpp
 
 approximateMatching.o :

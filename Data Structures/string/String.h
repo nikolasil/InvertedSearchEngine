@@ -9,8 +9,19 @@ public:
   String(const char *string);
   String(const String *string);
   ~String();
+  // Getters
+  char *getStr() const { return this->str; };
+  // Setters
+  void setStr(char *string) { this->str = string; };
+  // Distances
+  bool exactMatch(String *s);     // Exact match
+  int hammingDistance(String *s); // same size words
+  int editDistance(String *s);    // different size words
+  int compare(String *s);         // compare two strings
+  // Methods
   void print();
-  char *getStr() const;
 };
+
+typedef String word;
 
 #endif

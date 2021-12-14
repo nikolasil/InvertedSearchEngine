@@ -40,19 +40,48 @@ LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-
+FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o
 # The name of the library that will be built
 LIBRARY=core
 
 # Build all programs
-all: $(PROGRAMS)
+all: clean $(PROGRAMS)
+lib: $(IMPL_O) $(FILES)
+	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)  -I /usr/local/Cellar/openssl@3/3.0.0_1/include/ -L  /usr/local/Cellar/openssl@3/3.0.0_1/lib/ -lcrypto
 
-lib: $(IMPL_O)
-	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O)
+testdriver: lib $(TEST_O) $(FILES)
+	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES) -lcrypto
 
-testdriver: lib $(TEST_O)
-	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so
+hashTable.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/hashTable.cpp
 
+bucket.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/bucket.cpp
+
+exactInfoList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/queryList/exactInfoList.cpp
+
+heInfoList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/queryList/heInfoList.cpp
+	
+BK_Tree.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/BK_Tree.cpp
+	
+hammingArray.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/tree/hammingArray.cpp
+
+MatchArray.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/MatchArray.cpp
+
+MatchTree.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/MatchTree.cpp
+
+ResultList.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/ResultList.cpp
+
+String.o:
+	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/string/String.cpp
+	
 clean:
 	rm -f $(PROGRAMS) lib$(LIBRARY).so
 	find . -name '*.o' -print | xargs rm -f
