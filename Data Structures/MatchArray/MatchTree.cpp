@@ -14,9 +14,9 @@ MatchTree::~MatchTree() {}
 
 void MatchTree::print() {
   if (this->root != nullptr) {
-    cout << "Count " << this->count << endl;
-    cout << "maxWords " << this->maxWords << endl;
-    cout << "flag " << this->flag << endl;
+    cout << " Count " << this->count << endl;
+    cout << " maxWords " << this->maxWords << endl;
+    cout << " flag " << this->flag << endl;
     this->root->print();
   }
 }

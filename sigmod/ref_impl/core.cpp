@@ -252,7 +252,7 @@ ErrorCode EndQuery(QueryID query_id) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+int c = 0;
 ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
@@ -260,10 +260,11 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   MatchArray *matchArray = new MatchArray(maxQueryId);
 
   char *wordToken = strtok(cur_doc_str, " ");
+  edit->print();
   while (wordToken != NULL) {
     String *word = new String(wordToken);
+    // hashTable
     // String *matchedWord = new String("");
-    // // hashTable
     // exactInfoList *exactList = ht->lookup(word, &matchedWord);
     // if (exactList != nullptr) {
     //   cout << "Lookup Success" << endl;
@@ -275,15 +276,13 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     //   }
     // }
     // editDistance
+    // cout << wordToken << endl;
+    edit->lookup(word, matchArray);
 
-    heInfoList *editList = edit->lookup(word);
-    if (editList != nullptr) {
-      cout << "Lookup Success ";
-      word->print();
-      cout << endl;
-
-      editList->print();
-    }
+    matchArray->print();
+    // if (c++ == 5) {
+    //   exit(0);
+    // }
     // hammingDistance
 
     wordToken = strtok(NULL, " ");

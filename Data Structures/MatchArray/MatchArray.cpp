@@ -6,7 +6,7 @@
 using namespace std;
 
 MatchArray::MatchArray(int size) {
-  this->array = new MatchTree *[size](); // initialize MatchArray to null
+  this->array = new MatchTree *[size + 1](); // initialize MatchArray to null
   this->size = size;
   this->matchedIds = new ResultList();
 }
@@ -20,6 +20,7 @@ MatchArray::~MatchArray() {
 
 void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   if (this->array[queryId] == NULL) {
+    // cout << "null" << endl;
     this->array[queryId] = new MatchTree(maxQueryWords); // create and initialize matchTree
   }
   this->array[queryId]->insert(queryWord); // insert query word to matchTree
@@ -27,6 +28,18 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   // check if the query word is matched
   if (this->array[queryId]->matched()) {
     this->matchedIds->add(queryId);
+  }
+}
+void MatchArray::update(String *word, heInfoList *infoList, int threshold) {
+  heInfoNode *curr = infoList->getHead();
+  // infoList->print();
+  while (curr != nullptr) {
+    // cout << threshold << " " << curr->getWordInfo().matchDist << " " << curr->getId() << endl;
+    if (curr->getWordInfo().matchDist >= (unsigned int)threshold) {
+      // cout << " ok " << endl;
+      this->insert(word, curr->getId(), curr->getMaxQueryWords());
+    }
+    curr = curr->getNext();
   }
 }
 
@@ -44,7 +57,7 @@ void MatchArray::print(int queryId) {
   }
 }
 void MatchArray::print() {
-  for (int i = 0; i < this->size; i++) {
+  for (int i = 0; i <= this->size; i++) {
     if (this->array[i] != NULL) {
       cout << "MatchTree " << i << endl;
       this->array[i]->print();

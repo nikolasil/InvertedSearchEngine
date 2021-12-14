@@ -2,6 +2,7 @@
 #define MATCH_ARRAY_H
 
 #include "../../sigmod/include/core.h"
+#include "../queryList/heInfoList.h"
 #include "../string/String.h"
 #include "MatchTree.h"
 #include "ResultList.h"
@@ -25,6 +26,7 @@ public:
   void setMatchedIds(ResultList *matchedIds) { this->matchedIds = matchedIds; };
   // Methods
   void insert(String *queryWord, int queryId, int maxQueryWords);
+  void update(String *word, heInfoList *list, int threshold);
   void deleteMatchTree(int queryId);
   void print(int queryId);
   void print();

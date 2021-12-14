@@ -44,7 +44,6 @@ public:
   void setCount(int count) { this->count = count; };
   // Methods
   void addQuery(HEInfo wordInfo);
-  void mergeLists(heInfoList *list, int threshold);
   void print();
 };
 

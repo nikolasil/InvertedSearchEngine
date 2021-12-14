@@ -44,37 +44,24 @@ void BK_Tree::add(String *word, HEInfo info) {
 }
 
 void BK_Tree::print() {
-  if (this->root)
+  if (this->root) {
     this->root->print();
-  cout << endl;
+    cout << endl;
+  }
 }
 
-heInfoList *BK_Tree::lookup(String *word) {
-  heInfoList *foundWords = new heInfoList();
+void BK_Tree::lookup(String *word, MatchArray *matchArray) {
   if (this->root == nullptr) {
-    return foundWords;
+    return;
   }
   int diff = word->hammingDistance(this->root->getData());
-  for (int i = 1; i <= 3; i++) {
+  for (int i = 1; i <= MAX_THRESHOLD; i++) {
     if (diff <= i) {
-      const String *w = new String(this->root->getData());
-      cout << "key ";
-      word->print();
-      cout << endl;
-      cout << "parent ";
-      this->root->getData()->print();
-      cout << endl;
-      foundWords->mergeLists(this->root->getInfo(), i);
+      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
       break;
     }
   }
-
-  this->root->lookup(word, 1, &foundWords, diff);
-  if (foundWords->getCount() == 0) {
-    delete foundWords;
-    return nullptr;
-  }
-  return foundWords;
+  this->root->lookup(word, 1, diff, matchArray);
 }
 
 // Tree Node
@@ -158,28 +145,28 @@ void BK_TreeNode::print() {
   cout << endl;
 }
 
-void BK_TreeNode::lookup(String *word, int initialThreshold, heInfoList **foundWords, int diff) {
+void BK_TreeNode::lookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
   BK_TreeNode *child;
   BK_TreeEdge *currentEdge = this->getFirstChild();
+  int i;
+  int diff;
   while (currentEdge != nullptr) {
-    int threshold = initialThreshold;
     child = currentEdge->getChild();
     diff = child->getData()->hammingDistance(word);
-    for (int i = threshold; i <= 3; i++) {
-      if (diff <= threshold) {
-        const String *w = new String(child->getData());
-        (*foundWords)->mergeLists(this->getInfo(), i);
+
+    for (i = threshold; i <= MAX_THRESHOLD; i++) {
+      if (diff <= i) {
+        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i);
         break;
       }
     }
 
-    for (int i = threshold; i <= 3; i++) {
-      if (threshold < 0 && diff <= (threshold / 2)) {
-        child->lookup(word, threshold, foundWords, diff);
+    for (i = threshold; i <= MAX_THRESHOLD; i++) {
+      if (diff >= (parentDiff - i) && diff <= (parentDiff + i)) {
+        child->lookup(word, i, diff, matchArray);
         break;
       }
     }
-
     currentEdge = currentEdge->getNext();
   }
 }
@@ -212,6 +199,7 @@ void BK_TreeEdge::setNext(BK_TreeEdge *next) {
 BK_TreeNode *BK_TreeEdge::getChild() { return this->child; }
 
 void BK_TreeEdge::print() {
+  cout << "Edge : " << this->weight << " " << this->child->getData()->getStr() << endl;
   if (this->next != nullptr) {
     this->next->print();
   }

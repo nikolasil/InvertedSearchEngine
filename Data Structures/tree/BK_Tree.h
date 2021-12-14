@@ -7,8 +7,11 @@ class BK_Tree;
 
 // #include "../../Functions/functions.h"
 #include "../../sigmod/include/core.h"
+#include "../MatchArray/MatchArray.h"
 #include "../queryList/heInfoList.h"
 #include "../string/String.h"
+
+#define MAX_THRESHOLD 3
 
 class BK_TreeEdge {
 private:
@@ -49,9 +52,9 @@ public:
   void setData(String *data) { this->data = data; }; // set new word of node
 
   // Utils
-  BK_TreeNode *findChild(int w);                                               // Search for a child node that contains the word w
-  void lookup(String *word, int threshold, heInfoList **foundWords, int diff); // Lookup word
-  void addChild(int w, BK_TreeNode *c);                                        // Add child node
+  BK_TreeNode *findChild(int w);                                              // Search for a child node that contains the word w
+  void lookup(String *word, int threshold, int diff, MatchArray *matchArray); // Lookup word
+  void addChild(int w, BK_TreeNode *c);                                       // Add child node
   void print();
 };
 
@@ -68,8 +71,8 @@ public:
 
   // Utils
   void print();
-  void add(String *word, HEInfo info); // add word to BK_Tree
-  heInfoList *lookup(String *word);    // lookup a word in index
+  void add(String *word, HEInfo info);               // add word to BK_Tree
+  void lookup(String *word, MatchArray *matchArray); // lookup a word in index
 };
 
 #endif
