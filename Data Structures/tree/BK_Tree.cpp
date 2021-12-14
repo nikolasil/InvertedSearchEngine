@@ -1,5 +1,6 @@
 #include "BK_Tree.h"
 #include "../string/String.h"
+#include <cstring>
 #include <ctime>
 #include <iostream>
 #include <random>
@@ -54,7 +55,8 @@ void BK_Tree::editLookup(String *word, MatchArray *matchArray) {
   if (this->root == nullptr) {
     return;
   }
-  int diff = word->editDistance(this->root->getData());
+  int diff = word->editDistance(word->getStr(), this->root->getData()->getStr(), strlen(word->getStr()), strlen(this->root->getData()->getStr()));
+  // cout << "Diff between " << word->getStr() << " and  " << this->root->getData()->getStr() << "  is " << diff << " ." << endl;
   for (int i = 1; i <= MAX_THRESHOLD; i++) {
     if (diff <= i) {
       matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
@@ -69,6 +71,7 @@ void BK_Tree::hammingLookup(String *word, MatchArray *matchArray) {
     return;
   }
   int diff = word->hammingDistance(this->root->getData());
+
   for (int i = 1; i <= MAX_THRESHOLD; i++) {
     if (diff <= i) {
       matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
@@ -166,8 +169,7 @@ void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchA
   int diff;
   while (currentEdge != nullptr) {
     child = currentEdge->getChild();
-    diff = child->getData()->editDistance(word);
-
+    diff = word->editDistance(word->getStr(), child->getData()->getStr(), strlen(word->getStr()), strlen(child->getData()->getStr()));
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (diff <= i) {
         matchArray->update(child->getData(), child->getInfo(), (unsigned int)i);

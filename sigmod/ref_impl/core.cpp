@@ -260,29 +260,24 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   MatchArray *matchArray = new MatchArray(maxQueryId);
 
   char *wordToken = strtok(cur_doc_str, " ");
-  edit->print();
   while (wordToken != NULL) {
+
     String *word = new String(wordToken);
     // hashTable
-    // String *matchedWord = new String("");
-    // exactInfoList *exactList = ht->lookup(word, &matchedWord);
-    // if (exactList != nullptr) {
-    //   cout << "Lookup Success" << endl;
-    //   exactList->print();
-    //   exactInfoNode *cur = exactList->getHead();
-    //   while (cur != nullptr) {
-    //     matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
-    //     cur = cur->getNext();
-    //   }
-    // }
-    // editDistance
-    // cout << wordToken << endl;
-    // edit->editLookup(word, matchArray);
-    // matchArray->print();
+    String *matchedWord = new String("");
+    exactInfoList *exactList = ht->lookup(word, &matchedWord);
+    if (exactList != nullptr) {
+      exactInfoNode *cur = exactList->getHead();
+      while (cur != nullptr) {
+        matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
+        cur = cur->getNext();
+      }
+    }
+    // Edit Distance
+    edit->editLookup(word, matchArray);
 
-    // hammingDistance
+    // Hamming Distance
     hamming->lookup(word, matchArray);
-    matchArray->print();
 
     wordToken = strtok(NULL, " ");
   }

@@ -46,8 +46,24 @@ int String::hammingDistance(String *s) {
   return count;
 }
 
-int String::editDistance(String *s) {
-  return 0;
+int String::editDistance(char *str1, char *str2, int m, int n) {
+
+  if (m == 0)
+    return n;
+
+  if (n == 0)
+    return m;
+
+  if (str1[m - 1] == str2[n - 1])
+    return editDistance(str1, str2, m - 1, n - 1);
+
+  // cout << str1 << " " << str2 << " " << m << "  " << n << endl;
+
+  int minReplace = editDistance(str1, str2, m - 1, n - 1);
+  int minRemove = editDistance(str1, str2, m - 1, n);
+  int minInsert = editDistance(str1, str2, m, n - 1);
+
+  return 1 + min(minReplace, min(minRemove, minInsert));
 }
 
 void String::print() { cout << this->str; }
