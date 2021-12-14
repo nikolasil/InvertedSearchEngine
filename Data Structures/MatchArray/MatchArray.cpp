@@ -36,7 +36,6 @@ void MatchArray::update(String *word, heInfoList *infoList, int threshold) {
   while (curr != nullptr) {
     // cout << threshold << " " << curr->getWordInfo().matchDist << " " << curr->getId() << endl;
     if (curr->getWordInfo().matchDist >= (unsigned int)threshold) {
-      // cout << " ok " << endl;
       this->insert(word, curr->getId(), curr->getMaxQueryWords());
     }
     curr = curr->getNext();

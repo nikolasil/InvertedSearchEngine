@@ -50,7 +50,21 @@ void BK_Tree::print() {
   }
 }
 
-void BK_Tree::lookup(String *word, MatchArray *matchArray) {
+void BK_Tree::editLookup(String *word, MatchArray *matchArray) {
+  if (this->root == nullptr) {
+    return;
+  }
+  int diff = word->editDistance(this->root->getData());
+  for (int i = 1; i <= MAX_THRESHOLD; i++) {
+    if (diff <= i) {
+      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
+      break;
+    }
+  }
+  this->root->editLookup(word, 1, diff, matchArray);
+}
+
+void BK_Tree::hammingLookup(String *word, MatchArray *matchArray) {
   if (this->root == nullptr) {
     return;
   }
@@ -61,7 +75,7 @@ void BK_Tree::lookup(String *word, MatchArray *matchArray) {
       break;
     }
   }
-  this->root->lookup(word, 1, diff, matchArray);
+  this->root->hammingLookup(word, 1, diff, matchArray);
 }
 
 // Tree Node
@@ -145,7 +159,32 @@ void BK_TreeNode::print() {
   cout << endl;
 }
 
-void BK_TreeNode::lookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
+void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
+  BK_TreeNode *child;
+  BK_TreeEdge *currentEdge = this->getFirstChild();
+  int i;
+  int diff;
+  while (currentEdge != nullptr) {
+    child = currentEdge->getChild();
+    diff = child->getData()->editDistance(word);
+
+    for (i = threshold; i <= MAX_THRESHOLD; i++) {
+      if (diff <= i) {
+        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i);
+        break;
+      }
+    }
+
+    for (i = threshold; i <= MAX_THRESHOLD; i++) {
+      if (diff >= (parentDiff - i) && diff <= (parentDiff + i)) {
+        child->editLookup(word, i, diff, matchArray);
+        break;
+      }
+    }
+    currentEdge = currentEdge->getNext();
+  }
+}
+void BK_TreeNode::hammingLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
   BK_TreeNode *child;
   BK_TreeEdge *currentEdge = this->getFirstChild();
   int i;
@@ -163,7 +202,7 @@ void BK_TreeNode::lookup(String *word, int threshold, int parentDiff, MatchArray
 
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (diff >= (parentDiff - i) && diff <= (parentDiff + i)) {
-        child->lookup(word, i, diff, matchArray);
+        child->hammingLookup(word, i, diff, matchArray);
         break;
       }
     }

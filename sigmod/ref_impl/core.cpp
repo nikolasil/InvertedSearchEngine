@@ -277,13 +277,12 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     // }
     // editDistance
     // cout << wordToken << endl;
-    edit->lookup(word, matchArray);
+    // edit->editLookup(word, matchArray);
+    // matchArray->print();
 
-    matchArray->print();
-    // if (c++ == 5) {
-    //   exit(0);
-    // }
     // hammingDistance
+    hamming->lookup(word, matchArray);
+    matchArray->print();
 
     wordToken = strtok(NULL, " ");
   }

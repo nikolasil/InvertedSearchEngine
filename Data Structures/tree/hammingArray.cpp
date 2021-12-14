@@ -28,3 +28,9 @@ void hammingArray::print() {
     }
   }
 }
+
+void hammingArray::lookup(String *word, MatchArray *matchArray) {
+  BK_Tree *tree = this->array[strlen(word->getStr()) - 4];
+  if (tree)
+    tree->hammingLookup(word, matchArray);
+}
