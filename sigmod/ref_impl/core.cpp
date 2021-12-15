@@ -254,6 +254,7 @@ ErrorCode EndQuery(QueryID query_id) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 int c = 0;
 ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
+  // cout << "MatchDocument" << endl;
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
@@ -283,22 +284,30 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   }
 
   ResultList *rl = matchArray->getMatchedIds();
-  rl->print();
-  ht->print();
-  matchArray->print();
-  // Document doc;
-  // doc.doc_id = doc_id;
-  // doc.num_res = rl->getCount();
-  // doc.query_ids = 0;
-  // ResultListNode *cur = rl->getHead();
-  // int k = 0;
-  // while (cur != nullptr) {
-  //   doc.query_ids[k++] = cur->getId();
-  //   cur = cur->getNext();
-  // }
+  // cout << rl->getCount();
+  // ht->print();
+  // rl->print();
+  // ht->print();
 
-  // docs.push_back(doc);
+  // matchArray->print();
+  Document doc;
+  doc.doc_id = doc_id;
+  doc.num_res = rl->getCount();
+  doc.query_ids = 0;
+  // cout << "num res " << doc.num_res << endl;
+  if (doc.num_res) {
+    doc.query_ids = new unsigned int[doc.num_res];
+    ResultListNode *cur = rl->getHead();
+    int k = 0;
+    while (cur != nullptr) {
+      doc.query_ids[k++] = cur->getId();
+      cur = cur->getNext();
+    }
+  }
+
+  docs.push_back(doc);
   delete matchArray;
+  // cout << "MatchDocument END" << endl;
   return EC_SUCCESS;
 }
 

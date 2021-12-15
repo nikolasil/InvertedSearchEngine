@@ -38,7 +38,6 @@ void ResultList::add(int id) {
   }
   this->last = newNode;
   prev->setNext(newNode);
-
   count++;
 }
 
