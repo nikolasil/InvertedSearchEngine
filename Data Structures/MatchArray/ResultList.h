@@ -38,6 +38,8 @@ public:
   // Methods
   void add(int id);
   void remove(int id);
+  bool search(int id);
+  bool searchRemove(int id);
   void print();
 };
 

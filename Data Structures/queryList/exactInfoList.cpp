@@ -12,7 +12,7 @@ exactInfoList::exactInfoList() {
 exactInfoList::~exactInfoList() {
   delete this->head;
 }
-void exactInfoList::addQuery(ExactInfo wordInfo) {
+void exactInfoList::addQuery(ExactInfo *wordInfo) {
   exactInfoNode *newNode = new exactInfoNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
@@ -30,7 +30,7 @@ void exactInfoList::print() {
 }
 // exactInfoNode
 
-exactInfoNode::exactInfoNode(ExactInfo info) {
+exactInfoNode::exactInfoNode(ExactInfo *info) {
   this->info = info;
   this->next = nullptr;
 }

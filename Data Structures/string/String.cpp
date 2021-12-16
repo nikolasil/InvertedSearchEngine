@@ -5,13 +5,15 @@
 using namespace std;
 
 String::String(const char *string) {
-  this->str = new char[strlen(string) + 1];
-  this->str[strlen(string)] = '\0';
+  this->size = strlen(string);
+  this->str = new char[this->size + 1];
+  this->str[this->size] = '\0';
   strcpy(this->str, string);
 }
 String::String(const String *s) {
-  this->str = new char[strlen(s->getStr()) + 1];
-  this->str[strlen(s->getStr())] = '\0';
+  this->size = s->getSize();
+  this->str = new char[this->size + 1];
+  this->str[this->size] = '\0';
   strcpy(this->str, s->getStr());
 }
 String::~String() { delete[] this->str; }

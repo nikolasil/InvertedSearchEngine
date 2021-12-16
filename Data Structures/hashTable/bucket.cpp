@@ -19,24 +19,21 @@ Bucket::~Bucket() {
 
 void Bucket::print() {
   this->head->print();
-  // cout << endl;
 }
 
 exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
-      // cout << "Found exact match" << endl;
       (*matchedWord)->setStr(temp->getWord()->getStr());
       return temp->getList();
     }
     temp = temp->getNext();
   }
-  // cout << "NOT matched" << endl;
   return nullptr;
 }
 
-bucketNode *Bucket::addNode(String *word, ExactInfo wordInfo) {
+bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
   bucketNode *exists = this->getNode(word);
   if (exists != nullptr) {
     exists->addToQueryList(wordInfo);
@@ -67,7 +64,7 @@ bucketNode *Bucket::getNode(String *word) {
 
 // Bucket Node
 
-bucketNode::bucketNode(String *word, ExactInfo wordInfo) {
+bucketNode::bucketNode(String *word, ExactInfo *wordInfo) {
   this->word = word;
   this->next = nullptr;
   this->list = new exactInfoList();
@@ -80,7 +77,7 @@ bucketNode::~bucketNode() {
   }
 }
 
-void bucketNode::addToQueryList(ExactInfo wordInfo) {
+void bucketNode::addToQueryList(ExactInfo *wordInfo) {
   this->list->addQuery(wordInfo);
 }
 

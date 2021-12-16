@@ -113,11 +113,13 @@ typedef struct Query {
 
 typedef struct ExactInfo {
   QueryID query_id;
+  bool flag;
   unsigned int maxQueryWords;
 } ExactInfo;
 
 typedef struct HEInfo {
   QueryID query_id;
+  bool flag;
   unsigned int maxQueryWords;
   unsigned int matchDist;
 } HEInfo;

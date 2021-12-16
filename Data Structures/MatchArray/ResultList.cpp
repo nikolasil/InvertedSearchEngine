@@ -48,6 +48,7 @@ void ResultList::remove(int id) {
     if (current->getId() == id) {
       if (previous == nullptr) {
         this->head = current->getNext();
+        this->last = this->head;
       } else {
         previous->setNext(current->getNext());
       }
@@ -58,6 +59,37 @@ void ResultList::remove(int id) {
     previous = current;
     current = current->getNext();
   }
+}
+bool ResultList::search(int id) {
+  ResultListNode *current = this->head;
+  while (current != nullptr) {
+    if (current->getId() == id) {
+      return true;
+    }
+    current = current->getNext();
+  }
+  return false;
+}
+
+bool ResultList::searchRemove(int id) {
+  ResultListNode *current = this->head;
+  ResultListNode *previous = nullptr;
+  while (current != nullptr) {
+    if (current->getId() == id) {
+      if (previous == nullptr) {
+        this->head = current->getNext();
+        this->last = this->head;
+      } else {
+        previous->setNext(current->getNext());
+      }
+      delete current;
+      count--;
+      return true;
+    }
+    previous = current;
+    current = current->getNext();
+  }
+  return false;
 }
 void ResultList::print() {
   ResultListNode *current = this->head;

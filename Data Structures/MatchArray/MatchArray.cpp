@@ -30,13 +30,16 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
     this->matchedIds->add(queryId);
   }
 }
-void MatchArray::update(String *word, heInfoList *infoList, int threshold) {
+void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
   heInfoNode *curr = infoList->getHead();
   // infoList->print();
   while (curr != nullptr) {
     // cout << threshold << " " << curr->getWordInfo().matchDist << " " << curr->getId() << endl;
-    if (curr->getWordInfo().matchDist >= (unsigned int)threshold) {
-      this->insert(word, curr->getId(), curr->getMaxQueryWords());
+    if (curr->getMatchDist() >= (unsigned int)threshold) {
+      if (forDeletion->searchRemove(curr->getId())) {
+        curr->setFlag(false);
+      } else if (curr->getFlag())
+        this->insert(word, curr->getId(), curr->getMaxQueryWords());
     }
     curr = curr->getNext();
   }

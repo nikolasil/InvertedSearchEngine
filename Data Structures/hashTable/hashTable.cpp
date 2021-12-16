@@ -19,13 +19,11 @@ HashTable::~HashTable() {
   delete[] this->table;
 }
 
-void HashTable::insert(String *word, ExactInfo wordInfo) {
+void HashTable::insert(String *word, ExactInfo *wordInfo) {
   // Hash word with SHA1
 
-  unsigned char *returnHash = SHA1((const unsigned char *)(word->getStr()), strlen(word->getStr()), NULL);
+  unsigned char *returnHash = SHA1((const unsigned char *)(word->getStr()), word->getSize(), NULL);
 
-  // if (!strcmp(word->getStr(), "maggid"))
-  //   cout << "Hash: " << returnHash << endl;
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);
 
@@ -53,25 +51,6 @@ void HashTable::print() {
   }
 }
 
-// // Hashing Related Methods
-// bool HashTable::generateHashString(unsigned char *key, unsigned char *returnHash) {
-//   size_t length = strlen((char *)key);
-//   // unsigned char hash[SHA256_DIGEST_LENGTH];
-//   // SHA256((const unsigned char *)key, length, hash);
-//   // memcpy(returnHash, (char *)hash, SHA256_DIGEST_LENGTH);
-//   SHA256_CTX context;
-//   if (!SHA256_Init(&context))
-//     return false;
-
-//   if (!SHA256_Update(&context, (unsigned char *)key, length))
-//     return false;
-
-//   if (!SHA256_Final(returnHash, &context))
-//     return false;
-
-//   return true;
-// }
-
 int HashTable::hexadecimalToDecimal(unsigned char hexVal[]) {
   int len = strlen((char *)hexVal);
 
@@ -93,7 +72,7 @@ int HashTable::hexadecimalToDecimal(unsigned char hexVal[]) {
 
 exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
   // Hash word with SHA1
-  unsigned char *returnHash = SHA1((const unsigned char *)(H->getStr()), strlen(H->getStr()), NULL);
+  unsigned char *returnHash = SHA1((const unsigned char *)(H->getStr()), H->getSize(), NULL);
 
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);

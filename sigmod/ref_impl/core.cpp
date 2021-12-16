@@ -130,35 +130,40 @@ struct Document {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // Keeps all currently active queries
-vector<Query> queries;
+// vector<Query> queries;
 
 // Keeps all currently available results that has not been returned yet
 vector<Document> docs;
 
 // Keeps all currently matched words of the queries
-MatchArray *matchArray = nullptr;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-HashTable *ht;
-hammingArray *hamming;
-BK_Tree *edit;
+HashTable *ht = nullptr;
+hammingArray *hamming = nullptr;
+BK_Tree *edit = nullptr;
+MatchArray *matchArray = nullptr;
+ResultList *forDeletion = nullptr;
 unsigned int maxQueryId = 0;
 
 ErrorCode InitializeIndex() {
   ht = new HashTable();
   hamming = new hammingArray();
   edit = new BK_Tree();
+  forDeletion = new ResultList();
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode DestroyIndex() {
-  delete ht;
+  // delete ht;
+  // delete hamming;
+  // delete edit;
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+HEInfo *test = nullptr;
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
@@ -170,134 +175,106 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 
   char temp_query_str[MAX_QUERY_LENGTH];
   strcpy(temp_query_str, query_str);
-  int maxQueryWords = 0;
+  unsigned int maxQueryWords = 0;
   char *wordToken = strtok(temp_query_str, " ");
-  while (wordToken != NULL) {
-    maxQueryWords++;
-    wordToken = strtok(NULL, " ");
-  }
-
-  strcpy(temp_query_str, query_str);
-  wordToken = strtok(temp_query_str, " ");
 
   switch (match_type) {
   case MT_EXACT_MATCH: {
-    ExactInfo exactInfo;
-    exactInfo.query_id = query_id;
-    exactInfo.maxQueryWords = maxQueryWords;
+    ExactInfo *exactInfo = new ExactInfo();
+    exactInfo->query_id = query_id;
+    exactInfo->flag = true;
 
     while (wordToken != NULL) {
       ht->insert(new String(wordToken), exactInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+    exactInfo->maxQueryWords = maxQueryWords;
     break;
   }
   case MT_EDIT_DIST: {
-    // cout << "edit distance" << endl;
-    HEInfo heInfo;
-    heInfo.query_id = query_id;
-    heInfo.maxQueryWords = maxQueryWords;
-    heInfo.matchDist = match_dist;
+    HEInfo *heInfo = new HEInfo();
+    heInfo->query_id = query_id;
+    heInfo->matchDist = match_dist;
+    heInfo->flag = true;
 
     while (wordToken != NULL) {
       edit->add(new String(wordToken), heInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+    heInfo->maxQueryWords = maxQueryWords;
     break;
   }
   case MT_HAMMING_DIST: {
-    HEInfo heInfo;
-    heInfo.query_id = query_id;
-    heInfo.maxQueryWords = maxQueryWords;
-    heInfo.matchDist = match_dist;
+    HEInfo *heInfo = new HEInfo();
+
+    heInfo->query_id = query_id;
+    heInfo->matchDist = match_dist;
+    heInfo->flag = true;
 
     while (wordToken != NULL) {
       hamming->insert(new String(wordToken), heInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+    heInfo->maxQueryWords = maxQueryWords;
     break;
   }
   }
+  maxQueryId++;
 
-  // cout << "______________ EXACT"
-  //      << "_______________" << endl;
-  // ht->print();
-  // cout << "______________ EDIT"
-  //      << "_______________" << endl;
-  // edit->print();
-  // cout << "______________ HAMMING"
-  //      << "_______________" << endl;
-  // hamming->print();
-
-  // Add this query to the active query set
-  if (maxQueryId < query_id)
-    maxQueryId = query_id;
-
-  queries.push_back(query);
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode EndQuery(QueryID query_id) {
-  // Remove this query from the active query set
-  unsigned int i, n = queries.size();
-  for (i = 0; i < n; i++) {
-    if (queries[i].query_id == query_id) {
-      queries.erase(queries.begin() + i);
-      break;
-    }
-  }
+  forDeletion->add(query_id);
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-int c = 0;
+
 ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
-  // cout << "MatchDocument" << endl;
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
   MatchArray *matchArray = new MatchArray(maxQueryId);
-
   char *wordToken = strtok(cur_doc_str, " ");
   while (wordToken != NULL) {
-
     String *word = new String(wordToken);
+
     // hashTable
     String *matchedWord = new String("");
     exactInfoList *exactList = ht->lookup(word, &matchedWord);
     if (exactList != nullptr) {
       exactInfoNode *cur = exactList->getHead();
       while (cur != nullptr) {
-        matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
+        if (forDeletion->searchRemove(cur->getId())) {
+          cur->setFlag(false);
+        } else if (cur->getFlag())
+          matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
         cur = cur->getNext();
       }
     }
     // Edit Distance
-    edit->editLookup(word, matchArray);
+    edit->editLookup(word, matchArray, forDeletion);
 
     // Hamming Distance
-    hamming->lookup(word, matchArray);
+    hamming->lookup(word, matchArray, forDeletion);
 
     wordToken = strtok(NULL, " ");
   }
 
-  ResultList *rl = matchArray->getMatchedIds();
-  // cout << rl->getCount();
-  // ht->print();
-  // rl->print();
-  // ht->print();
-
-  // matchArray->print();
   Document doc;
   doc.doc_id = doc_id;
-  doc.num_res = rl->getCount();
+  doc.num_res = matchArray->getMatchedIds()->getCount();
   doc.query_ids = 0;
-  // cout << "num res " << doc.num_res << endl;
+
   if (doc.num_res) {
     doc.query_ids = new unsigned int[doc.num_res];
-    ResultListNode *cur = rl->getHead();
+    ResultListNode *cur = matchArray->getMatchedIds()->getHead();
     int k = 0;
     while (cur != nullptr) {
       doc.query_ids[k++] = cur->getId();
@@ -307,7 +284,6 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
 
   docs.push_back(doc);
   delete matchArray;
-  // cout << "MatchDocument END" << endl;
   return EC_SUCCESS;
 }
 

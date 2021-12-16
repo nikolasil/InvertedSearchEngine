@@ -4,6 +4,7 @@
 class String {
 private:
   char *str;
+  int size;
 
 public:
   String(const char *string);
@@ -11,8 +12,10 @@ public:
   ~String();
   // Getters
   char *getStr() const { return this->str; };
+  int getSize() const { return this->size; };
   // Setters
   void setStr(char *string) { this->str = string; };
+  void setSize(int size) { this->size = size; };
   // Distances
   bool exactMatch(String *s);                             // Exact match
   int hammingDistance(String *s);                         // same size words

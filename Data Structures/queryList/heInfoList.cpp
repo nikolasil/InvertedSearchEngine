@@ -12,7 +12,7 @@ heInfoList::heInfoList() {
 heInfoList::~heInfoList() {
   delete this->head;
 }
-void heInfoList::addQuery(HEInfo wordInfo) {
+void heInfoList::addQuery(HEInfo *wordInfo) {
   heInfoNode *newNode = new heInfoNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
@@ -32,7 +32,7 @@ void heInfoList::print() {
 }
 // heInfoNode
 
-heInfoNode::heInfoNode(HEInfo info) {
+heInfoNode::heInfoNode(HEInfo *info) {
   this->info = info;
   this->next = nullptr;
 }

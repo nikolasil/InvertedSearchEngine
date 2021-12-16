@@ -12,7 +12,7 @@ private:
   bucketNode *next;
 
 public:
-  bucketNode(String *word, ExactInfo wordInfo);
+  bucketNode(String *word, ExactInfo *wordInfo);
   ~bucketNode();
   // Getters
   String *getWord() const { return this->word; };
@@ -23,7 +23,7 @@ public:
   void setList(exactInfoList *list) { this->list = list; };
   void setNext(bucketNode *next) { this->next = next; };
   // Methods
-  void addToQueryList(ExactInfo wordInfo);
+  void addToQueryList(ExactInfo *wordInfo);
   void print();
 };
 
@@ -46,7 +46,7 @@ public:
   void setCount(int count) { this->count = count; };
   // Methods
   exactInfoList *lookup(String *word, String **matchedWord);
-  bucketNode *addNode(String *word, ExactInfo wordInfo);
+  bucketNode *addNode(String *word, ExactInfo *wordInfo);
   bucketNode *getNode(String *word);
   void print();
 };
