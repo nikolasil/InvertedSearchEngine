@@ -26,6 +26,7 @@
  */
 
 #include "../include/core.h"
+#include "../../Data Structures/DocumentList/DocumentList.h"
 #include "../../Data Structures/MatchArray/MatchArray.h"
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
@@ -36,104 +37,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <vector>
 
 using namespace std;
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Computes edit distance between a null-terminated string "a" with length "na"
-//  and a null-terminated string "b" with length "nb"
-int EditDistance(char *a, int na, char *b, int nb) {
-  int oo = 0x7FFFFFFF;
-
-  static int T[2][MAX_WORD_LENGTH + 1];
-
-  int ia, ib;
-
-  int cur = 0;
-  ia = 0;
-
-  for (ib = 0; ib <= nb; ib++)
-    T[cur][ib] = ib;
-
-  cur = 1 - cur;
-
-  for (ia = 1; ia <= na; ia++) {
-    for (ib = 0; ib <= nb; ib++)
-      T[cur][ib] = oo;
-
-    int ib_st = 0;
-    int ib_en = nb;
-
-    if (ib_st == 0) {
-      ib = 0;
-      T[cur][ib] = ia;
-      ib_st++;
-    }
-
-    for (ib = ib_st; ib <= ib_en; ib++) {
-      int ret = oo;
-
-      int d1 = T[1 - cur][ib] + 1;
-      int d2 = T[cur][ib - 1] + 1;
-      int d3 = T[1 - cur][ib - 1];
-      if (a[ia - 1] != b[ib - 1])
-        d3++;
-
-      if (d1 < ret)
-        ret = d1;
-      if (d2 < ret)
-        ret = d2;
-      if (d3 < ret)
-        ret = d3;
-
-      T[cur][ib] = ret;
-    }
-
-    cur = 1 - cur;
-  }
-
-  int ret = T[1 - cur][nb];
-
-  return ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Computes Hamming distance between a null-terminated string "a" with length "na"
-//  and a null-terminated string "b" with length "nb"
-unsigned int HammingDistance(char *a, int na, char *b, int nb) {
-  int j, oo = 0x7FFFFFFF;
-  if (na != nb)
-    return oo;
-
-  unsigned int num_mismatches = 0;
-  for (j = 0; j < na; j++)
-    if (a[j] != b[j])
-      num_mismatches++;
-
-  return num_mismatches;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Keeps all query ID results associated with a dcoument
-struct Document {
-  DocID doc_id;
-  unsigned int num_res;
-  QueryID *query_ids;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Keeps all currently active queries
-// vector<Query> queries;
-
-// Keeps all currently available results that has not been returned yet
-vector<Document> docs;
 
 // Keeps all currently matched words of the queries
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +48,7 @@ hammingArray *hamming = nullptr;
 BK_Tree *edit = nullptr;
 MatchArray *matchArray = nullptr;
 ResultList *forDeletion = nullptr;
+DocumentList *docs = nullptr;
 unsigned int maxQueryId = 0;
 
 ErrorCode InitializeIndex() {
@@ -150,15 +56,20 @@ ErrorCode InitializeIndex() {
   hamming = new hammingArray();
   edit = new BK_Tree();
   forDeletion = new ResultList();
+  docs = new DocumentList();
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode DestroyIndex() {
-  // delete ht;
-  // delete hamming;
-  // delete edit;
+  delete ht;
+  delete hamming;
+  delete edit;
+  delete matchArray;
+  delete forDeletion;
+  delete docs;
+
   return EC_SUCCESS;
 }
 
@@ -264,25 +175,27 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     // Hamming Distance
     hamming->lookup(word, matchArray, forDeletion);
 
-    wordToken = strtok(NULL, " ");
+    if (wordToken) {
+      wordToken = strtok(NULL, " ");
+    }
   }
 
-  Document doc;
-  doc.doc_id = doc_id;
-  doc.num_res = matchArray->getMatchedIds()->getCount();
-  doc.query_ids = 0;
+  Document *doc = new Document();
+  doc->doc_id = doc_id;
+  doc->num_res = matchArray->getMatchedIds()->getCount();
+  doc->query_ids = 0;
 
-  if (doc.num_res) {
-    doc.query_ids = new unsigned int[doc.num_res];
+  if (doc->num_res) {
+    doc->query_ids = new unsigned int[doc->num_res];
     ResultListNode *cur = matchArray->getMatchedIds()->getHead();
     int k = 0;
     while (cur != nullptr) {
-      doc.query_ids[k++] = cur->getId();
+      doc->query_ids[k++] = cur->getId();
       cur = cur->getNext();
     }
   }
 
-  docs.push_back(doc);
+  docs->addToEnd(doc);
   delete matchArray;
   return EC_SUCCESS;
 }
@@ -294,12 +207,14 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_doc_id = 0;
   *p_num_res = 0;
   *p_query_ids = 0;
-  if (docs.size() == 0)
+  if (docs->getCount() == 0)
     return EC_NO_AVAIL_RES;
-  *p_doc_id = docs[0].doc_id;
-  *p_num_res = docs[0].num_res;
-  *p_query_ids = docs[0].query_ids;
-  docs.erase(docs.begin());
+
+  *p_doc_id = docs->getHead()->getDoc()->doc_id;
+  *p_num_res = docs->getHead()->getDoc()->num_res;
+  *p_query_ids = docs->getHead()->getDoc()->query_ids;
+
+  docs->removeFromStart();
   return EC_SUCCESS;
 }
 
