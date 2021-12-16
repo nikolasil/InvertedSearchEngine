@@ -10,7 +10,11 @@ MatchTree::MatchTree(int maxWords) {
   this->maxWords = maxWords;
   this->root = nullptr;
 }
-MatchTree::~MatchTree() {}
+MatchTree::~MatchTree() {
+  if (this->root) {
+    delete this->root;
+  }
+}
 
 void MatchTree::print() {
   if (this->root != nullptr) {
@@ -55,7 +59,17 @@ bool MatchTree::matched() {
   return false;
 }
 
-MatchTreeNode::~MatchTreeNode() {}
+MatchTreeNode::~MatchTreeNode() {
+  if (this->left != nullptr) {
+    delete this->left;
+  }
+  // if (this->data != nullptr) {
+  //   delete this->data;
+  // }
+  if (this->right != nullptr) {
+    delete this->right;
+  }
+}
 MatchTreeNode::MatchTreeNode(String *d) {
   this->data = d;
   this->left = nullptr;

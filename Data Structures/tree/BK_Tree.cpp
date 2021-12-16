@@ -92,11 +92,14 @@ BK_TreeNode::BK_TreeNode(String *d, HEInfo *info) {
 }
 
 BK_TreeNode::~BK_TreeNode() {
-  if (this->data != nullptr) {
-    delete this->data;
-  }
+  // if (this->data != nullptr) {
+  //   delete this->data;
+  // }
   if (this->childs != nullptr) {
     delete this->childs;
+  }
+  if (this->info != nullptr) {
+    delete this->info;
   }
 }
 

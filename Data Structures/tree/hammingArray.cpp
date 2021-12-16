@@ -11,6 +11,12 @@ hammingArray::hammingArray() {
 }
 
 hammingArray::~hammingArray() {
+  for (int i = 0; i < ARRAY_SIZE; i++) {
+    if (this->array[i] != NULL) {
+      delete this->array[i];
+    }
+  }
+  delete[] this->array;
 }
 
 void hammingArray::insert(String *word, HEInfo *info) {

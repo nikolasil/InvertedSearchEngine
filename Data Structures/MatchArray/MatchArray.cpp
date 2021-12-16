@@ -13,9 +13,15 @@ MatchArray::MatchArray(int size) {
 
 MatchArray::~MatchArray() {
   for (int i = 0; i < this->size; i++) {
-    delete this->array[i];
+    if (this->array[i] != nullptr) {
+      delete this->array[i];
+    }
   }
   delete[] this->array;
+
+  if (this->matchedIds) {
+    delete this->matchedIds;
+  }
 }
 
 void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {

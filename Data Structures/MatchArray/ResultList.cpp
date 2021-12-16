@@ -9,6 +9,9 @@ ResultList::ResultList() {
   this->count = 0;
 }
 ResultList::~ResultList() {
+  if (this->head) {
+    delete this->head;
+  }
 }
 void ResultList::add(int id) {
   ResultListNode *newNode = new ResultListNode(id);

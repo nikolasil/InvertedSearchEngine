@@ -72,8 +72,14 @@ bucketNode::bucketNode(String *word, ExactInfo *wordInfo) {
 }
 
 bucketNode::~bucketNode() {
+  // if (this->word != nullptr) {
+  //   delete this->word;
+  // }
   if (this->next != nullptr) {
     delete this->next;
+  }
+  if (this->list != nullptr) {
+    delete this->list;
   }
 }
 
