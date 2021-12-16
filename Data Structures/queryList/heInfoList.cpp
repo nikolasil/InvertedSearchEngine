@@ -10,8 +10,9 @@ heInfoList::heInfoList() {
   this->count = 0;
 }
 heInfoList::~heInfoList() {
-  if (this->head) {
+  if (this->head != nullptr) {
     delete this->head;
+    this->head = nullptr;
   }
 }
 void heInfoList::addQuery(HEInfo *wordInfo) {
@@ -39,16 +40,27 @@ heInfoNode::heInfoNode(HEInfo *info) {
   this->next = nullptr;
 }
 heInfoNode::~heInfoNode() {
-  // if (this->info != nullptr) {
-  //   delete this->info;
-  // }
   if (this->next != nullptr) {
     delete this->next;
+    this->next = nullptr;
   }
 }
 void heInfoNode::print() {
   cout << "{" << this->getId() << "," << this->getMaxQueryWords() << "," << this->getMatchDist() << "}  ";
   if (this->next) {
     this->next->print();
+  }
+}
+
+void heInfoNode::destroy() {
+  delete this->info;
+  if (this->next != nullptr) {
+    this->next->destroy();
+  }
+}
+
+void heInfoList::destroy() {
+  if (this->head != nullptr) {
+    this->head->destroy();
   }
 }

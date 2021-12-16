@@ -14,6 +14,7 @@ Bucket::Bucket() {
 Bucket::~Bucket() {
   if (this->head != nullptr) {
     delete this->head;
+    this->head = nullptr;
   }
 }
 
@@ -25,7 +26,7 @@ exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
-      (*matchedWord)->setStr(temp->getWord()->getStr());
+      (*matchedWord) = temp->getWord();
       return temp->getList();
     }
     temp = temp->getNext();
@@ -37,6 +38,7 @@ bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
   bucketNode *exists = this->getNode(word);
   if (exists != nullptr) {
     exists->addToQueryList(wordInfo);
+    delete word;
     return exists;
   }
 
@@ -54,7 +56,7 @@ bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
 bucketNode *Bucket::getNode(String *word) {
   bucketNode *current = this->head;
   while (current != nullptr) {
-    if (!strcmp(current->getWord()->getStr(), word->getStr())) {
+    if (current->getWord()->exactMatch(word)) {
       return current;
     }
     current = current->getNext();
@@ -72,14 +74,17 @@ bucketNode::bucketNode(String *word, ExactInfo *wordInfo) {
 }
 
 bucketNode::~bucketNode() {
-  // if (this->word != nullptr) {
-  //   delete this->word;
-  // }
+  if (this->word != nullptr) {
+    delete this->word;
+    this->word = nullptr;
+  }
   if (this->next != nullptr) {
     delete this->next;
+    this->next = nullptr;
   }
   if (this->list != nullptr) {
     delete this->list;
+    this->list = nullptr;
   }
 }
 

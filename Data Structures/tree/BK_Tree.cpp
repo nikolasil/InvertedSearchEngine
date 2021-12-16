@@ -13,6 +13,7 @@ BK_Tree::BK_Tree() { this->root = nullptr; }
 BK_Tree::~BK_Tree() {
   if (this->root != nullptr) {
     delete this->root;
+    this->root = nullptr;
   }
 }
 
@@ -23,15 +24,17 @@ void BK_Tree::add(String *word, HEInfo *info) {
     this->root = new BK_TreeNode(word, info);
     return;
   }
+  int diff;
   while (true) {
     // Compare word with node data
-    int diff;
     if (current->getData()->getSize() == word->getSize())
       diff = word->hammingDistance(current->getData());
     else
       diff = word->editDistance(current->getData()->getStr(), word->getStr(), current->getData()->getSize(), word->getSize());
+
     if (diff == 0) {
       current->getInfo()->addQuery(info);
+      delete word;
       return;
     }
     // Search for child node with equal weight in edge
@@ -92,14 +95,17 @@ BK_TreeNode::BK_TreeNode(String *d, HEInfo *info) {
 }
 
 BK_TreeNode::~BK_TreeNode() {
-  // if (this->data != nullptr) {
-  //   delete this->data;
-  // }
+  if (this->data != nullptr) {
+    delete this->data;
+    this->data = nullptr;
+  }
   if (this->childs != nullptr) {
     delete this->childs;
+    this->childs = nullptr;
   }
   if (this->info != nullptr) {
     delete this->info;
+    this->info = nullptr;
   }
 }
 
@@ -225,9 +231,11 @@ BK_TreeEdge::BK_TreeEdge(int w, BK_TreeNode *c) {
 BK_TreeEdge::~BK_TreeEdge() {
   if (this->child != nullptr) {
     delete this->child;
+    this->child = nullptr;
   }
   if (this->next != nullptr) {
     delete this->next;
+    this->next = nullptr;
   }
 }
 

@@ -10,6 +10,7 @@ private:
 public:
   exactInfoNode(ExactInfo *info);
   ~exactInfoNode();
+  void destroy();
   //  Getters
   int getId() const { return this->info->query_id; };
   unsigned int getMaxQueryWords() const { return this->info->maxQueryWords; };
@@ -34,6 +35,7 @@ private:
 public:
   exactInfoList();
   ~exactInfoList();
+  void destroy();
   // Getters
   exactInfoNode *getHead() const { return this->head; };
   exactInfoNode *getLast() const { return this->last; };

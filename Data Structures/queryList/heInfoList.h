@@ -10,6 +10,7 @@ private:
 public:
   heInfoNode(HEInfo *info);
   ~heInfoNode();
+  void destroy();
   //  Getters
   int getId() const { return this->info->query_id; };
   unsigned int getMaxQueryWords() const { return this->info->maxQueryWords; };
@@ -36,6 +37,7 @@ private:
 public:
   heInfoList();
   ~heInfoList();
+  void destroy();
   // Getters
   heInfoNode *getHead() const { return this->head; };
   heInfoNode *getLast() const { return this->last; };

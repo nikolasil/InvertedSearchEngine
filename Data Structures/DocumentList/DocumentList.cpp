@@ -9,15 +9,19 @@ DocumentList::DocumentList() {
   this->count = 0;
 }
 DocumentList::~DocumentList() {
-  if (this->head != nullptr) {
-    delete this->head;
+  DocumentNode *curr = this->head;
+  while (curr != nullptr) {
+    DocumentNode *temp = curr->getNext();
+    delete curr;
+    curr = temp;
   }
 }
-void DocumentList::addToEnd(Document *doc) {
+void DocumentList::addToEnd(Document doc) {
   DocumentNode *newNode = new DocumentNode(doc);
 
   if (count == 0) {
-    this->head = this->last = newNode;
+    this->head = newNode;
+    this->last = newNode;
     count++;
     return;
   }
@@ -29,27 +33,31 @@ void DocumentList::addToEnd(Document *doc) {
 
 void DocumentList::removeFromStart() {
   if (count > 0) {
+    DocumentNode *temp = this->head;
     this->head = this->head->getNext();
     if (this->head == nullptr) {
       this->last = nullptr;
     }
     count--;
+    delete temp;
   }
 }
 
 // DocumentNode
-DocumentNode::DocumentNode(Document *doc) {
+DocumentNode::DocumentNode(Document doc) {
   this->doc = doc;
   this->next = nullptr;
 }
-DocumentNode::~DocumentNode() {
-  // if (this->doc != nullptr) {
-  //   if (doc->query_ids != nullptr) {
-  //     delete[] doc->query_ids;
-  //   }
-  //   delete doc;
-  // }
+DocumentNode::~DocumentNode() {}
+
+void DocumentList::destroy() {
+  if (this->head != nullptr) {
+    this->head->destroy();
+  }
+}
+
+void DocumentNode::destroy() {
   if (this->next != nullptr) {
-    delete this->next;
+    this->next->destroy();
   }
 }

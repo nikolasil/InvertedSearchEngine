@@ -30,6 +30,8 @@
 #include "../../Data Structures/MatchArray/MatchArray.h"
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
+#include "../../Data Structures/queryList/exactInfoList.h"
+#include "../../Data Structures/queryList/heInfoList.h"
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
@@ -51,12 +53,17 @@ ResultList *forDeletion = nullptr;
 DocumentList *docs = nullptr;
 unsigned int maxQueryId = 0;
 
+exactInfoList *exactStructsList = nullptr;
+heInfoList *heStructsList = nullptr;
+
 ErrorCode InitializeIndex() {
   ht = new HashTable();
   hamming = new hammingArray();
   edit = new BK_Tree();
   forDeletion = new ResultList();
   docs = new DocumentList();
+  exactStructsList = new exactInfoList();
+  heStructsList = new heInfoList();
   return EC_SUCCESS;
 }
 
@@ -66,15 +73,20 @@ ErrorCode DestroyIndex() {
   delete ht;
   delete hamming;
   delete edit;
-  delete matchArray;
+
+  exactStructsList->destroy();
+  heStructsList->destroy();
+  forDeletion->destroy();
+  // docs->destroy();
+  delete exactStructsList;
+  delete heStructsList;
   delete forDeletion;
   delete docs;
-
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-HEInfo *test = nullptr;
+
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
@@ -100,7 +112,9 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
     exactInfo->maxQueryWords = maxQueryWords;
+    exactStructsList->addQuery(exactInfo);
     break;
   }
   case MT_EDIT_DIST: {
@@ -114,7 +128,9 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
     heInfo->maxQueryWords = maxQueryWords;
+    heStructsList->addQuery(heInfo);
     break;
   }
   case MT_HAMMING_DIST: {
@@ -129,10 +145,13 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
     heInfo->maxQueryWords = maxQueryWords;
+    heStructsList->addQuery(heInfo);
     break;
   }
   }
+  delete wordToken;
   maxQueryId++;
 
   return EC_SUCCESS;
@@ -153,14 +172,18 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
 
   MatchArray *matchArray = new MatchArray(maxQueryId);
   char *wordToken = strtok(cur_doc_str, " ");
+  String *word = nullptr;
+  String *matchedWord = nullptr;
+  exactInfoList *exactList = nullptr;
+  exactInfoNode *cur = nullptr;
   while (wordToken != NULL) {
-    String *word = new String(wordToken);
+    word = new String(wordToken);
 
     // hashTable
-    String *matchedWord = new String("");
-    exactInfoList *exactList = ht->lookup(word, &matchedWord);
+    matchedWord = nullptr;
+    exactList = ht->lookup(word, &matchedWord);
     if (exactList != nullptr) {
-      exactInfoNode *cur = exactList->getHead();
+      cur = exactList->getHead();
       while (cur != nullptr) {
         if (forDeletion->searchRemove(cur->getId())) {
           cur->setFlag(false);
@@ -178,20 +201,22 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     if (wordToken) {
       wordToken = strtok(NULL, " ");
     }
+    delete word;
   }
+  delete wordToken;
 
-  Document *doc = new Document();
-  doc->doc_id = doc_id;
-  doc->num_res = matchArray->getMatchedIds()->getCount();
-  doc->query_ids = 0;
+  Document doc;
+  doc.doc_id = doc_id;
+  doc.num_res = matchArray->getMatchedIds()->getCount();
+  doc.query_ids = 0;
 
-  if (doc->num_res) {
-    doc->query_ids = new unsigned int[doc->num_res];
-    ResultListNode *cur = matchArray->getMatchedIds()->getHead();
+  if (doc.num_res != 0) {
+    doc.query_ids = new QueryID[doc.num_res];
+    ResultListNode *r_cur = matchArray->getMatchedIds()->getHead();
     int k = 0;
-    while (cur != nullptr) {
-      doc->query_ids[k++] = cur->getId();
-      cur = cur->getNext();
+    while (r_cur != nullptr) {
+      doc.query_ids[k++] = r_cur->getId();
+      r_cur = r_cur->getNext();
     }
   }
 
@@ -210,9 +235,9 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   if (docs->getCount() == 0)
     return EC_NO_AVAIL_RES;
 
-  *p_doc_id = docs->getHead()->getDoc()->doc_id;
-  *p_num_res = docs->getHead()->getDoc()->num_res;
-  *p_query_ids = docs->getHead()->getDoc()->query_ids;
+  *p_doc_id = docs->getHead()->getDoc().doc_id;
+  *p_num_res = docs->getHead()->getDoc().num_res;
+  *p_query_ids = docs->getHead()->getDoc().query_ids;
 
   docs->removeFromStart();
   return EC_SUCCESS;

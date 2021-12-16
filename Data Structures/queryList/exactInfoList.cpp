@@ -12,6 +12,7 @@ exactInfoList::exactInfoList() {
 exactInfoList::~exactInfoList() {
   if (this->head != nullptr) {
     delete this->head;
+    this->head = nullptr;
   }
 }
 void exactInfoList::addQuery(ExactInfo *wordInfo) {
@@ -37,16 +38,27 @@ exactInfoNode::exactInfoNode(ExactInfo *info) {
   this->next = nullptr;
 }
 exactInfoNode::~exactInfoNode() {
-  // if (this->info != nullptr) {
-  //   delete this->info;
-  // }
   if (this->next != nullptr) {
     delete this->next;
+    this->next = nullptr;
   }
 }
 void exactInfoNode::print() {
   cout << "{" << this->getId() << "," << this->getMaxQueryWords() << "}  ";
   if (this->next) {
     this->next->print();
+  }
+}
+
+void exactInfoNode::destroy() {
+  delete this->info;
+  if (this->next != nullptr) {
+    this->next->destroy();
+  }
+}
+
+void exactInfoList::destroy() {
+  if (this->head != nullptr) {
+    this->head->destroy();
   }
 }

@@ -12,11 +12,13 @@ HashTable::HashTable(int size) {
 
 HashTable::~HashTable() {
   for (int i = 0; i < this->size; i++) {
-    if (this->table[i] != NULL) {
+    if (this->table[i] != nullptr) {
       delete this->table[i];
+      this->table[i] = nullptr;
     }
   }
   delete[] this->table;
+  this->table = nullptr;
 }
 
 void HashTable::insert(String *word, ExactInfo *wordInfo) {

@@ -27,6 +27,7 @@ private:
 public:
   ResultList();
   ~ResultList();
+  void destroy();
   // Getters
   int getCount() { return this->count; };
   ResultListNode *getHead() { return this->head; };

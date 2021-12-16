@@ -7,8 +7,8 @@ private:
   int size;
 
 public:
-  String(const char *string);
-  String(const String *string);
+  String(char *string);
+  String(String *string);
   ~String();
   // Getters
   char *getStr() const { return this->str; };

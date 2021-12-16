@@ -6,17 +6,19 @@
 #include "../string/String.h"
 class DocumentNode {
 private:
-  Document *doc;
+  Document doc;
   DocumentNode *next;
 
 public:
-  DocumentNode(Document *doc);
+  DocumentNode(Document doc);
   ~DocumentNode();
+  void destroy();
+  // void remove();
   // Getters
-  Document *getDoc() { return this->doc; };
+  Document getDoc() { return this->doc; };
   DocumentNode *getNext() { return this->next; };
   // Setters
-  void setDoc(Document *doc) { this->doc = doc; };
+  void setDoc(Document doc) { this->doc = doc; };
   void setNext(DocumentNode *next) { this->next = next; };
 };
 
@@ -24,11 +26,13 @@ class DocumentList {
 private:
   DocumentNode *head;
   DocumentNode *last;
+
   int count;
 
 public:
   DocumentList();
   ~DocumentList();
+  void destroy();
   // Getters
   int getCount() { return this->count; };
   DocumentNode *getHead() { return this->head; };
@@ -38,7 +42,7 @@ public:
   void setHead(DocumentNode *head) { this->head = head; };
   void setLast(DocumentNode *last) { this->last = last; };
   // Methods
-  void addToEnd(Document *doc);
+  void addToEnd(Document doc);
   void removeFromStart();
 };
 

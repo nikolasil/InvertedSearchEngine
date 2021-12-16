@@ -5,19 +5,22 @@
 
 using namespace std;
 
-String::String(const char *string) {
+String::String(char *string) {
   this->size = strlen(string);
   this->str = new char[this->size + 1];
   this->str[this->size] = '\0';
   strcpy(this->str, string);
 }
-String::String(const String *s) {
+String::String(String *s) {
   this->size = s->getSize();
   this->str = new char[this->size + 1];
   this->str[this->size] = '\0';
   strcpy(this->str, s->getStr());
 }
-String::~String() { delete[] this->str; }
+String::~String() {
+  delete[] this->str;
+  this->str = nullptr;
+}
 
 bool String::exactMatch(String *s) {
   char *s1 = this->str;

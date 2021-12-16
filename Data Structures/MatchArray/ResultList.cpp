@@ -9,8 +9,9 @@ ResultList::ResultList() {
   this->count = 0;
 }
 ResultList::~ResultList() {
-  if (this->head) {
+  if (this->head != nullptr) {
     delete this->head;
+    this->head = nullptr;
   }
 }
 void ResultList::add(int id) {
@@ -108,3 +109,13 @@ ResultListNode::ResultListNode(int id) {
   this->next = nullptr;
 }
 ResultListNode::~ResultListNode() {}
+
+void ResultList::destroy() {
+  ResultListNode *current = this->getHead();
+  while (current != nullptr) {
+    ResultListNode *temp = current->getNext();
+    delete current;
+    current = temp;
+  }
+  this->setHead(nullptr);
+}

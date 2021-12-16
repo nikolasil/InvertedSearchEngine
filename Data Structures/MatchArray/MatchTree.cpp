@@ -11,8 +11,9 @@ MatchTree::MatchTree(int maxWords) {
   this->root = nullptr;
 }
 MatchTree::~MatchTree() {
-  if (this->root) {
+  if (this->root != nullptr) {
     delete this->root;
+    this->root = nullptr;
   }
 }
 
@@ -62,12 +63,11 @@ bool MatchTree::matched() {
 MatchTreeNode::~MatchTreeNode() {
   if (this->left != nullptr) {
     delete this->left;
+    this->left = nullptr;
   }
-  // if (this->data != nullptr) {
-  //   delete this->data;
-  // }
   if (this->right != nullptr) {
     delete this->right;
+    this->right = nullptr;
   }
 }
 MatchTreeNode::MatchTreeNode(String *d) {
