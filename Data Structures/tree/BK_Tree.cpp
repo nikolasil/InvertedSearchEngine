@@ -165,7 +165,6 @@ void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
 void BK_TreeNode::print() {
   cout << "Node : " << this->data->getStr();
   this->info->print();
-  cout << endl;
 
   if (this->childs != nullptr) {
     this->childs->print();

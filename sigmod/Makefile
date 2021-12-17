@@ -97,4 +97,4 @@ clean:
 	rm -f $(PROGRAMS) lib$(LIBRARY).so
 	find . -name '*.o' -print | xargs rm -f
 clean_test:
-	rm -f test $(TESTFILES) $(TESTER)
+	rm -f test $(FILES) $(TESTER)

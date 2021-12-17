@@ -1,6 +1,16 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+class HashTable;
+class hammingArray;
+class BK_Tree;
+class ResultList;
+class DocumentList;
+class exactInfoList;
+class heInfoList;
+class Bucket;
+class MatchArray;
+
 #include "../../Data Structures/DocumentList/DocumentList.h"
 #include "../../Data Structures/MatchArray/MatchArray.h"
 #include "../../Data Structures/hashTable/bucket.h"
