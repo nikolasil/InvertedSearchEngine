@@ -35,7 +35,7 @@
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
-#include "../include/structs.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -46,7 +46,6 @@ using namespace std;
 // Keeps all currently matched words of the queries
 ///////////////////////////////////////////////////////////////////////////////////////////////
 DataStructs structs;
-
 ErrorCode InitializeIndex() {
 
   return EC_SUCCESS;
@@ -59,6 +58,10 @@ ErrorCode DestroyIndex() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+DataStructs *getStructs() {
+  return &structs;
+}
 
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
@@ -144,7 +147,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   strcpy(cur_doc_str, doc_str);
 
   MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
-  char *wordToken = strtok(cur_doc_str, " ");
+  const char *wordToken = strtok(cur_doc_str, " ");
   String *word = nullptr;
   String *matchedWord = nullptr;
   exactInfoList *exactList = nullptr;

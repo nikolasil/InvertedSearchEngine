@@ -5,7 +5,7 @@
 
 using namespace std;
 
-String::String(char *string) {
+String::String(const char *string) {
   this->size = strlen(string);
   this->str = new char[this->size + 1];
   this->str[this->size] = '\0';

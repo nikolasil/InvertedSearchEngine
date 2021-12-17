@@ -7,7 +7,7 @@ private:
   int size;
 
 public:
-  String(char *string);
+  String(const char *string);
   String(String *string);
   ~String();
   // Getters

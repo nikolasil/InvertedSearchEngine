@@ -81,6 +81,7 @@ exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
 
   // If Bucket is Empty, Create a new Bucket
   if (this->table[index] == NULL) {
+    (*matchedWord) = nullptr;
     return NULL;
   }
 

@@ -33,7 +33,7 @@ IMPL_O=ref_impl/core.o
 
 # Compiler flags
 CC  = gcc
-CXX = g++
+CXX = g++ -std=c++11
 CFLAGS=-O3 -fPIC -Wall -g -I. -I./include
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-lpthread
@@ -49,9 +49,9 @@ TESTER = test.o
 # Build all programs
 all: clean $(PROGRAMS)
 test :  $(IMPL_O)  $(FILES) $(TESTER)
-	$(CXX) $(CFLAFS) -o test  $(IMPL_O)  $(FILES) $(TESTER) -lcrypto
+	$(CXX) $(CXXFLAGS) -w  -o test  $(IMPL_O)  $(FILES) $(TESTER) -lcrypto
 lib: $(IMPL_O) $(FILES)
-	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)  -I /usr/local/Cellar/openssl@3/3.0.0_1/include/ -L  /usr/local/Cellar/openssl@3/3.0.0_1/lib/ -lcrypto
+	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES) -lcrypto
 
 testdriver: lib $(TEST_O) $(FILES)
 	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES) -lcrypto
@@ -97,4 +97,4 @@ clean:
 	rm -f $(PROGRAMS) lib$(LIBRARY).so
 	find . -name '*.o' -print | xargs rm -f
 clean_test:
-	rm -f test $(TESTFILES) $(TESTER)
+	rm -f test $(FILES) $(TESTER)
