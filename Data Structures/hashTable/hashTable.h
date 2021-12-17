@@ -24,13 +24,12 @@ public:
   // Methods
   Bucket *getBucket(int i) { return this->table[i]; };
   void setBucket(Bucket *b, int i) { this->table[i] = b; };
-  void insert(String *word, ExactInfo wordInfo);
-  int getIndex(char *H);
+  void insert(String *word, ExactInfo *wordInfo);
+  int getIndex(unsigned char *H);
   exactInfoList *lookup(String *H, String **matchedWord);
   void print();
   // Hashing Related Methods
-  void generateHashString(char key[256], char *returnHash);
-  int hexadecimalToDecimal(char hexVal[]);
+  int hexadecimalToDecimal(unsigned char hexVal[]);
 };
 
 #endif

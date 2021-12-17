@@ -27,6 +27,7 @@ private:
 public:
   ResultList();
   ~ResultList();
+  void destroy();
   // Getters
   int getCount() { return this->count; };
   ResultListNode *getHead() { return this->head; };
@@ -38,6 +39,8 @@ public:
   // Methods
   void add(int id);
   void remove(int id);
+  bool search(int id);
+  bool searchRemove(int id);
   void print();
 };
 

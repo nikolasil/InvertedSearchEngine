@@ -9,15 +9,39 @@ ResultList::ResultList() {
   this->count = 0;
 }
 ResultList::~ResultList() {
+  if (this->head != nullptr) {
+    delete this->head;
+    this->head = nullptr;
+  }
 }
 void ResultList::add(int id) {
   ResultListNode *newNode = new ResultListNode(id);
-  if (this->head == nullptr) {
+  ResultListNode *curr = this->head;
+  ResultListNode *prev = nullptr;
+  if (curr == NULL) {
     this->head = newNode;
-  } else {
-    this->last->setNext(newNode);
+    this->last = newNode;
+    count++;
+    return;
+  }
+  while (curr != nullptr) {
+    if (curr->getId() > id) {
+      if (prev == nullptr) {
+        this->head = newNode;
+        newNode->setNext(curr);
+        count++;
+        return;
+      }
+      newNode->setNext(curr);
+      prev->setNext(newNode);
+      count++;
+      return;
+    }
+    prev = curr;
+    curr = curr->getNext();
   }
   this->last = newNode;
+  prev->setNext(newNode);
   count++;
 }
 
@@ -28,6 +52,7 @@ void ResultList::remove(int id) {
     if (current->getId() == id) {
       if (previous == nullptr) {
         this->head = current->getNext();
+        this->last = this->head;
       } else {
         previous->setNext(current->getNext());
       }
@@ -38,6 +63,37 @@ void ResultList::remove(int id) {
     previous = current;
     current = current->getNext();
   }
+}
+bool ResultList::search(int id) {
+  ResultListNode *current = this->head;
+  while (current != nullptr) {
+    if (current->getId() == id) {
+      return true;
+    }
+    current = current->getNext();
+  }
+  return false;
+}
+
+bool ResultList::searchRemove(int id) {
+  ResultListNode *current = this->head;
+  ResultListNode *previous = nullptr;
+  while (current != nullptr) {
+    if (current->getId() == id) {
+      if (previous == nullptr) {
+        this->head = current->getNext();
+        this->last = this->head;
+      } else {
+        previous->setNext(current->getNext());
+      }
+      delete current;
+      count--;
+      return true;
+    }
+    previous = current;
+    current = current->getNext();
+  }
+  return false;
 }
 void ResultList::print() {
   ResultListNode *current = this->head;
@@ -53,3 +109,13 @@ ResultListNode::ResultListNode(int id) {
   this->next = nullptr;
 }
 ResultListNode::~ResultListNode() {}
+
+void ResultList::destroy() {
+  ResultListNode *current = this->getHead();
+  while (current != nullptr) {
+    ResultListNode *temp = current->getNext();
+    delete current;
+    current = temp;
+  }
+  this->setHead(nullptr);
+}

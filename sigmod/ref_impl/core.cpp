@@ -26,139 +26,40 @@
  */
 
 #include "../include/core.h"
+#include "../../Data Structures/DocumentList/DocumentList.h"
 #include "../../Data Structures/MatchArray/MatchArray.h"
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
+#include "../../Data Structures/queryList/exactInfoList.h"
+#include "../../Data Structures/queryList/heInfoList.h"
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
+#include "../include/structs.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Computes edit distance between a null-terminated string "a" with length "na"
-//  and a null-terminated string "b" with length "nb"
-int EditDistance(char *a, int na, char *b, int nb) {
-  int oo = 0x7FFFFFFF;
-
-  static int T[2][MAX_WORD_LENGTH + 1];
-
-  int ia, ib;
-
-  int cur = 0;
-  ia = 0;
-
-  for (ib = 0; ib <= nb; ib++)
-    T[cur][ib] = ib;
-
-  cur = 1 - cur;
-
-  for (ia = 1; ia <= na; ia++) {
-    for (ib = 0; ib <= nb; ib++)
-      T[cur][ib] = oo;
-
-    int ib_st = 0;
-    int ib_en = nb;
-
-    if (ib_st == 0) {
-      ib = 0;
-      T[cur][ib] = ia;
-      ib_st++;
-    }
-
-    for (ib = ib_st; ib <= ib_en; ib++) {
-      int ret = oo;
-
-      int d1 = T[1 - cur][ib] + 1;
-      int d2 = T[cur][ib - 1] + 1;
-      int d3 = T[1 - cur][ib - 1];
-      if (a[ia - 1] != b[ib - 1])
-        d3++;
-
-      if (d1 < ret)
-        ret = d1;
-      if (d2 < ret)
-        ret = d2;
-      if (d3 < ret)
-        ret = d3;
-
-      T[cur][ib] = ret;
-    }
-
-    cur = 1 - cur;
-  }
-
-  int ret = T[1 - cur][nb];
-
-  return ret;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Computes Hamming distance between a null-terminated string "a" with length "na"
-//  and a null-terminated string "b" with length "nb"
-unsigned int HammingDistance(char *a, int na, char *b, int nb) {
-  int j, oo = 0x7FFFFFFF;
-  if (na != nb)
-    return oo;
-
-  unsigned int num_mismatches = 0;
-  for (j = 0; j < na; j++)
-    if (a[j] != b[j])
-      num_mismatches++;
-
-  return num_mismatches;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Keeps all query ID results associated with a dcoument
-struct Document {
-  DocID doc_id;
-  unsigned int num_res;
-  QueryID *query_ids;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-// Keeps all currently active queries
-vector<Query> queries;
-
-// Keeps all currently available results that has not been returned yet
-vector<Document> docs;
-
 // Keeps all currently matched words of the queries
-MatchArray *matchArray = nullptr;
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
-HashTable *ht;
-hammingArray *hamming;
-BK_Tree *edit;
-unsigned int maxQueryId = 0;
+DataStructs structs;
 
 ErrorCode InitializeIndex() {
-  ht = new HashTable();
-  hamming = new hammingArray();
-  edit = new BK_Tree();
+
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode DestroyIndex() {
-  delete ht;
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
 ErrorCode
 StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
   Query query;
@@ -170,137 +71,129 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 
   char temp_query_str[MAX_QUERY_LENGTH];
   strcpy(temp_query_str, query_str);
-  int maxQueryWords = 0;
+  unsigned int maxQueryWords = 0;
   char *wordToken = strtok(temp_query_str, " ");
-  while (wordToken != NULL) {
-    maxQueryWords++;
-    wordToken = strtok(NULL, " ");
-  }
-
-  strcpy(temp_query_str, query_str);
-  wordToken = strtok(temp_query_str, " ");
 
   switch (match_type) {
   case MT_EXACT_MATCH: {
-    ExactInfo exactInfo;
-    exactInfo.query_id = query_id;
-    exactInfo.maxQueryWords = maxQueryWords;
+    ExactInfo *exactInfo = new ExactInfo();
+    exactInfo->query_id = query_id;
+    exactInfo->flag = true;
 
     while (wordToken != NULL) {
-      ht->insert(new String(wordToken), exactInfo);
+      structs.getHashTable()->insert(new String(wordToken), exactInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
+    exactInfo->maxQueryWords = maxQueryWords;
+    structs.getExactStructsList()->addQuery(exactInfo);
     break;
   }
   case MT_EDIT_DIST: {
-    // cout << "edit distance" << endl;
-    HEInfo heInfo;
-    heInfo.query_id = query_id;
-    heInfo.maxQueryWords = maxQueryWords;
-    heInfo.matchDist = match_dist;
+    HEInfo *heInfo = new HEInfo();
+    heInfo->query_id = query_id;
+    heInfo->matchDist = match_dist;
+    heInfo->flag = true;
 
     while (wordToken != NULL) {
-      edit->add(new String(wordToken), heInfo);
+      structs.getEdit()->add(new String(wordToken), heInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
+    heInfo->maxQueryWords = maxQueryWords;
+    structs.getHeStructsList()->addQuery(heInfo);
     break;
   }
   case MT_HAMMING_DIST: {
-    HEInfo heInfo;
-    heInfo.query_id = query_id;
-    heInfo.maxQueryWords = maxQueryWords;
-    heInfo.matchDist = match_dist;
+    HEInfo *heInfo = new HEInfo();
+
+    heInfo->query_id = query_id;
+    heInfo->matchDist = match_dist;
+    heInfo->flag = true;
 
     while (wordToken != NULL) {
-      hamming->insert(new String(wordToken), heInfo);
+      structs.getHamming()->insert(new String(wordToken), heInfo);
+      maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
+
+    heInfo->maxQueryWords = maxQueryWords;
+    structs.getHeStructsList()->addQuery(heInfo);
     break;
   }
   }
+  delete wordToken;
+  structs.setMaxQueryId(structs.getMaxQueryId() + 1);
 
-  // cout << "______________ EXACT"
-  //      << "_______________" << endl;
-  // ht->print();
-  // cout << "______________ EDIT"
-  //      << "_______________" << endl;
-  // edit->print();
-  // cout << "______________ HAMMING"
-  //      << "_______________" << endl;
-  // hamming->print();
-
-  // Add this query to the active query set
-  if (maxQueryId < query_id)
-    maxQueryId = query_id;
-
-  queries.push_back(query);
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode EndQuery(QueryID query_id) {
-  // Remove this query from the active query set
-  unsigned int i, n = queries.size();
-  for (i = 0; i < n; i++) {
-    if (queries[i].query_id == query_id) {
-      queries.erase(queries.begin() + i);
-      break;
-    }
-  }
+  structs.getForDeletion()->add(query_id);
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-int c = 0;
+
 ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
-  MatchArray *matchArray = new MatchArray(maxQueryId);
-
+  MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
   char *wordToken = strtok(cur_doc_str, " ");
-  edit->print();
+  String *word = nullptr;
+  String *matchedWord = nullptr;
+  exactInfoList *exactList = nullptr;
+  exactInfoNode *cur = nullptr;
   while (wordToken != NULL) {
-    String *word = new String(wordToken);
+    word = new String(wordToken);
+
     // hashTable
-    // String *matchedWord = new String("");
-    // exactInfoList *exactList = ht->lookup(word, &matchedWord);
-    // if (exactList != nullptr) {
-    //   cout << "Lookup Success" << endl;
-    //   exactList->print();
-    //   exactInfoNode *cur = exactList->getHead();
-    //   while (cur != nullptr) {
-    //     matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
-    //     cur = cur->getNext();
-    //   }
-    // }
-    // editDistance
-    // cout << wordToken << endl;
-    edit->lookup(word, matchArray);
+    matchedWord = nullptr;
+    exactList = structs.getHashTable()->lookup(word, &matchedWord);
+    if (exactList != nullptr) {
+      cur = exactList->getHead();
+      while (cur != nullptr) {
+        if (structs.getForDeletion()->searchRemove(cur->getId())) {
+          cur->setFlag(false);
+        } else if (cur->getFlag())
+          matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
+        cur = cur->getNext();
+      }
+    }
+    // Edit Distance
+    structs.getEdit()->editLookup(word, matchArray, structs.getForDeletion());
 
-    matchArray->print();
-    // if (c++ == 5) {
-    //   exit(0);
-    // }
-    // hammingDistance
+    // Hamming Distance
+    structs.getHamming()->lookup(word, matchArray, structs.getForDeletion());
 
-    wordToken = strtok(NULL, " ");
+    if (wordToken) {
+      wordToken = strtok(NULL, " ");
+    }
+    delete word;
   }
+  delete wordToken;
 
-  ResultList *rl = matchArray->getMatchedIds();
   Document doc;
   doc.doc_id = doc_id;
-  doc.num_res = rl->getCount();
+  doc.num_res = matchArray->getMatchedIds()->getCount();
   doc.query_ids = 0;
-  ResultListNode *cur = rl->getHead();
-  int k = 0;
-  while (cur != nullptr) {
-    doc.query_ids[k++] = cur->getId();
-    cur = cur->getNext();
+
+  if (doc.num_res != 0) {
+    doc.query_ids = new QueryID[doc.num_res];
+    ResultListNode *r_cur = matchArray->getMatchedIds()->getHead();
+    int k = 0;
+    while (r_cur != nullptr) {
+      doc.query_ids[k++] = r_cur->getId();
+      r_cur = r_cur->getNext();
+    }
   }
 
-  docs.push_back(doc);
+  structs.getDocs()->addToEnd(doc);
   delete matchArray;
   return EC_SUCCESS;
 }
@@ -312,12 +205,14 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_doc_id = 0;
   *p_num_res = 0;
   *p_query_ids = 0;
-  if (docs.size() == 0)
+  if (structs.getDocs()->getCount() == 0)
     return EC_NO_AVAIL_RES;
-  *p_doc_id = docs[0].doc_id;
-  *p_num_res = docs[0].num_res;
-  *p_query_ids = docs[0].query_ids;
-  docs.erase(docs.begin());
+
+  *p_doc_id = structs.getDocs()->getHead()->getDoc().doc_id;
+  *p_num_res = structs.getDocs()->getHead()->getDoc().num_res;
+  *p_query_ids = structs.getDocs()->getHead()->getDoc().query_ids;
+
+  structs.getDocs()->removeFromStart();
   return EC_SUCCESS;
 }
 

@@ -11,14 +11,22 @@ hammingArray::hammingArray() {
 }
 
 hammingArray::~hammingArray() {
+  for (int i = 0; i < ARRAY_SIZE; i++) {
+    if (this->array[i] != nullptr) {
+      delete this->array[i];
+      this->array[i] = nullptr;
+    }
+  }
+  delete[] this->array;
+  this->array = nullptr;
 }
 
-void hammingArray::insert(String *word, HEInfo info) {
+void hammingArray::insert(String *word, HEInfo *info) {
 
-  if (this->array[strlen(word->getStr()) - 4] == nullptr) {
-    this->array[strlen(word->getStr()) - 4] = new BK_Tree();
+  if (this->array[word->getSize() - 4] == nullptr) {
+    this->array[word->getSize() - 4] = new BK_Tree();
   }
-  this->array[strlen(word->getStr()) - 4]->add(word, info);
+  this->array[word->getSize() - 4]->add(word, info);
 }
 
 void hammingArray::print() {
@@ -27,4 +35,10 @@ void hammingArray::print() {
       this->array[i]->print();
     }
   }
+}
+
+void hammingArray::lookup(String *word, MatchArray *matchArray, ResultList *forDeletion) {
+  BK_Tree *tree = this->array[word->getSize() - 4];
+  if (tree)
+    tree->hammingLookup(word, matchArray, forDeletion);
 }

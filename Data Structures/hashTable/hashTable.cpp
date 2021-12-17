@@ -12,17 +12,19 @@ HashTable::HashTable(int size) {
 
 HashTable::~HashTable() {
   for (int i = 0; i < this->size; i++) {
-    if (this->table[i] != NULL) {
+    if (this->table[i] != nullptr) {
       delete this->table[i];
+      this->table[i] = nullptr;
     }
   }
   delete[] this->table;
+  this->table = nullptr;
 }
 
-void HashTable::insert(String *word, ExactInfo wordInfo) {
+void HashTable::insert(String *word, ExactInfo *wordInfo) {
   // Hash word with SHA1
-  char *returnHash = new char[SHA_DIGEST_LENGTH];
-  generateHashString(word->getStr(), returnHash);
+
+  unsigned char *returnHash = SHA1((const unsigned char *)(word->getStr()), word->getSize(), NULL);
 
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);
@@ -37,7 +39,7 @@ void HashTable::insert(String *word, ExactInfo wordInfo) {
   this->table[index]->addNode(word, wordInfo);
 }
 
-int HashTable::getIndex(char *hash) {
+int HashTable::getIndex(unsigned char *hash) {
   return (hexadecimalToDecimal(hash) % (TABLE_SIZE - 1)) + 1;
 }
 
@@ -51,16 +53,8 @@ void HashTable::print() {
   }
 }
 
-// Hashing Related Methods
-void HashTable::generateHashString(char key[256], char *returnHash) {
-  size_t length = strlen(key);
-  unsigned char hash[SHA_DIGEST_LENGTH];
-  SHA1((const unsigned char *)key, length, hash);
-  memcpy(returnHash, (char *)hash, SHA_DIGEST_LENGTH);
-}
-
-int HashTable::hexadecimalToDecimal(char hexVal[]) {
-  int len = strlen(hexVal);
+int HashTable::hexadecimalToDecimal(unsigned char hexVal[]) {
+  int len = strlen((char *)hexVal);
 
   int base = 1;
 
@@ -80,8 +74,7 @@ int HashTable::hexadecimalToDecimal(char hexVal[]) {
 
 exactInfoList *HashTable::lookup(String *H, String **matchedWord) {
   // Hash word with SHA1
-  char *returnHash = new char[SHA_DIGEST_LENGTH];
-  generateHashString(H->getStr(), returnHash);
+  unsigned char *returnHash = SHA1((const unsigned char *)(H->getStr()), H->getSize(), NULL);
 
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);

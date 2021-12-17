@@ -43,6 +43,8 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //*********************************************************************************************
 
+// Keeps all query ID results associated with a dcoument
+
 /// Maximum document length in characters.
 #define MAX_DOC_LENGTH (1 << 22)
 
@@ -63,6 +65,12 @@ typedef unsigned int QueryID;
 
 /// Document ID type.
 typedef unsigned int DocID;
+
+struct Document {
+  DocID doc_id;
+  unsigned int num_res;
+  QueryID *query_ids;
+};
 
 /// Matching types:
 typedef enum {
@@ -113,11 +121,13 @@ typedef struct Query {
 
 typedef struct ExactInfo {
   QueryID query_id;
+  bool flag;
   unsigned int maxQueryWords;
 } ExactInfo;
 
 typedef struct HEInfo {
   QueryID query_id;
+  bool flag;
   unsigned int maxQueryWords;
   unsigned int matchDist;
 } HEInfo;
