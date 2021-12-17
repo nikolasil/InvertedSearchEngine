@@ -147,7 +147,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   strcpy(cur_doc_str, doc_str);
 
   MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
-  char *wordToken = strtok(cur_doc_str, " ");
+  const char *wordToken = strtok(cur_doc_str, " ");
   String *word = nullptr;
   String *matchedWord = nullptr;
   exactInfoList *exactList = nullptr;

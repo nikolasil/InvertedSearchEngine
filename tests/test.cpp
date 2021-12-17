@@ -172,15 +172,16 @@ void htInsert() {
   ht->insert(new String("Nikolas"), info4);
   ht->insert(new String("Kostas"), info5);
   // ht->print();
-  TEST_ASSERT(ht->getBucket(1)->getHead()->getWord()->exactMatch(new String("Michalis")));
-  TEST_ASSERT(ht->getBucket(1)->getHead()->getList()->getHead()->getWordInfo() == info3);
-  TEST_ASSERT(ht->getBucket(1)->getHead()->getNext()->getWord()->exactMatch(new String("Kostas")));
-  TEST_ASSERT(ht->getBucket(1)->getHead()->getNext()->getList()->getHead()->getWordInfo() == info5);
-  TEST_ASSERT(ht->getBucket(5)->getHead()->getWord()->exactMatch(new String("Nikolas")));
-  TEST_ASSERT(ht->getBucket(5)->getHead()->getList()->getHead()->getWordInfo() == info2);
-  TEST_ASSERT(ht->getBucket(5)->getHead()->getList()->getHead()->getNext()->getWordInfo() == info4);
-  TEST_ASSERT(ht->getBucket(33)->getHead()->getWord()->exactMatch(new String("Nikolas1")));
-  TEST_ASSERT(ht->getBucket(33)->getHead()->getList()->getHead()->getWordInfo() == info1);
+  int size = ht->getSize();
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Michalis"), strlen("Michalis"), NULL)))->getHead()->getWord()->exactMatch(new String("Michalis")));
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Michalis"), strlen("Michalis"), NULL)))->getHead()->getList()->getHead()->getWordInfo() == info3);
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Kostas"), strlen("Kostas"), NULL)))->getHead()->getNext()->getWord()->exactMatch(new String("Kostas")));
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Kostas"), strlen("Kostas"), NULL)))->getHead()->getNext()->getList()->getHead()->getWordInfo() == info5);
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Nikolas"), strlen("Nikolas"), NULL)))->getHead()->getWord()->exactMatch(new String("Nikolas")));
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Nikolas"), strlen("Nikolas"), NULL)))->getHead()->getList()->getHead()->getWordInfo() == info2);
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Nikolas"), strlen("Nikolas"), NULL)))->getHead()->getList()->getHead()->getNext()->getWordInfo() == info4);
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Nikolas1"), strlen("Nikolas1"), NULL)))->getHead()->getWord()->exactMatch(new String("Nikolas1")));
+  TEST_ASSERT(ht->getBucket(ht->getIndex(SHA1((const unsigned char *)("Nikolas1"), strlen("Nikolas1"), NULL)))->getHead()->getList()->getHead()->getWordInfo() == info1);
 }
 
 void htLookup() {

@@ -1,17 +1,15 @@
 ## Inverted Search Engine Optimization
 *An Inverted Search Engine Optimizer based from the [SIGMOD 2013 Contest](https://sigmod.kaust.edu.sa/task-details.html)*
 
-![Project Demo](public/project_demo.gif)
+<!-- ![Project Demo](public/project_demo.gif) -->
 ### :building_construction: Compilation & Execution
 
 In order to provide easier compilation a Makefile has been included. The Makefile accepts the following commands: 
 - ```make clean``` to clean the project's object files and executable
 - ```make clean_test``` to clean the test's object files and test executable
 - ```make clean_all``` to clean all files and executables
--  ```make compile``` to compile the project's files
-- ```make run``` to run the project
+-  ```make``` to compile the project's files
 - ```make test``` to compile the test files
-- ```make run_test``` to run the tests
 
 
 
@@ -115,10 +113,37 @@ The project is divided into 3 distinct categories :
       ```
 
 - **Functions** The Functions Directory is mainly based from the SIGMOD 2013 Contest and contains an interface for managing the data structures listed above. The main use of functions is to create a BK_Tree index to be used as an inverted search engine.
-- **Tests** The Tests Directory contains a testing suite using the [Acutest Testing Framework](https://github.com/mity/acutest). It tests all the data structures for creation,lookup and deletion by using the project's functions.
+- **Tests** The Tests Directory contains a testing suite using the [Acutest Testing Framework](https://github.com/mity/acutest). It tests all the main Data Structures used for storing Queries,Documents and Results as well as the core functions (StartQuery,MatchDocument, GetNextAvailableRes,EndQuery) used by the test driver provided by sigmod to test the document results.
 
-### :grey_exclamation: Additional Information
-- 
+### :ocean: Modifications in Core Functions & Data Flow 
+
+#### StartQuery 
+  The main purpose of the StartQuery function is to take each word token of each query and store it depending on the MatchType  in the corresponding Structure (HashTable for Exact Match, BK_Tree for Edit Distance, Hamming  Array for Hamming Distance). In order to achieve this, it utilizes helper structs mainly the ExactInfo and the HEInfo to store in these three structs the information necessary for each word regarding the query it appears in. 
+
+  > For each match type we also store the heInfo/exactInfo into a list to properly free the info nodes after we matched all the documents
+  > The maxQueryId property in the main structs object that is incremented for each query iteration will later be used as an index for the MatchArray array size.
+
+
+### MatchDocument
+ The MatchDocument Function tokenizes the document into the words it contains and tries to find matches between these words and the words in the queries we processed in StartQuery. To optimize this we used the lookup methods for all 3 data structures mentioned above:
+  - For the ExactMatch type we hash the word token and search in the respective bucket for a word that matches it. If there is a match we add that word and the exact info list that contains the info of all the queries the matched word appears in, into the match array to add it later to the matched documents (excluding the queries that have been deleted/flagged). 
+ - For the Hamming/Edit types we use the BK_Tree lookup function which does the following:
+   Instead of calling the lookup function multiple times for all the possible threshold values(1-3) we do the following:
+    - We begin with the minimum threshold(1 for root/ threshold parameter for subtrees) and for each iteration we compare the match type distance with the threshold iterator. If it is a match we update the  match array with the info list of the word. 
+    - We then iterate for the starting threshold up to the maximum threshold(3) and compare the edge weights (distance between the child and its parent node ) to see if we are inside the distance range. If the weight is inside the range we recursively call the lookup function **using the current threshold iterator value as a starting threshold for its subtree.**
+ - Finally we construct the document with the matched query ids that are stored inside the matchArray and we push it into the document list that stores all the matched documents.
+
+> If we call the lookup function for a tree node with a specific threshold value e.g. 2 , it is certain that it will also be called for its subtree with all the possible threshold values greater than 2. This is used for optimizing the stack calls of the lookup function for each possible threshold and checking only the values necessary for matching the word token. 
+
+### GetNextAvailableRes
+  We only modified the GetNextAvailableRes function to support our document list object
+
+---
+
+> The InitializeIndex and DestroyIndex functions do nothing as all the necessary data and objects are statically initialized by the DataStructs Object.
+
+### :bullettrain_side: Performance & Optimization
+  By utilizing the optimization techniques mentioned above we managed to reduce the execution time for processing the sample small_test file from the initial ~33s down to ~2.1s!
 
 ### :desktop_computer: Contributors
  - [Nikolas Iliopoulos](https://github.com/nikolasil) (1115201800332) 

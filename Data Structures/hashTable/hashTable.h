@@ -5,7 +5,7 @@
 #include "bucket.h"
 #include <openssl/sha.h>
 
-#define TABLE_SIZE 50
+#define TABLE_SIZE 10000
 
 class HashTable {
 private:
