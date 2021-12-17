@@ -40,12 +40,16 @@ LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o DocumentList.o
+FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o DocumentList.o structs.o
 # The name of the library that will be built
 LIBRARY=core
 
+TESTER = test.o
+
 # Build all programs
 all: clean $(PROGRAMS)
+test :  $(IMPL_O)  $(FILES) $(TESTER)
+	$(CXX) $(CFLAFS) -o test  $(IMPL_O)  $(FILES) $(TESTER) -lcrypto
 lib: $(IMPL_O) $(FILES)
 	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)  -I /usr/local/Cellar/openssl@3/3.0.0_1/include/ -L  /usr/local/Cellar/openssl@3/3.0.0_1/lib/ -lcrypto
 
@@ -83,7 +87,14 @@ DocumentList.o:
 
 String.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/string/String.cpp
-	
+structs.o:
+	$(CXX) $(CXXFLAGS) -c ref_impl/structs.cpp
+
+#Test files
+test.o :
+	$(CXX) $(CFLAFS) -c ../tests/test.cpp
 clean:
 	rm -f $(PROGRAMS) lib$(LIBRARY).so
 	find . -name '*.o' -print | xargs rm -f
+clean_test:
+	rm -f test $(TESTFILES) $(TESTER)

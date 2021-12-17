@@ -35,6 +35,7 @@
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
+#include "../include/structs.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -44,44 +45,16 @@ using namespace std;
 
 // Keeps all currently matched words of the queries
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
-HashTable *ht = nullptr;
-hammingArray *hamming = nullptr;
-BK_Tree *edit = nullptr;
-MatchArray *matchArray = nullptr;
-ResultList *forDeletion = nullptr;
-DocumentList *docs = nullptr;
-unsigned int maxQueryId = 0;
-
-exactInfoList *exactStructsList = nullptr;
-heInfoList *heStructsList = nullptr;
+DataStructs structs;
 
 ErrorCode InitializeIndex() {
-  ht = new HashTable();
-  hamming = new hammingArray();
-  edit = new BK_Tree();
-  forDeletion = new ResultList();
-  docs = new DocumentList();
-  exactStructsList = new exactInfoList();
-  heStructsList = new heInfoList();
+
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode DestroyIndex() {
-  delete ht;
-  delete hamming;
-  delete edit;
-
-  exactStructsList->destroy();
-  heStructsList->destroy();
-  forDeletion->destroy();
-  // docs->destroy();
-  delete exactStructsList;
-  delete heStructsList;
-  delete forDeletion;
-  delete docs;
   return EC_SUCCESS;
 }
 
@@ -108,13 +81,13 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
     exactInfo->flag = true;
 
     while (wordToken != NULL) {
-      ht->insert(new String(wordToken), exactInfo);
+      structs.getHashTable()->insert(new String(wordToken), exactInfo);
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
 
     exactInfo->maxQueryWords = maxQueryWords;
-    exactStructsList->addQuery(exactInfo);
+    structs.getExactStructsList()->addQuery(exactInfo);
     break;
   }
   case MT_EDIT_DIST: {
@@ -124,13 +97,13 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
     heInfo->flag = true;
 
     while (wordToken != NULL) {
-      edit->add(new String(wordToken), heInfo);
+      structs.getEdit()->add(new String(wordToken), heInfo);
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
 
     heInfo->maxQueryWords = maxQueryWords;
-    heStructsList->addQuery(heInfo);
+    structs.getHeStructsList()->addQuery(heInfo);
     break;
   }
   case MT_HAMMING_DIST: {
@@ -141,18 +114,18 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
     heInfo->flag = true;
 
     while (wordToken != NULL) {
-      hamming->insert(new String(wordToken), heInfo);
+      structs.getHamming()->insert(new String(wordToken), heInfo);
       maxQueryWords++;
       wordToken = strtok(NULL, " ");
     }
 
     heInfo->maxQueryWords = maxQueryWords;
-    heStructsList->addQuery(heInfo);
+    structs.getHeStructsList()->addQuery(heInfo);
     break;
   }
   }
   delete wordToken;
-  maxQueryId++;
+  structs.setMaxQueryId(structs.getMaxQueryId() + 1);
 
   return EC_SUCCESS;
 }
@@ -160,7 +133,7 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode EndQuery(QueryID query_id) {
-  forDeletion->add(query_id);
+  structs.getForDeletion()->add(query_id);
   return EC_SUCCESS;
 }
 
@@ -170,7 +143,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
-  MatchArray *matchArray = new MatchArray(maxQueryId);
+  MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
   char *wordToken = strtok(cur_doc_str, " ");
   String *word = nullptr;
   String *matchedWord = nullptr;
@@ -181,11 +154,11 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
 
     // hashTable
     matchedWord = nullptr;
-    exactList = ht->lookup(word, &matchedWord);
+    exactList = structs.getHashTable()->lookup(word, &matchedWord);
     if (exactList != nullptr) {
       cur = exactList->getHead();
       while (cur != nullptr) {
-        if (forDeletion->searchRemove(cur->getId())) {
+        if (structs.getForDeletion()->searchRemove(cur->getId())) {
           cur->setFlag(false);
         } else if (cur->getFlag())
           matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
@@ -193,10 +166,10 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
       }
     }
     // Edit Distance
-    edit->editLookup(word, matchArray, forDeletion);
+    structs.getEdit()->editLookup(word, matchArray, structs.getForDeletion());
 
     // Hamming Distance
-    hamming->lookup(word, matchArray, forDeletion);
+    structs.getHamming()->lookup(word, matchArray, structs.getForDeletion());
 
     if (wordToken) {
       wordToken = strtok(NULL, " ");
@@ -220,7 +193,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     }
   }
 
-  docs->addToEnd(doc);
+  structs.getDocs()->addToEnd(doc);
   delete matchArray;
   return EC_SUCCESS;
 }
@@ -232,14 +205,14 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_doc_id = 0;
   *p_num_res = 0;
   *p_query_ids = 0;
-  if (docs->getCount() == 0)
+  if (structs.getDocs()->getCount() == 0)
     return EC_NO_AVAIL_RES;
 
-  *p_doc_id = docs->getHead()->getDoc().doc_id;
-  *p_num_res = docs->getHead()->getDoc().num_res;
-  *p_query_ids = docs->getHead()->getDoc().query_ids;
+  *p_doc_id = structs.getDocs()->getHead()->getDoc().doc_id;
+  *p_num_res = structs.getDocs()->getHead()->getDoc().num_res;
+  *p_query_ids = structs.getDocs()->getHead()->getDoc().query_ids;
 
-  docs->removeFromStart();
+  structs.getDocs()->removeFromStart();
   return EC_SUCCESS;
 }
 
