@@ -143,7 +143,7 @@ The project is divided into 3 distinct categories :
 > The InitializeIndex and DestroyIndex functions do nothing as all the necessary data and objects are statically initialized by the DataStructs Object.
 
 ### :bullettrain_side: Performance & Optimization
-  By utilizing the optimization techniques mentioned above we managed to reduce the execution time for processing the sample small_test file from the initial ~33s down to ~2.1s!
+  By utilizing the optimization techniques mentioned above we managed to reduce the execution time for processing the sample small_test file from the initial ~33s down to ~2.01s!
 
 ### :desktop_computer: Contributors
  - [Nikolas Iliopoulos](https://github.com/nikolasil) (1115201800332) 
