@@ -31,6 +31,7 @@ exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
     }
     temp = temp->getNext();
   }
+  (*matchedWord) = nullptr;
   return nullptr;
 }
 

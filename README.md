@@ -18,41 +18,107 @@ In order to provide easier compilation a Makefile has been included. The Makefil
 ### :notebook_with_decorative_cover:General Approach
 
 The project is divided into 3 distinct categories :
-- **Data Structures** The Data Structures Directory contains all the structures that are essential for the project ie. Entry Lists, Entries , LinkedLists (as a supplementary list option for creating lists - not used yet) ,Tree (for managing search indexes) and Utils for various utilities (calculating matching distance etc.).
-    - **Entry** An Entry is a basic data structure that consists of two elements : a word (string) and a payload (list of subjects)
+- **Data Structures** The Data Structures Directory contains all the structures that are essential for the project ie. **Hash Tables, Lists, Trees, Arrays, Strings**
+    - **Hash Table**
         ```cpp
-        class entry {
-            word *w;
-            void *payload;
-            entry *next;
-        };
+        class HashTable {
+          Bucket **table;
+          int size;
+        }
+        // Bucket is a linked list that stores the words
+        class Bucket { 
+          bucketNode *head;
+          bucketNode *last;
+          int count;
+        }
+        // BucketNode is a node that stores the word
+        // and the and information about that word
+        // information = A list with the data {query_id,count_total_words}
+        class BucketNode {
+          String *word;
+          exactInfoList *list; // linked list with {query_id,count_total_words}
+          bucketNode *next;
+        }
         ```
-  - **Entry List** An Entry List ,as the name suggests, is a linked list consisting of entries and is used for building indexes
-    ```cpp
-    class entry_list {
-        entry *start;
-        entry *end;
-        unsigned int count;
-    };
-    ```
-  - **Tree Index** A BK_Tree index (BK Tree) is used for searching words that have a specific matching distance from a key word.
-   
+  - **Exact Info** The list that holds the hash table (exact match) information
+      ```cpp
+      class exactInfoList {
+        exactInfoNode *head;
+        exactInfoNode *last;
+        int count;
+      }
+      class exactInfoNode {
+        ExactInfo *info;
+        exactInfoNode *next;
+      }
+      typedef struct ExactInfo {
+        QueryID query_id; // the id of the query
+        bool flag; // false if the query is deleted 
+        unsigned int maxQueryWords; // the total words of that query
+      } ExactInfo;
+      ```
+  - **BK Tree** A BK_Tree index (BK Tree) is used for searching words that have a specific matching distance from a key word.
+      ```cpp
+      class BK_Tree {
+        BK_TreeNode *root;
+      }
+      // BK_TreeNode stores the word
+      class BK_TreeNode { 
+        String *data;
+        BK_TreeEdge *childs; // linked list with the childs
+        heInfoList *info;
+      }
+      // Represents the edge that points to a child with that weight
+      class BK_TreeEdge {
+        int weight;
+        BK_TreeNode *child;
+        BK_TreeEdge *next;
+      }
+      ```
+  - **Hamming Array** An Array of 28 cells. Each cell contains a BK Tree
+      ```cpp
+      class heInfoList {
+        heInfoNode *head;
+        heInfoNode *last;
+        int count;
+      }
+      class heInfoNode {
+        HEInfo *info;
+        heInfoNode *next;
+      }
+      ```
+  - **Hamming & Edit Info** The list that holds the hamming and edit information
+      ```cpp
+      class heInfoList {
+        heInfoNode *head;
+        heInfoNode *last;
+        int count;
+      }
+      class heInfoNode {
+        HEInfo *info;
+        heInfoNode *next;
+      }
+      typedef struct HEInfo {
+        QueryID query_id; // the id of the query
+        bool flag; // false if the query is deleted 
+        unsigned int maxQueryWords;// the total words of that query
+        unsigned int matchDist; // the match distance of that query
+      } HEInfo;
+      ```
+  - **Match Array** Used for storing the results of the lookups. For every query we hold a tree that contains the words that we have matched for this query.
+      ```cpp
+      class MatchArray {
+        MatchTree **array; // all the results of the lookups are here for each query
+        int size;
+        ResultList *matchedIds; // the list that contains only the matched ids
+      }
+      ```
 
 - **Functions** The Functions Directory is mainly based from the SIGMOD 2013 Contest and contains an interface for managing the data structures listed above. The main use of functions is to create a BK_Tree index to be used as an inverted search engine.
 - **Tests** The Tests Directory contains a testing suite using the [Acutest Testing Framework](https://github.com/mity/acutest). It tests all the data structures for creation,lookup and deletion by using the project's functions.
 
-
-
-### Default Behavior by Main Function
-
-The Main Function creates 7 entries from the words : [hell,help,fall,small,fell,felt,melt] and initializes an entry list from these words. It then builds a BK_Tree index from the entry list and executes the lookup function using the word "henn" as key. The result array contains the words [hell,help].
-
-
 ### :grey_exclamation: Additional Information
-- **The hamming distance matches the equal letters beginning from the right.**
-- The used threshold for calculating matching distances is 2.
-- The main function includes a timer for measuring the lookup index performance.
-
+- 
 
 ### :desktop_computer: Contributors
  - [Nikolas Iliopoulos](https://github.com/nikolasil) (1115201800332) 

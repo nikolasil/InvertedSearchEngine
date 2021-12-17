@@ -179,9 +179,11 @@ void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchA
   int diff;
   while (currentEdge != nullptr) {
     child = currentEdge->getChild();
+    // cout << "Child : " << child->getData()->getStr() << endl;
     diff = word->editDistance(word->getStr(), child->getData()->getStr(), word->getSize(), child->getData()->getSize());
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (diff <= i) {
+        // cout << "inserting " << child->getData()->getStr() << " with weight " << i << " in matchArray" << endl;
         matchArray->update(child->getData(), child->getInfo(), (unsigned int)i, forDeletion);
         break;
       }

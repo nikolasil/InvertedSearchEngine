@@ -40,9 +40,9 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
 }
 void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
   heInfoNode *curr = infoList->getHead();
-  // infoList->print();
+
   while (curr != nullptr) {
-    // cout << threshold << " " << curr->getWordInfo().matchDist << " " << curr->getId() << endl;
+
     if (curr->getMatchDist() >= (unsigned int)threshold) {
       if (forDeletion->searchRemove(curr->getId())) {
         curr->setFlag(false);
@@ -68,9 +68,9 @@ void MatchArray::print(int queryId) {
 }
 void MatchArray::print() {
   for (int i = 0; i < this->size; i++) {
-    if (this->array[i - 1] != NULL) {
-      cout << "MatchTree " << i - 1 << endl;
-      this->array[i - 1]->print();
+    if (this->array[i] != NULL) {
+      cout << "MatchTree " << i << endl;
+      this->array[i]->print();
     }
   }
   cout << "Result" << endl;
