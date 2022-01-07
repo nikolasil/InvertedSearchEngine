@@ -1,0 +1,60 @@
+#include "Queue.h"
+#include <iostream>
+
+using namespace std;
+
+QueueNode::QueueNode(Job *data) {
+  this->job = data;
+  this->next = NULL;
+}
+
+QueueNode ::~QueueNode() {}
+
+void QueueNode::print() {
+  cout << "Job: " << this->job->test<< endl;
+}
+
+Queue::Queue() {
+  this->head = NULL;
+  this->tail = NULL;
+  this->size = 0;
+}
+
+Queue::~Queue() {}
+
+void Queue::addFromHead(Job *job) {
+  QueueNode *node = new QueueNode(job);
+  if (this->head == NULL) {
+    this->head = node;
+    this->tail = node;
+  } else {
+    node->setNext(this->head);
+    this->head = node;
+  }
+  this->size++;
+}
+
+QueueNode *Queue::removeFromTail() {
+  QueueNode *node = this->tail;
+  if (this->tail == this->head) {
+    this->head = NULL;
+    this->tail = NULL;
+  } else {
+    QueueNode *temp = this->head;
+    while (temp->getNext() != this->tail) {
+      temp = temp->getNext();
+    }
+    this->tail = temp;
+    this->tail->setNext(NULL);
+  }
+  this->size--;
+  return node;
+}
+
+void Queue::print() {
+  QueueNode *temp = this->head;
+  while (temp != NULL) {
+    temp->print();
+    temp = temp->getNext();
+  }
+}
