@@ -39,8 +39,8 @@ public:
   void setTail(QueueNode *tail) { this->tail = tail; };
   void setSize(int size) { this->size = size; };
   // Utility
-  void addFromHead(Job *job);
-  QueueNode *removeFromTail();
+  void add(Job *job);
+  QueueNode *remove();
 
   void print();
 };

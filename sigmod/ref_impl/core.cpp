@@ -36,6 +36,7 @@
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
 
+#include "../../Job Scheduler/JobScheduler.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -46,8 +47,9 @@ using namespace std;
 // Keeps all currently matched words of the queries
 ///////////////////////////////////////////////////////////////////////////////////////////////
 DataStructs structs;
+JobScheduler *jobScheduler;
 ErrorCode InitializeIndex() {
-
+  jobScheduler = new JobScheduler(NUM_THREADS);
   return EC_SUCCESS;
 }
 

@@ -1,17 +1,18 @@
-#include <iostream>
-#include "Queue.h"
 #include "Job.h"
 #include "JobScheduler.h"
+#include "Queue.h"
+#include <iostream>
+#include <unistd.h>
 using namespace std;
 
-int main(){
-    Queue* queue = new Queue();
-    queue->addFromHead(new Job(1));
-    queue->addFromHead(new Job(2));
-    queue->addFromHead(new Job(3));
-    queue->print();
+void func() {
+  cout << "Job func" << endl;
+}
 
-    queue->removeFromTail()->print();
-    queue->removeFromTail()->print();
-    queue->removeFromTail()->print();
+int main() {
+  JobScheduler *jobScheduler = new JobScheduler(5);
+
+  jobScheduler->addJob(new Job('s', &func));
+  jobScheduler->addJob(new Job('s', &func));
+  sleep(2);
 }

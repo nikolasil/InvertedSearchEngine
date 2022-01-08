@@ -65,6 +65,9 @@ typedef unsigned int QueryID;
 /// Document ID type.
 typedef unsigned int DocID;
 
+// Number of threads for job scheduler
+#define NUM_THREADS 5
+
 struct Document {
   DocID doc_id;
   unsigned int num_res;

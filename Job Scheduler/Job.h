@@ -1,11 +1,16 @@
-#ifndef Job_H
-#define Job_H
+#ifndef JOB_H
+#define JOB_H
 
 class Job {
+  char type;
+  void (*function)();
+  int status;
 
 public:
-  int test;
-  Job(int test) : test(test) {}
+  Job(char type, void (*function)());
+  ~Job();
+  char getType() { return this->type; };
+  int getStatus() { return this->status; };
 };
 
 #endif
