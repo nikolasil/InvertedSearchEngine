@@ -2,11 +2,16 @@
 #include "Queue.h"
 #include "pthread.h"
 #include <iostream>
+#include <unistd.h>
 using namespace std;
 
 void *threadFunc(void *args) {
   JobScheduler *scheduler = (JobScheduler *)args;
   cout << "thread  started" << endl;
+  sleep(1);
+  cout << "go to take job" << endl;
+  scheduler->getJob()->execute();
+  sleep(1);
   cout << "thread  ended" << endl;
 }
 
@@ -35,4 +40,11 @@ void JobScheduler::addJob(Job *job) {
   pthread_mutex_lock(&(this->mutex));
   queue->add(job);
   pthread_mutex_unlock(&(this->mutex));
+}
+
+Job *JobScheduler::getJob() {
+  pthread_mutex_lock(&(this->mutex));
+  Job *job = queue->remove()->getJob();
+  pthread_mutex_unlock(&(this->mutex));
+  return job;
 }
