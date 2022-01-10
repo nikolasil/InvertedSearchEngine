@@ -2,6 +2,7 @@
 #define EXACTINFOLIST_H
 
 #include "../../sigmod/include/core.h"
+#include <pthread.h>
 class exactInfoNode {
 private:
   ExactInfo *info;
@@ -31,6 +32,7 @@ private:
   exactInfoNode *head;
   exactInfoNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   exactInfoList();

@@ -8,6 +8,7 @@ heInfoList::heInfoList() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 heInfoList::~heInfoList() {
   if (this->head != nullptr) {
@@ -16,6 +17,7 @@ heInfoList::~heInfoList() {
   }
 }
 void heInfoList::addQuery(HEInfo *wordInfo) {
+  pthread_mutex_lock(&(this->mutex));
   heInfoNode *newNode = new heInfoNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
@@ -25,6 +27,7 @@ void heInfoList::addQuery(HEInfo *wordInfo) {
   }
   this->last = newNode;
   count++;
+  pthread_mutex_unlock(&(this->mutex));
 }
 
 void heInfoList::print() {

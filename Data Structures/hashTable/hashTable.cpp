@@ -8,6 +8,7 @@ using namespace std;
 HashTable::HashTable(int size) {
   this->table = new Bucket *[size]();
   this->size = size;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 HashTable::~HashTable() {
@@ -22,6 +23,7 @@ HashTable::~HashTable() {
 }
 
 void HashTable::insert(String *word, ExactInfo *wordInfo) {
+  pthread_mutex_lock(&(this->mutex));
   // Hash word with SHA1
 
   unsigned char *returnHash = SHA1((const unsigned char *)(word->getStr()), word->getSize(), NULL);
@@ -37,6 +39,7 @@ void HashTable::insert(String *word, ExactInfo *wordInfo) {
   // Insert Word into Bucket
   // cout << "Inserting " << word->getStr() << " into Bucket " << index << endl;
   this->table[index]->addNode(word, wordInfo);
+  pthread_mutex_unlock(&(this->mutex));
 }
 
 int HashTable::getIndex(unsigned char *hash) {

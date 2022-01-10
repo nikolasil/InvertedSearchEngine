@@ -3,17 +3,22 @@
 
 using namespace std;
 
-Job::Job(char type, void (*function)(int, char **), char **args, int numArgs) {
+Job::Job(char type, ErrorCode (*function)(int, void **), void **args, int numArgs) {
   this->type = type;
   this->status = 0;
   this->function = function;
   this->args = args;
   this->numArgs = numArgs;
+  this->epoch = 0;
 }
 
 Job::~Job() {
 }
 
-void Job::execute(){
+void Job::execute() {
   this->function(this->numArgs, this->args);
+}
+
+void Job::print() {
+  cout << "Job: " << this->type << " " << *(int *)args[0] << endl;
 }

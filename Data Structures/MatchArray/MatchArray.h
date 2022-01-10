@@ -6,12 +6,14 @@
 #include "../string/String.h"
 #include "MatchTree.h"
 #include "ResultList.h"
+#include <pthread.h>
 
 class MatchArray {
 private:
   MatchTree **array;
   int size;
   ResultList *matchedIds;
+  pthread_mutex_t mutex;
 
 public:
   MatchArray(int size);

@@ -6,7 +6,8 @@ DataStructs::DataStructs() {
   this->edit = new BK_Tree();
   this->forDeletion = new ResultList();
   this->docs = new DocumentList();
-  maxQueryId = 0;
+  this->maxQueryId = 0;
+  this->lastServedDocId = 0;
   this->exactStructsList = new exactInfoList();
   this->heStructsList = new heInfoList();
 }

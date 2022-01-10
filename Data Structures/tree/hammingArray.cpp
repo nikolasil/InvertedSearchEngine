@@ -8,6 +8,7 @@ using namespace std;
 // hammingArray
 hammingArray::hammingArray() {
   this->array = new BK_Tree *[ARRAY_SIZE]();
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 hammingArray::~hammingArray() {
@@ -22,11 +23,12 @@ hammingArray::~hammingArray() {
 }
 
 void hammingArray::insert(String *word, HEInfo *info) {
-
+  pthread_mutex_lock(&(this->mutex));
   if (this->array[word->getSize() - 4] == nullptr) {
     this->array[word->getSize() - 4] = new BK_Tree();
   }
   this->array[word->getSize() - 4]->add(word, info);
+  pthread_mutex_unlock(&(this->mutex));
 }
 
 void hammingArray::print() {

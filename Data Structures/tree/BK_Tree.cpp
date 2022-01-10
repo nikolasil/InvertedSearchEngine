@@ -8,7 +8,10 @@
 using namespace std;
 
 // Tree
-BK_Tree::BK_Tree() { this->root = nullptr; }
+BK_Tree::BK_Tree() {
+  this->root = nullptr;
+  pthread_mutex_init(&(this->mutex), NULL);
+}
 
 BK_Tree::~BK_Tree() {
   if (this->root != nullptr) {
@@ -18,10 +21,12 @@ BK_Tree::~BK_Tree() {
 }
 
 void BK_Tree::add(String *word, HEInfo *info) {
+  pthread_mutex_lock(&(this->mutex));
   BK_TreeNode *current = this->root;
 
   if (current == nullptr) {
     this->root = new BK_TreeNode(word, info);
+    pthread_mutex_unlock(&(this->mutex));
     return;
   }
   int diff;
@@ -35,6 +40,7 @@ void BK_Tree::add(String *word, HEInfo *info) {
     if (diff == 0) {
       current->getInfo()->addQuery(info);
       delete word;
+      pthread_mutex_unlock(&(this->mutex));
       return;
     }
     // Search for child node with equal weight in edge
@@ -42,10 +48,12 @@ void BK_Tree::add(String *word, HEInfo *info) {
     if ((childNode = current->findChild(diff)) == nullptr) {
 
       current->addChild(diff, new BK_TreeNode(word, info));
+      pthread_mutex_unlock(&(this->mutex));
       return;
     }
     current = childNode;
   }
+  pthread_mutex_unlock(&(this->mutex));
 }
 
 void BK_Tree::print() {

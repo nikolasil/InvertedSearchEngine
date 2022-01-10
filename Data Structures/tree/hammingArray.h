@@ -4,12 +4,13 @@
 #include "../../sigmod/include/core.h"
 #include "../string/String.h"
 #include "BK_Tree.h"
-
+#include <pthread.h>
 #define ARRAY_SIZE 28
 
 class hammingArray {
 private:
   BK_Tree **array;
+  pthread_mutex_t mutex;
 
 public:
   hammingArray();

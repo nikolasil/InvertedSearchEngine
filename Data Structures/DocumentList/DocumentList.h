@@ -4,6 +4,8 @@
 
 #include "../../sigmod/include/core.h"
 #include "../string/String.h"
+#include <pthread.h>
+
 class DocumentNode {
 private:
   Document doc;
@@ -26,7 +28,7 @@ class DocumentList {
 private:
   DocumentNode *head;
   DocumentNode *last;
-
+  pthread_mutex_t mutex;
   int count;
 
 public:
@@ -42,7 +44,11 @@ public:
   void setHead(DocumentNode *head) { this->head = head; };
   void setLast(DocumentNode *last) { this->last = last; };
   // Methods
+  Document getDoc(DocID docId);
+  void remove(DocID docId);
+  bool search(DocID docId);
   void addToEnd(Document doc);
+  void addSorted(Document doc);
   void removeFromStart();
 };
 

@@ -51,6 +51,14 @@ QueueNode *Queue::remove() {
   return node;
 }
 
+int Queue::getLastJobEpoch() {
+  int epoch = 0;
+  if (this->head != NULL) {
+    epoch = this->head->getJob()->getEpoch();
+  }
+  return epoch;
+}
+
 void Queue::print() {
   QueueNode *temp = this->head;
   while (temp != NULL) {

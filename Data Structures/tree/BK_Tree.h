@@ -10,6 +10,7 @@ class BK_Tree;
 #include "../MatchArray/MatchArray.h"
 #include "../queryList/heInfoList.h"
 #include "../string/String.h"
+#include <pthread.h>
 
 #define MAX_THRESHOLD 3
 
@@ -62,6 +63,7 @@ public:
 class BK_Tree {
 private:
   BK_TreeNode *root;
+  pthread_mutex_t mutex;
 
 public:
   BK_Tree();

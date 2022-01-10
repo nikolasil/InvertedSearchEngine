@@ -9,7 +9,9 @@ MatchTree::MatchTree(int maxWords) {
   this->flag = false;
   this->maxWords = maxWords;
   this->root = nullptr;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
+
 MatchTree::~MatchTree() {
   if (this->root != nullptr) {
     delete this->root;
@@ -26,20 +28,24 @@ void MatchTree::print() {
   }
 }
 void MatchTree::insert(String *word) {
+  pthread_mutex_lock(&(this->mutex));
   if (this->root == nullptr) {
     this->root = new MatchTreeNode(word);
     this->count++;
+    pthread_mutex_unlock(&(this->mutex));
     return;
   }
   MatchTreeNode *current = this->root;
   while (current != nullptr) {
     if (word->exactMatch(current->getData())) {
+      pthread_mutex_unlock(&(this->mutex));
       return;
     }
     if (word->compare(current->getData()) < 0) {
       if (current->getLeft() == nullptr) {
         current->setLeft(new MatchTreeNode(word));
         this->count++;
+        pthread_mutex_unlock(&(this->mutex));
         return;
       }
       current = current->getLeft();
@@ -47,16 +53,22 @@ void MatchTree::insert(String *word) {
       if (current->getRight() == nullptr) {
         current->setRight(new MatchTreeNode(word));
         this->count++;
+        pthread_mutex_unlock(&(this->mutex));
         return;
       }
       current = current->getRight();
     }
   }
+  pthread_mutex_unlock(&(this->mutex));
 }
 bool MatchTree::matched() {
+  pthread_mutex_lock(&(this->mutex));
   if ((this->count == this->maxWords) && !flag) {
-    return this->flag = true; // to avoid return it to the future again
+    this->flag = true;
+    pthread_mutex_unlock(&(this->mutex));
+    return this->flag; // to avoid return it to the future again
   }
+  pthread_mutex_unlock(&(this->mutex));
   return false;
 }
 

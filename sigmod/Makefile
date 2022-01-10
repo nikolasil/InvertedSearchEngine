@@ -33,14 +33,14 @@ IMPL_O=ref_impl/core.o
 
 # Compiler flags
 CC  = gcc
-CXX = g++ -std=c++11
+CXX = g++ -std=c++11 -pthread
 CFLAGS=-O3 -fPIC -Wall -g -I. -I./include
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-lpthread
 
 # The programs that will be built
 PROGRAMS=testdriver
-FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o DocumentList.o structs.o
+FILES = String.o hashTable.o bucket.o exactInfoList.o heInfoList.o BK_Tree.o hammingArray.o MatchArray.o MatchTree.o ResultList.o DocumentList.o structs.o JobScheduler.o Job.o Queue.o
 # The name of the library that will be built
 LIBRARY=core
 
@@ -82,13 +82,24 @@ MatchTree.o:
 
 ResultList.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/MatchArray/ResultList.cpp
+
 DocumentList.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/DocumentList/DocumentList.cpp
 
 String.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/string/String.cpp
+
 structs.o:
 	$(CXX) $(CXXFLAGS) -c ref_impl/structs.cpp
+
+Job.o:
+	$(CXX) $(CXXFLAGS) -c ../Job\ Scheduler/Job.cpp
+
+JobScheduler.o:
+	$(CXX) $(CXXFLAGS) -c ../Job\ Scheduler/JobScheduler.cpp
+
+Queue.o:
+	$(CXX) $(CXXFLAGS) -c ../Job\ Scheduler/Queue.cpp
 
 #Test files
 test.o :

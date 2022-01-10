@@ -27,6 +27,7 @@ private:
   ResultList *forDeletion;
   DocumentList *docs;
   unsigned int maxQueryId;
+  int lastServedDocId;
   exactInfoList *exactStructsList;
   heInfoList *heStructsList;
 
@@ -40,11 +41,13 @@ public:
   ResultList *getForDeletion() { return this->forDeletion; };
   DocumentList *getDocs() { return this->docs; };
   unsigned int getMaxQueryId() { return this->maxQueryId; };
+  int getLastServedDocId() { return this->lastServedDocId; };
   exactInfoList *getExactStructsList() { return this->exactStructsList; };
   heInfoList *getHeStructsList() { return this->heStructsList; };
 
   // Setters
   void setMaxQueryId(int max) { this->maxQueryId = max; };
+  void setLastServedDocId(int docid) { this->lastServedDocId = docid; };
 };
 
 #endif

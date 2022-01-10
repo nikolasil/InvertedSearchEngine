@@ -4,13 +4,14 @@
 #include "../string/String.h"
 #include "bucket.h"
 #include <openssl/sha.h>
-
+#include <pthread.h>
 #define TABLE_SIZE 10000
 
 class HashTable {
 private:
   Bucket **table;
   int size;
+  pthread_mutex_t mutex;
 
 public:
   HashTable(int size = TABLE_SIZE);

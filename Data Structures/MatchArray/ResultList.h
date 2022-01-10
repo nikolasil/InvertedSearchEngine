@@ -2,6 +2,7 @@
 #define ResultList_H
 
 #include "../string/String.h"
+#include <pthread.h>
 class ResultListNode {
 private:
   int id;
@@ -22,6 +23,7 @@ class ResultList {
 private:
   ResultListNode *head;
   ResultListNode *last;
+  pthread_mutex_t mutex;
   int count;
 
 public:

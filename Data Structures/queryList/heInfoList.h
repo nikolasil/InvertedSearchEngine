@@ -2,6 +2,7 @@
 #define HEINFOLIST_H
 
 #include "../../sigmod/include/core.h"
+#include <pthread.h>
 class heInfoNode {
 private:
   HEInfo *info;
@@ -33,6 +34,7 @@ private:
   heInfoNode *head;
   heInfoNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   heInfoList();

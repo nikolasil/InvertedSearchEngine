@@ -2,6 +2,7 @@
 #define MatchTree_H
 
 #include "../string/String.h"
+#include <pthread.h>
 
 class MatchTreeNode {
 private:
@@ -30,6 +31,7 @@ private:
   int maxWords;
   bool flag;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   MatchTree(int maxWords);

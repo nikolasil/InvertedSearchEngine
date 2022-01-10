@@ -48,6 +48,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 DataStructs structs;
 JobScheduler *jobScheduler;
+
 ErrorCode InitializeIndex() {
   jobScheduler = new JobScheduler(NUM_THREADS);
   return EC_SUCCESS;
@@ -65,8 +66,12 @@ DataStructs *getStructs() {
   return &structs;
 }
 
-ErrorCode
-StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
+ErrorCode query(int numArgs, void **args) {
+  QueryID query_id = *(QueryID *)args[0];
+  const char *query_str = (const char *)args[1];
+  MatchType match_type = *((MatchType *)args[2]);
+  unsigned int match_dist = *((unsigned int *)args[3]);
+
   Query query;
 
   query.query_id = query_id;
@@ -135,16 +140,43 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   return EC_SUCCESS;
 }
 
+ErrorCode
+StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsigned int match_dist) {
+  void **args0 = new void *[4];
+  args0[0] = new QueryID(query_id);
+  args0[1] = new char[MAX_QUERY_LENGTH];
+  strcpy((char *)args0[1], query_str);
+  args0[2] = new MatchType(match_type);
+  args0[3] = new unsigned int(match_dist);
+
+  jobScheduler->addJob(new Job('s', &query, args0, 4));
+  cout << "added start querry" << endl;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ErrorCode EndQuery(QueryID query_id) {
+ErrorCode equery(int numArgs, void **args) {
+  QueryID query_id = *(QueryID *)args[0];
   structs.getForDeletion()->add(query_id);
+  return EC_SUCCESS;
+}
+
+ErrorCode EndQuery(QueryID query_id) {
+  void **args0 = new void *[1];
+  args0[0] = new QueryID(query_id);
+
+  jobScheduler->addJob(new Job('e', &equery, args0, 1));
+  cout << "added end querry" << endl;
+
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
+ErrorCode document(int numArgs, void **args) {
+  DocID doc_id = *(DocID *)args[0];
+  const char *doc_str = (const char *)args[0];
+
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
 
@@ -198,9 +230,18 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
     }
   }
 
-  structs.getDocs()->addToEnd(doc);
+  structs.getDocs()->addSorted(doc);
   delete matchArray;
   return EC_SUCCESS;
+}
+ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
+  void **args0 = new void *[2];
+  args0[0] = new DocID(doc_id);
+  args0[1] = new char[MAX_DOC_LENGTH];
+  strcpy((char *)args0[1], doc_str);
+
+  jobScheduler->addJob(new Job('m', &document, args0, 2));
+  cout << "added match doc" << endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -210,14 +251,16 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_doc_id = 0;
   *p_num_res = 0;
   *p_query_ids = 0;
-  if (structs.getDocs()->getCount() == 0)
-    return EC_NO_AVAIL_RES;
 
-  *p_doc_id = structs.getDocs()->getHead()->getDoc().doc_id;
-  *p_num_res = structs.getDocs()->getHead()->getDoc().num_res;
-  *p_query_ids = structs.getDocs()->getHead()->getDoc().query_ids;
+  while (structs.getDocs()->search(structs.getLastServedDocId() + 1) == false) {
+  }
 
-  structs.getDocs()->removeFromStart();
+  Document doc = structs.getDocs()->getDoc(structs.getLastServedDocId() + 1);
+  *p_doc_id = doc.doc_id;
+  *p_num_res = doc.num_res;
+  *p_query_ids = doc.query_ids;
+  structs.setLastServedDocId(doc.doc_id);
+  structs.getDocs()->remove(doc.doc_id);
   return EC_SUCCESS;
 }
 
