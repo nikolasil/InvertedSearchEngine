@@ -1,5 +1,5 @@
 #include "../include/structs.h"
-
+#include <pthread.h>
 DataStructs::DataStructs() {
   this->ht = new HashTable();
   this->hamming = new hammingArray();
@@ -10,6 +10,8 @@ DataStructs::DataStructs() {
   this->lastServedDocId = 0;
   this->exactStructsList = new exactInfoList();
   this->heStructsList = new heInfoList();
+
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 DataStructs::~DataStructs() {
@@ -26,3 +28,15 @@ DataStructs::~DataStructs() {
   delete forDeletion;
   delete docs;
 }
+
+void DataStructs::setMaxQueryId(int max) {
+  pthread_mutex_lock(&(this->mutex));
+  this->maxQueryId = max;
+  pthread_mutex_unlock(&(this->mutex));
+};
+
+void DataStructs::setLastServedDocId(int docid) {
+  pthread_mutex_lock(&(this->mutex));
+  this->lastServedDocId = docid;
+  pthread_mutex_unlock(&(this->mutex));
+};

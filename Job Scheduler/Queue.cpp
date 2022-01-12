@@ -51,12 +51,12 @@ QueueNode *Queue::remove() {
   return node;
 }
 
-int Queue::getLastJobEpoch() {
-  int epoch = 0;
-  if (this->head != NULL) {
-    epoch = this->head->getJob()->getEpoch();
+char Queue::getLastJobType() {
+  char type = 't';
+  if (this->tail != NULL) {
+    type = this->tail->getJob()->getType();
   }
-  return epoch;
+  return type;
 }
 
 void Queue::print() {

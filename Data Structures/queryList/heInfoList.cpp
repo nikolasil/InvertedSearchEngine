@@ -41,6 +41,7 @@ void heInfoList::print() {
 heInfoNode::heInfoNode(HEInfo *info) {
   this->info = info;
   this->next = nullptr;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 heInfoNode::~heInfoNode() {
   if (this->next != nullptr) {

@@ -41,6 +41,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -145,12 +146,12 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   void **args0 = new void *[4];
   args0[0] = new QueryID(query_id);
   args0[1] = new char[MAX_QUERY_LENGTH];
-  strcpy((char *)args0[1], query_str);
+  memcpy((char *)args0[1], query_str, strlen(query_str) + 1);
   args0[2] = new MatchType(match_type);
   args0[3] = new unsigned int(match_dist);
 
   jobScheduler->addJob(new Job('s', &query, args0, 4));
-  cout << "added start querry" << endl;
+  // cout << "added start querry" << endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +167,7 @@ ErrorCode EndQuery(QueryID query_id) {
   args0[0] = new QueryID(query_id);
 
   jobScheduler->addJob(new Job('e', &equery, args0, 1));
-  cout << "added end querry" << endl;
+  // cout << "added end querry" << endl;
 
   return EC_SUCCESS;
 }
@@ -175,7 +176,7 @@ ErrorCode EndQuery(QueryID query_id) {
 
 ErrorCode document(int numArgs, void **args) {
   DocID doc_id = *(DocID *)args[0];
-  const char *doc_str = (const char *)args[0];
+  const char *doc_str = (const char *)args[1];
 
   char cur_doc_str[MAX_DOC_LENGTH];
   strcpy(cur_doc_str, doc_str);
@@ -188,7 +189,6 @@ ErrorCode document(int numArgs, void **args) {
   exactInfoNode *cur = nullptr;
   while (wordToken != NULL) {
     word = new String(wordToken);
-
     // hashTable
     matchedWord = nullptr;
     exactList = structs.getHashTable()->lookup(word, &matchedWord);
@@ -230,18 +230,19 @@ ErrorCode document(int numArgs, void **args) {
     }
   }
 
-  structs.getDocs()->addSorted(doc);
+  structs.getDocs()->addToEnd(doc);
   delete matchArray;
   return EC_SUCCESS;
 }
+
 ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   void **args0 = new void *[2];
   args0[0] = new DocID(doc_id);
   args0[1] = new char[MAX_DOC_LENGTH];
-  strcpy((char *)args0[1], doc_str);
+  memcpy((char *)args0[1], doc_str, strlen(doc_str) + 1);
 
   jobScheduler->addJob(new Job('m', &document, args0, 2));
-  cout << "added match doc" << endl;
+  // cout << "added match doc" << endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -252,15 +253,18 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_num_res = 0;
   *p_query_ids = 0;
 
-  while (structs.getDocs()->search(structs.getLastServedDocId() + 1) == false) {
-  }
+  cout << "before getNextAvailRes" << endl;
 
-  Document doc = structs.getDocs()->getDoc(structs.getLastServedDocId() + 1);
-  *p_doc_id = doc.doc_id;
-  *p_num_res = doc.num_res;
-  *p_query_ids = doc.query_ids;
-  structs.setLastServedDocId(doc.doc_id);
-  structs.getDocs()->remove(doc.doc_id);
+  pthread_cond_wait(jobScheduler->getCond(), jobScheduler->getCondMutex());
+
+  cout << "after getNextAvailRes" << endl;
+
+  *p_doc_id = structs.getDocs()->getHead()->getDoc().doc_id;
+  *p_num_res = structs.getDocs()->getHead()->getDoc().num_res;
+  *p_query_ids = structs.getDocs()->getHead()->getDoc().query_ids;
+
+  structs.getDocs()->removeFromStart();
+  // sleep(1);
   return EC_SUCCESS;
 }
 

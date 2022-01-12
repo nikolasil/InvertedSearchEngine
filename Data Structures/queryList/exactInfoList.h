@@ -7,6 +7,7 @@ class exactInfoNode {
 private:
   ExactInfo *info;
   exactInfoNode *next;
+  pthread_mutex_t mutex;
 
 public:
   exactInfoNode(ExactInfo *info);
@@ -19,11 +20,31 @@ public:
   ExactInfo *getWordInfo() const { return this->info; };
   exactInfoNode *getNext() const { return this->next; };
   // Setters
-  void setId(int id) { this->info->query_id = id; };
-  void setMaxQueryWords(int max) { this->info->maxQueryWords = max; };
-  void setWordInfo(ExactInfo *wi) { this->info = wi; };
-  void setFlag(bool flag) { this->info->flag = flag; };
-  void setNext(exactInfoNode *next) { this->next = next; };
+  void setId(int id) {
+    pthread_mutex_lock(&(this->mutex));
+    this->info->query_id = id;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setMaxQueryWords(int max) {
+    pthread_mutex_lock(&(this->mutex));
+    this->info->maxQueryWords = max;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setWordInfo(ExactInfo *wi) {
+    pthread_mutex_lock(&(this->mutex));
+    this->info = wi;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setFlag(bool flag) {
+    pthread_mutex_lock(&(this->mutex));
+    this->info->flag = flag;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setNext(exactInfoNode *next) {
+    pthread_mutex_lock(&(this->mutex));
+    this->next = next;
+    pthread_mutex_unlock(&(this->mutex));
+  };
   void print();
 };
 

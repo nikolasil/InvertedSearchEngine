@@ -9,11 +9,25 @@ void *threadFunc(void *args) {
   JobScheduler *scheduler = (JobScheduler *)args;
   Job *j;
   while (1) {
+    if (scheduler->getFlag()) {
+      cout << "flag " << scheduler->getLastJobType() << endl;
+      pthread_barrier_wait(scheduler->getBarrier());
+      pthread_mutex_lock(scheduler->getMutex());
+
+      if (scheduler->getLastJobType() == 'm') {
+        pthread_cond_signal(scheduler->getCond());
+      }
+      if (scheduler->getFlag()) {
+        scheduler->setLastJobType(scheduler->getQueue()->getLastJobType());
+        scheduler->setFlag(false);
+      }
+      pthread_mutex_unlock(scheduler->getMutex());
+      pthread_barrier_wait(scheduler->getBarrier());
+    }
     j = scheduler->getJob();
     if (j != NULL) {
-      j->print();
       j->execute();
-      scheduler->decreaseRunningThreads();
+      // cout <<" executed" << endl;
     }
   }
 }
@@ -22,12 +36,12 @@ JobScheduler::JobScheduler(int numThreads) {
   queue = new Queue();
   this->numThreads = numThreads;
   this->threadIDs = new pthread_t[numThreads];
-  this->epoch = 0;
-  this->currEpoch = 0;
   this->lastJobType = 's';
-  this->runningThreads = 0;
-
+  this->flag = false;
   pthread_mutex_init(&(this->mutex), NULL);
+  pthread_barrier_init(&(this->barrier), NULL, this->numThreads);
+  pthread_cond_init(&(this->cond), NULL);
+  pthread_mutex_init(&(this->condMutex), NULL);
 
   for (int i = 0; i < this->numThreads; i++) {
     if (pthread_create(&this->threadIDs[i], nullptr, threadFunc, this) != 0) {
@@ -40,56 +54,42 @@ JobScheduler::JobScheduler(int numThreads) {
 JobScheduler::~JobScheduler() {
 }
 
-void JobScheduler::decreaseRunningThreads() {
-  pthread_mutex_lock(&(this->mutex));
-  this->runningThreads--;
-  pthread_mutex_unlock(&(this->mutex));
-}
-
-void JobScheduler::increaseRunningThreads() {
-  pthread_mutex_lock(&(this->mutex));
-  this->runningThreads++;
-  pthread_mutex_unlock(&(this->mutex));
-}
-
 void JobScheduler::addJob(Job *job) {
-  while (this->epoch - this->currEpoch > 1) {
-  }
   pthread_mutex_lock(&(this->mutex));
-  if (job->getType() != this->lastJobType) {
-    this->epoch++;
-    this->lastJobType = job->getType();
-  }
   queue->add(job);
-  job->setEpoch(this->epoch);
   pthread_mutex_unlock(&(this->mutex));
 }
 
 Job *JobScheduler::getJob() {
-
-  if (this->queue->getSize() > 0) { // if there are jobs in the queue
-
-    if (this->queue->getLastJobEpoch() == this->epoch) { // if the last job in the queue is of the same epoch
-      pthread_mutex_lock(&(this->mutex));
-      QueueNode *qn = queue->remove();
-      if (qn != NULL) {
-        runningThreads++;
-        pthread_mutex_unlock(&(this->mutex));
-        return qn->getJob();
-      }
-
-      pthread_mutex_unlock(&(this->mutex));
-
-      return NULL;
-    } else { // then the epoch must change when all the previous jobs are done
-      while (runningThreads != 0) {
-      }
-      pthread_mutex_lock(&(this->mutex));
-      cout << "waited to change epoch" << endl;
-      currEpoch++;
-      pthread_mutex_unlock(&(this->mutex));
-    }
+  pthread_mutex_lock(&(this->mutex));
+  if (flag) {
+    pthread_mutex_unlock(&(this->mutex));
+    return NULL;
   }
+  // if the queue is empty
+  if (this->queue->getSize() == 0) {
+    if (this->getLastJobType() == 'm') {
+      pthread_cond_signal(this->getCond());
+    }
+    pthread_mutex_unlock(&(this->mutex));
+    return NULL;
+  }
+  // if the job type is different from the last job type
+  if (this->queue->getLastJobType() != this->getLastJobType()) {
+    // cout << "type " << this->queue->getLastJobType() << this->getLastJobType() << endl;
+    this->flag = true;
+    pthread_mutex_unlock(&(this->mutex));
+    return NULL;
+  }
+
+  QueueNode *qn = queue->remove();
+  if (qn != NULL) {
+    qn->getJob()->print();
+    pthread_mutex_unlock(&(this->mutex));
+    return qn->getJob();
+  }
+
+  pthread_mutex_unlock(&(this->mutex));
 
   return NULL;
 }

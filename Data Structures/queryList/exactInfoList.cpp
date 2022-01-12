@@ -39,6 +39,7 @@ void exactInfoList::print() {
 exactInfoNode::exactInfoNode(ExactInfo *info) {
   this->info = info;
   this->next = nullptr;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 exactInfoNode::~exactInfoNode() {
   if (this->next != nullptr) {

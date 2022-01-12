@@ -44,6 +44,7 @@ public:
   void setHead(DocumentNode *head) { this->head = head; };
   void setLast(DocumentNode *last) { this->last = last; };
   // Methods
+  void print();
   Document getDoc(DocID docId);
   void remove(DocID docId);
   bool search(DocID docId);

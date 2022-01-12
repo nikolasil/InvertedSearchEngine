@@ -18,7 +18,7 @@ class MatchArray;
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
-
+#include <pthread.h>
 class DataStructs {
 private:
   HashTable *ht;
@@ -30,6 +30,8 @@ private:
   int lastServedDocId;
   exactInfoList *exactStructsList;
   heInfoList *heStructsList;
+
+  pthread_mutex_t mutex;
 
 public:
   DataStructs();
@@ -46,8 +48,8 @@ public:
   heInfoList *getHeStructsList() { return this->heStructsList; };
 
   // Setters
-  void setMaxQueryId(int max) { this->maxQueryId = max; };
-  void setLastServedDocId(int docid) { this->lastServedDocId = docid; };
+  void setMaxQueryId(int max);
+  void setLastServedDocId(int docid);
 };
 
 #endif

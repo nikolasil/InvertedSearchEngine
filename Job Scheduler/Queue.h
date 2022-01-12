@@ -41,7 +41,7 @@ public:
   // Utility
   void add(Job *job);
   QueueNode *remove();
-  int getLastJobEpoch();
+  char getLastJobType();
 
   void print();
 };

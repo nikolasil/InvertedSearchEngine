@@ -42,7 +42,7 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   pthread_mutex_unlock(&(this->mutex));
 }
 void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
-  pthread_mutex_lock(&(this->mutex));
+  // pthread_mutex_lock(&(this->mutex));
   heInfoNode *curr = infoList->getHead();
 
   while (curr != nullptr) {
@@ -55,7 +55,7 @@ void MatchArray::update(String *word, heInfoList *infoList, int threshold, Resul
     }
     curr = curr->getNext();
   }
-  pthread_mutex_unlock(&(this->mutex));
+  // pthread_mutex_unlock(&(this->mutex));
 }
 
 void MatchArray::deleteMatchTree(int queryId) {

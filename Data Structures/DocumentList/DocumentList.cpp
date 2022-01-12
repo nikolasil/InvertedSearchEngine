@@ -17,6 +17,7 @@ DocumentList::~DocumentList() {
     curr = temp;
   }
 }
+
 void DocumentList::addToEnd(Document doc) {
   pthread_mutex_lock(&(this->mutex));
   DocumentNode *newNode = new DocumentNode(doc);
@@ -29,44 +30,6 @@ void DocumentList::addToEnd(Document doc) {
     return;
   }
 
-  this->last->setNext(newNode);
-  this->last = newNode;
-  count++;
-  pthread_mutex_unlock(&(this->mutex));
-}
-
-void DocumentList::addSorted(Document doc) {
-  pthread_mutex_lock(&(this->mutex));
-  DocumentNode *newNode = new DocumentNode(doc);
-
-  if (count == 0) {
-    this->head = newNode;
-    this->last = newNode;
-    count++;
-    pthread_mutex_unlock(&(this->mutex));
-    return;
-  }
-
-  DocumentNode *curr = this->head;
-  DocumentNode *prev = NULL;
-  while (curr != NULL) {
-    if (curr->getDoc().doc_id > doc.doc_id) {
-      if (prev == NULL) {
-        this->head = newNode;
-        newNode->setNext(curr);
-        count++;
-        pthread_mutex_unlock(&(this->mutex));
-        return;
-      }
-      prev->setNext(newNode);
-      newNode->setNext(curr);
-      count++;
-      pthread_mutex_unlock(&(this->mutex));
-      return;
-    }
-    prev = curr;
-    curr = curr->getNext();
-  }
   this->last->setNext(newNode);
   this->last = newNode;
   count++;
@@ -140,6 +103,15 @@ bool DocumentList::search(DocID docId) {
   }
   pthread_mutex_unlock(&(this->mutex));
   return false;
+}
+
+void DocumentList::print() {
+  DocumentNode *curr = this->head;
+  while (curr != nullptr) {
+    cout << curr->getDoc().doc_id << " ";
+    curr = curr->getNext();
+  }
+  cout << endl;
 }
 
 // DocumentNode

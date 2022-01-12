@@ -9,7 +9,6 @@ Job::Job(char type, ErrorCode (*function)(int, void **), void **args, int numArg
   this->function = function;
   this->args = args;
   this->numArgs = numArgs;
-  this->epoch = 0;
 }
 
 Job::~Job() {
