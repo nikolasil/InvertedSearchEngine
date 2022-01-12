@@ -118,6 +118,7 @@ void DocumentList::print() {
 DocumentNode::DocumentNode(Document doc) {
   this->doc = doc;
   this->next = nullptr;
+  pthread_mutex_init(&(this->mutex), NULL);
 }
 DocumentNode::~DocumentNode() {}
 

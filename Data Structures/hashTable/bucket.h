@@ -4,12 +4,14 @@
 #include "../../sigmod/include/core.h"
 #include "../queryList/exactInfoList.h"
 #include "../string/String.h"
+#include <pthread.h>
 
 class bucketNode {
 private:
   String *word;
   exactInfoList *list;
   bucketNode *next;
+  pthread_mutex_t mutex;
 
 public:
   bucketNode(String *word, ExactInfo *wordInfo);
@@ -19,9 +21,21 @@ public:
   exactInfoList *getList() const { return this->list; };
   bucketNode *getNext() const { return this->next; };
   // Setters
-  void setWord(String *word) { this->word = word; };
-  void setList(exactInfoList *list) { this->list = list; };
-  void setNext(bucketNode *next) { this->next = next; };
+  void setWord(String *word) {
+    pthread_mutex_lock(&(this->mutex));
+    this->word = word;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setList(exactInfoList *list) {
+    pthread_mutex_lock(&(this->mutex));
+    this->list = list;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setNext(bucketNode *next) {
+    pthread_mutex_lock(&(this->mutex));
+    this->next = next;
+    pthread_mutex_unlock(&(this->mutex));
+  };
   // Methods
   void addToQueryList(ExactInfo *wordInfo);
   void print();
@@ -32,6 +46,7 @@ private:
   bucketNode *head;
   bucketNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   Bucket();

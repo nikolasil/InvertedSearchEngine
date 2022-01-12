@@ -10,6 +10,7 @@ class DocumentNode {
 private:
   Document doc;
   DocumentNode *next;
+  pthread_mutex_t mutex;
 
 public:
   DocumentNode(Document doc);
@@ -20,8 +21,16 @@ public:
   Document getDoc() { return this->doc; };
   DocumentNode *getNext() { return this->next; };
   // Setters
-  void setDoc(Document doc) { this->doc = doc; };
-  void setNext(DocumentNode *next) { this->next = next; };
+  void setDoc(Document doc) {
+    pthread_mutex_lock(&(this->mutex));
+    this->doc = doc;
+    pthread_mutex_unlock(&(this->mutex));
+  };
+  void setNext(DocumentNode *next) {
+    pthread_mutex_lock(&(this->mutex));
+    this->next = next;
+    pthread_mutex_unlock(&(this->mutex));
+  };
 };
 
 class DocumentList {
