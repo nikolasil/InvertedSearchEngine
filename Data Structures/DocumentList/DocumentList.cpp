@@ -18,7 +18,11 @@ DocumentList::~DocumentList() {
   }
 }
 
-void DocumentList::addToEnd(Document doc) {
+Document DocumentList::getFirst() {
+  return this->head->getDoc();
+}
+
+void DocumentList::add(Document doc) {
   pthread_mutex_lock(&(this->mutex));
   DocumentNode *newNode = new DocumentNode(doc);
 
@@ -33,33 +37,6 @@ void DocumentList::addToEnd(Document doc) {
   this->last->setNext(newNode);
   this->last = newNode;
   count++;
-  pthread_mutex_unlock(&(this->mutex));
-}
-
-void DocumentList::removeFromStart() {
-  pthread_mutex_lock(&(this->mutex));
-  if (count > 0) {
-    DocumentNode *temp = this->head;
-    this->head = this->head->getNext();
-    if (this->head == nullptr) {
-      this->last = nullptr;
-    }
-    count--;
-    delete temp;
-  }
-  pthread_mutex_unlock(&(this->mutex));
-}
-
-Document DocumentList::getDoc(DocID docId) {
-  pthread_mutex_lock(&(this->mutex));
-  DocumentNode *curr = this->head;
-  while (curr != NULL) {
-    if (curr->getDoc().doc_id == docId) {
-      pthread_mutex_unlock(&(this->mutex));
-      return curr->getDoc();
-    }
-    curr = curr->getNext();
-  }
   pthread_mutex_unlock(&(this->mutex));
 }
 
@@ -82,6 +59,7 @@ void DocumentList::remove(DocID docId) {
       }
       count--;
       delete curr;
+      // cout << "count: " << count << endl;
       pthread_mutex_unlock(&(this->mutex));
       return;
     }
@@ -89,20 +67,6 @@ void DocumentList::remove(DocID docId) {
     curr = curr->getNext();
   }
   pthread_mutex_unlock(&(this->mutex));
-}
-
-bool DocumentList::search(DocID docId) {
-  pthread_mutex_lock(&(this->mutex));
-  DocumentNode *curr = this->head;
-  while (curr != nullptr) {
-    if (curr->getDoc().doc_id == docId) {
-      pthread_mutex_unlock(&(this->mutex));
-      return true;
-    }
-    curr = curr->getNext();
-  }
-  pthread_mutex_unlock(&(this->mutex));
-  return false;
 }
 
 void DocumentList::print() {

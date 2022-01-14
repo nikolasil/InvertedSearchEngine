@@ -10,7 +10,6 @@ String::String(const char *string) {
   this->str = new char[this->size + 1];
   this->str[this->size] = '\0';
   strcpy(this->str, string);
-  pthread_mutex_init(&(this->mutex), NULL);
 }
 String::String(String *s) {
   this->size = s->getSize();

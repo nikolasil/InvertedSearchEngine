@@ -23,7 +23,6 @@ class ResultList {
 private:
   ResultListNode *head;
   ResultListNode *last;
-  pthread_mutex_t mutex;
   int count;
 
 public:

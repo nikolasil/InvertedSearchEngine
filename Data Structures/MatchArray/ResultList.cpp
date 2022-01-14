@@ -7,7 +7,6 @@ ResultList::ResultList() {
   this->head = NULL;
   this->last = NULL;
   this->count = 0;
-  pthread_mutex_init(&(this->mutex), NULL);
 }
 ResultList::~ResultList() {
   if (this->head != nullptr) {
@@ -16,7 +15,6 @@ ResultList::~ResultList() {
   }
 }
 void ResultList::add(int id) {
-  pthread_mutex_lock(&(this->mutex));
   ResultListNode *newNode = new ResultListNode(id);
   ResultListNode *curr = this->head;
   ResultListNode *prev = nullptr;
@@ -24,7 +22,6 @@ void ResultList::add(int id) {
     this->head = newNode;
     this->last = newNode;
     count++;
-    pthread_mutex_unlock(&(this->mutex));
     return;
   }
   while (curr != nullptr) {
@@ -33,13 +30,11 @@ void ResultList::add(int id) {
         this->head = newNode;
         newNode->setNext(curr);
         count++;
-        pthread_mutex_unlock(&(this->mutex));
         return;
       }
       newNode->setNext(curr);
       prev->setNext(newNode);
       count++;
-      pthread_mutex_unlock(&(this->mutex));
       return;
     }
     prev = curr;
@@ -48,11 +43,9 @@ void ResultList::add(int id) {
   this->last = newNode;
   prev->setNext(newNode);
   count++;
-  pthread_mutex_unlock(&(this->mutex));
 }
 
 void ResultList::remove(int id) {
-  pthread_mutex_lock(&(this->mutex));
   ResultListNode *current = this->head;
   ResultListNode *previous = nullptr;
   while (current != nullptr) {
@@ -65,13 +58,11 @@ void ResultList::remove(int id) {
       }
       delete current;
       count--;
-      pthread_mutex_unlock(&(this->mutex));
       break;
     }
     previous = current;
     current = current->getNext();
   }
-  pthread_mutex_unlock(&(this->mutex));
 }
 bool ResultList::search(int id) {
   ResultListNode *current = this->head;
@@ -85,7 +76,6 @@ bool ResultList::search(int id) {
 }
 
 bool ResultList::searchRemove(int id) {
-  pthread_mutex_lock(&(this->mutex));
   ResultListNode *current = this->head;
   ResultListNode *previous = nullptr;
   while (current != nullptr) {
@@ -98,13 +88,11 @@ bool ResultList::searchRemove(int id) {
       }
       delete current;
       count--;
-      pthread_mutex_unlock(&(this->mutex));
       return true;
     }
     previous = current;
     current = current->getNext();
   }
-  pthread_mutex_unlock(&(this->mutex));
   return false;
 }
 void ResultList::print() {

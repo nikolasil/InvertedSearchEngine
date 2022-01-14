@@ -9,7 +9,6 @@ MatchArray::MatchArray(int size) {
   this->array = new MatchTree *[size](); // initialize MatchArray to null
   this->size = size;
   this->matchedIds = new ResultList();
-  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 MatchArray::~MatchArray() {
@@ -28,7 +27,6 @@ MatchArray::~MatchArray() {
 }
 
 void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
-  pthread_mutex_lock(&(this->mutex));
   if (this->array[queryId - 1] == NULL) {
     // cout << "null" << endl;
     this->array[queryId - 1] = new MatchTree(maxQueryWords); // create and initialize matchTree
@@ -39,10 +37,22 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   if (this->array[queryId - 1]->matched()) {
     this->matchedIds->add(queryId);
   }
-  pthread_mutex_unlock(&(this->mutex));
 }
+
+void MatchArray::insertNoLock(String *queryWord, int queryId, int maxQueryWords) {
+  if (this->array[queryId - 1] == NULL) {
+    // cout << "null" << endl;
+    this->array[queryId - 1] = new MatchTree(maxQueryWords); // create and initialize matchTree
+  }
+  this->array[queryId - 1]->insert(queryWord); // insert query word to matchTree
+  // cout << "Query word: " << queryWord->getStr() << " inserted to matchTree " << queryId << endl;
+  // check if the query word is matched
+  if (this->array[queryId - 1]->matched()) {
+    this->matchedIds->add(queryId);
+  }
+}
+
 void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
-  // pthread_mutex_lock(&(this->mutex));
   heInfoNode *curr = infoList->getHead();
 
   while (curr != nullptr) {
@@ -51,11 +61,10 @@ void MatchArray::update(String *word, heInfoList *infoList, int threshold, Resul
       if (forDeletion->searchRemove(curr->getId())) {
         curr->setFlag(false);
       } else if (curr->getFlag())
-        this->insert(word, curr->getId(), curr->getMaxQueryWords());
+        this->insertNoLock(word, curr->getId(), curr->getMaxQueryWords());
     }
     curr = curr->getNext();
   }
-  // pthread_mutex_unlock(&(this->mutex));
 }
 
 void MatchArray::deleteMatchTree(int queryId) {

@@ -5,7 +5,7 @@ using namespace std;
 
 Job::Job(char type, ErrorCode (*function)(int, void **), void **args, int numArgs) {
   this->type = type;
-  this->status = 0;
+  this->status = 1;
   this->function = function;
   this->args = args;
   this->numArgs = numArgs;

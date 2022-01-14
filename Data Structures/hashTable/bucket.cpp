@@ -10,7 +10,6 @@ Bucket::Bucket() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
-  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 Bucket::~Bucket() {
@@ -24,27 +23,30 @@ void Bucket::print() {
   this->head->print();
 }
 
-exactInfoList *Bucket::lookup(String *word, String **matchedWord) {
+void Bucket::lookup(String *word, MatchArray *MatchArray, ResultList *forDelition) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
-      (*matchedWord) = temp->getWord();
-      return temp->getList();
+
+      exactInfoNode *cur = temp->getList()->getHead();
+      while (cur != nullptr) {
+        if (forDelition->searchRemove(cur->getId())) {
+          cur->setFlag(false);
+        } else if (cur->getFlag())
+          MatchArray->insert(temp->getWord(), cur->getId(), cur->getMaxQueryWords());
+        cur = cur->getNext();
+      }
     }
     temp = temp->getNext();
   }
-  (*matchedWord) = nullptr;
-  return nullptr;
+  return;
 }
 
 bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
-  pthread_mutex_lock(&(this->mutex));
   bucketNode *exists = this->getNode(word);
   if (exists != nullptr) {
     exists->addToQueryList(wordInfo);
     delete word;
-    pthread_mutex_unlock(&(this->mutex));
-
     return exists;
   }
 
@@ -56,12 +58,11 @@ bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
   }
   this->last = newNode;
   count++;
-  pthread_mutex_unlock(&(this->mutex));
-
   return newNode;
 }
 
 bucketNode *Bucket::getNode(String *word) {
+
   bucketNode *current = this->head;
   while (current != nullptr) {
     if (current->getWord()->exactMatch(word)) {
@@ -79,7 +80,6 @@ bucketNode::bucketNode(String *word, ExactInfo *wordInfo) {
   this->next = nullptr;
   this->list = new exactInfoList();
   this->addToQueryList(wordInfo);
-  pthread_mutex_init(&(this->mutex), NULL);
 }
 
 bucketNode::~bucketNode() {
@@ -98,9 +98,7 @@ bucketNode::~bucketNode() {
 }
 
 void bucketNode::addToQueryList(ExactInfo *wordInfo) {
-  pthread_mutex_lock(&(this->mutex));
   this->list->addQuery(wordInfo);
-  pthread_mutex_unlock(&(this->mutex));
 }
 
 void bucketNode::print() {

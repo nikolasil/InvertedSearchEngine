@@ -7,7 +7,6 @@ class heInfoNode {
 private:
   HEInfo *info;
   heInfoNode *next;
-  pthread_mutex_t mutex;
 
 public:
   heInfoNode(HEInfo *info);
@@ -21,36 +20,12 @@ public:
   bool getFlag() const { return this->info->flag; };
   unsigned int getMatchDist() const { return this->info->matchDist; };
   // Setters
-  void setId(int id) {
-    pthread_mutex_lock(&(this->mutex));
-    this->info->query_id = id;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setMaxQueryWords(int max) {
-    pthread_mutex_lock(&(this->mutex));
-    this->info->maxQueryWords = max;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setWordInfo(HEInfo *wi) {
-    pthread_mutex_lock(&(this->mutex));
-    this->info = wi;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setNext(heInfoNode *n) {
-    pthread_mutex_lock(&(this->mutex));
-    this->next = n;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setFlag(bool flag) {
-    pthread_mutex_lock(&(this->mutex));
-    this->info->flag = flag;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setMatchDist(unsigned int dist) {
-    pthread_mutex_lock(&(this->mutex));
-    this->info->matchDist = dist;
-    pthread_mutex_unlock(&(this->mutex));
-  };
+  void setId(int id) { this->info->query_id = id; };
+  void setMaxQueryWords(int max) { this->info->maxQueryWords = max; };
+  void setWordInfo(HEInfo *wi) { this->info = wi; };
+  void setNext(heInfoNode *n) { this->next = n; };
+  void setFlag(bool flag) { this->info->flag = flag; };
+  void setMatchDist(unsigned int dist) { this->info->matchDist = dist; };
   void print();
 };
 
@@ -59,7 +34,6 @@ private:
   heInfoNode *head;
   heInfoNode *last;
   int count;
-  pthread_mutex_t mutex;
 
 public:
   heInfoList();

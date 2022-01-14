@@ -54,12 +54,14 @@ public:
   void setLast(DocumentNode *last) { this->last = last; };
   // Methods
   void print();
-  Document getDoc(DocID docId);
+  void add(Document doc);
   void remove(DocID docId);
-  bool search(DocID docId);
-  void addToEnd(Document doc);
-  void addSorted(Document doc);
-  void removeFromStart();
+  Document getFirst();
+  // void addToEnd(Document doc);
+  // void removeFromStart();
+  // Document getDoc(DocID docId);
+  // bool search(DocID docId);
+  // void addSorted(Document doc);
 };
 
 #endif

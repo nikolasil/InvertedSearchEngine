@@ -13,9 +13,10 @@ private:
   bool flag;
   pthread_t *threadIDs;
   pthread_mutex_t mutex;
-  pthread_cond_t cond;
   pthread_mutex_t condMutex;
+  pthread_cond_t cond;
   pthread_barrier_t barrier;
+  pthread_barrier_t barrierAfter;
 
 public:
   JobScheduler(int numThreads);
@@ -27,9 +28,10 @@ public:
   bool getFlag() { return this->flag; };
   pthread_t *getThreadIDs() { return this->threadIDs; };
   pthread_mutex_t *getMutex() { return &(this->mutex); };
-  pthread_cond_t *getCond() { return &(this->cond); };
   pthread_mutex_t *getCondMutex() { return &(this->condMutex); };
+  pthread_cond_t *getCond() { return &(this->cond); };
   pthread_barrier_t *getBarrier() { return &(this->barrier); };
+  pthread_barrier_t *getBarrierAfter() { return &(this->barrierAfter); };
   // Setters
   void setQueue(Queue *queue) { this->queue = queue; };
   void setNumThreads(long numThreads) { this->numThreads = numThreads; };
@@ -37,9 +39,10 @@ public:
   void setFlag(bool flag) { this->flag = flag; };
   void setThreadIDs(pthread_t *threadIDs) { this->threadIDs = threadIDs; };
   void setMutex(pthread_mutex_t mutex) { this->mutex = mutex; };
-  void setCond(pthread_cond_t cond) { this->cond = cond; };
   void setCondMutex(pthread_mutex_t condMutex) { this->condMutex = condMutex; };
+  void setCond(pthread_cond_t cond) { this->cond = cond; };
   void setBarrier(pthread_barrier_t barrier) { this->barrier = barrier; };
+  void setBarrierAfter(pthread_barrier_t barrierAfter) { this->barrierAfter = barrierAfter; };
   // Utility
   void addJob(Job *job);
   Job *getJob();

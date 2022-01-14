@@ -12,6 +12,15 @@ DataStructs::DataStructs() {
   this->heStructsList = new heInfoList();
 
   pthread_mutex_init(&(this->mutex), NULL);
+  pthread_mutex_init(&(this->mutex0), NULL);
+  pthread_mutex_init(&(this->mutex1), NULL);
+  pthread_mutex_init(&(this->mutex2), NULL);
+  pthread_mutex_init(&(this->mutex3), NULL);
+  pthread_mutex_init(&(this->mutex4), NULL);
+  pthread_mutex_init(&(this->mutex5), NULL);
+  pthread_mutex_init(&(this->mutex6), NULL);
+  pthread_mutex_init(&(this->mutex7), NULL);
+  pthread_mutex_init(&(this->mutex8), NULL);
 }
 
 DataStructs::~DataStructs() {
@@ -30,13 +39,9 @@ DataStructs::~DataStructs() {
 }
 
 void DataStructs::setMaxQueryId(int max) {
-  pthread_mutex_lock(&(this->mutex));
   this->maxQueryId = max;
-  pthread_mutex_unlock(&(this->mutex));
 };
 
 void DataStructs::setLastServedDocId(int docid) {
-  pthread_mutex_lock(&(this->mutex));
   this->lastServedDocId = docid;
-  pthread_mutex_unlock(&(this->mutex));
 };

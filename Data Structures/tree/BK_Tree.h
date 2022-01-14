@@ -19,7 +19,6 @@ private:
   int weight;
   BK_TreeNode *child;
   BK_TreeEdge *next;
-  pthread_mutex_t mutex;
 
 public:
   BK_TreeEdge(int w, BK_TreeNode *c);
@@ -33,9 +32,7 @@ public:
   // Setters
   void setNext(BK_TreeEdge *next); // set next node
   void setWeight(int weight) {
-    pthread_mutex_lock(&(this->mutex));
     this->weight = weight;
-    pthread_mutex_unlock(&(this->mutex));
   }; // set edge weight
   void print();
 };
@@ -45,7 +42,6 @@ private:
   String *data;
   BK_TreeEdge *childs;
   heInfoList *info;
-  pthread_mutex_t mutex;
 
 public:
   BK_TreeNode(String *d, HEInfo *info);
@@ -56,11 +52,7 @@ public:
   String *getData();                                  // get word of node
   heInfoList *getInfo() const { return this->info; }; // get info list of node
   // Setters
-  void setData(String *data) {
-    pthread_mutex_lock(&(this->mutex));
-    this->data = data;
-    pthread_mutex_unlock(&(this->mutex));
-  }; // set new word of node
+  void setData(String *data) { this->data = data; }; // set new word of node
 
   // Utils
   BK_TreeNode *findChild(int w);                                                                              // Search for a child node that contains the word w
@@ -73,7 +65,6 @@ public:
 class BK_Tree {
 private:
   BK_TreeNode *root;
-  pthread_mutex_t mutex;
 
 public:
   BK_Tree();

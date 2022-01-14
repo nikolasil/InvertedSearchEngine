@@ -10,7 +10,6 @@
 class hammingArray {
 private:
   BK_Tree **array;
-  pthread_mutex_t mutex;
 
 public:
   hammingArray();

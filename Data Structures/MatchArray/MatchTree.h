@@ -31,7 +31,6 @@ private:
   int maxWords;
   bool flag;
   int count;
-  pthread_mutex_t mutex;
 
 public:
   MatchTree(int maxWords);

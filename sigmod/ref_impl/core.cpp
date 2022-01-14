@@ -45,10 +45,8 @@
 
 using namespace std;
 
-// Keeps all currently matched words of the queries
-///////////////////////////////////////////////////////////////////////////////////////////////
-DataStructs structs;
 JobScheduler *jobScheduler;
+DataStructs structs;
 
 ErrorCode InitializeIndex() {
   jobScheduler = new JobScheduler(NUM_THREADS);
@@ -68,6 +66,7 @@ DataStructs *getStructs() {
 }
 
 ErrorCode query(int numArgs, void **args) {
+  pthread_mutex_lock(&(structs.mutex));
   QueryID query_id = *(QueryID *)args[0];
   const char *query_str = (const char *)args[1];
   MatchType match_type = *((MatchType *)args[2]);
@@ -137,7 +136,7 @@ ErrorCode query(int numArgs, void **args) {
   }
   delete wordToken;
   structs.setMaxQueryId(structs.getMaxQueryId() + 1);
-
+  pthread_mutex_unlock(&(structs.mutex));
   return EC_SUCCESS;
 }
 
@@ -157,8 +156,10 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode equery(int numArgs, void **args) {
+  pthread_mutex_lock(&(structs.mutex));
   QueryID query_id = *(QueryID *)args[0];
   structs.getForDeletion()->add(query_id);
+  pthread_mutex_unlock(&(structs.mutex));
   return EC_SUCCESS;
 }
 
@@ -175,6 +176,7 @@ ErrorCode EndQuery(QueryID query_id) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode document(int numArgs, void **args) {
+  pthread_mutex_lock(&(structs.mutex));
   DocID doc_id = *(DocID *)args[0];
   const char *doc_str = (const char *)args[1];
 
@@ -182,31 +184,26 @@ ErrorCode document(int numArgs, void **args) {
   strcpy(cur_doc_str, doc_str);
 
   MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
+
   const char *wordToken = strtok(cur_doc_str, " ");
   String *word = nullptr;
-  String *matchedWord = nullptr;
-  exactInfoList *exactList = nullptr;
-  exactInfoNode *cur = nullptr;
+
   while (wordToken != NULL) {
     word = new String(wordToken);
-    // hashTable
-    matchedWord = nullptr;
-    exactList = structs.getHashTable()->lookup(word, &matchedWord);
-    if (exactList != nullptr) {
-      cur = exactList->getHead();
-      while (cur != nullptr) {
-        if (structs.getForDeletion()->searchRemove(cur->getId())) {
-          cur->setFlag(false);
-        } else if (cur->getFlag())
-          matchArray->insert(matchedWord, cur->getId(), cur->getMaxQueryWords());
-        cur = cur->getNext();
-      }
-    }
+
+    // HashTable
+    structs.getHashTable()->lookup(word, matchArray, structs.getForDeletion());
+    // pthread_mutex_unlock(&(structs.mutex0));
+
     // Edit Distance
+    // pthread_mutex_lock(&(structs.mutex0));
     structs.getEdit()->editLookup(word, matchArray, structs.getForDeletion());
+    // pthread_mutex_unlock(&(structs.mutex0));
 
     // Hamming Distance
+    // pthread_mutex_lock(&(structs.mutex0));
     structs.getHamming()->lookup(word, matchArray, structs.getForDeletion());
+    // pthread_mutex_unlock(&(structs.mutex0));
 
     if (wordToken) {
       wordToken = strtok(NULL, " ");
@@ -230,8 +227,10 @@ ErrorCode document(int numArgs, void **args) {
     }
   }
 
-  structs.getDocs()->addToEnd(doc);
+  // pthread_mutex_lock(&(structs.mutex3));
+  structs.getDocs()->add(doc);
   delete matchArray;
+  pthread_mutex_unlock(&(structs.mutex));
   return EC_SUCCESS;
 }
 
@@ -240,13 +239,14 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   args0[0] = new DocID(doc_id);
   args0[1] = new char[MAX_DOC_LENGTH];
   memcpy((char *)args0[1], doc_str, strlen(doc_str) + 1);
-
+  // structs.getHashTable()->print();
   jobScheduler->addJob(new Job('m', &document, args0, 2));
   // cout << "added match doc" << endl;
+  return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+bool flag = true;
 ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_query_ids) {
   // Get the first undeliverd resuilt from "docs" and return it
   *p_doc_id = 0;
@@ -255,17 +255,29 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
 
   cout << "before getNextAvailRes" << endl;
 
-  pthread_cond_wait(jobScheduler->getCond(), jobScheduler->getCondMutex());
+  if (flag) {
+    Job *j = new Job('w', NULL, NULL, 0);
+    j->setStatus(0);
+    jobScheduler->addJob(j);
+    structs.getHashTable()->print();
+    pthread_cond_wait(jobScheduler->getCond(), jobScheduler->getCondMutex());
+  }
+  cout << "broke wait getNextAvailRes" << endl;
 
-  cout << "after getNextAvailRes" << endl;
+  Document d = structs.getDocs()->getFirst();
+  structs.getDocs()->print();
+  cout << d.query_ids << endl;
+  cout << structs.getDocs()->getCount() << " after getNextAvailRes " << d.doc_id << endl;
+  *p_doc_id = d.doc_id;
+  *p_num_res = d.num_res;
+  *p_query_ids = d.query_ids;
 
-  *p_doc_id = structs.getDocs()->getHead()->getDoc().doc_id;
-  *p_num_res = structs.getDocs()->getHead()->getDoc().num_res;
-  *p_query_ids = structs.getDocs()->getHead()->getDoc().query_ids;
-
-  structs.getDocs()->removeFromStart();
-  // sleep(1);
+  structs.getDocs()->remove(d.doc_id);
+  if (flag)
+    flag = false;
+  if (structs.getDocs()->getCount() == 0)
+    flag = true;
   return EC_SUCCESS;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////////////////////////////////
