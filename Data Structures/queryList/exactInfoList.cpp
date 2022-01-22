@@ -8,6 +8,7 @@ exactInfoList::exactInfoList() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
+  pthread_mutex_init(&this->mutex, NULL);
 }
 exactInfoList::~exactInfoList() {
   if (this->head != nullptr) {
@@ -16,6 +17,7 @@ exactInfoList::~exactInfoList() {
   }
 }
 void exactInfoList::addQuery(ExactInfo *wordInfo) {
+  pthread_mutex_lock(&this->mutex);
   exactInfoNode *newNode = new exactInfoNode(wordInfo);
 
   if (this->head == nullptr) { // no entries in list
@@ -25,6 +27,7 @@ void exactInfoList::addQuery(ExactInfo *wordInfo) {
   }
   this->last = newNode;
   count++;
+  pthread_mutex_unlock(&this->mutex);
 }
 
 void exactInfoList::print() {

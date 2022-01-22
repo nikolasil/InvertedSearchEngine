@@ -42,6 +42,7 @@ private:
   exactInfoNode *head;
   exactInfoNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   exactInfoList();

@@ -14,6 +14,7 @@ class HashTable {
 private:
   Bucket **table;
   int size;
+  pthread_mutex_t mutex;
 
 public:
   HashTable(int size = TABLE_SIZE);

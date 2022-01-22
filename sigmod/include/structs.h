@@ -42,7 +42,7 @@ public:
   pthread_mutex_t mutex6;
   pthread_mutex_t mutex7;
   pthread_mutex_t mutex8;
-  
+
   DataStructs();
   ~DataStructs();
   // Getters

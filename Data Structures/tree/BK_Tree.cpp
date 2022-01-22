@@ -10,6 +10,7 @@ using namespace std;
 // Tree
 BK_Tree::BK_Tree() {
   this->root = nullptr;
+  pthread_mutex_init(&this->mutex, NULL);
 }
 
 BK_Tree::~BK_Tree() {
@@ -20,12 +21,16 @@ BK_Tree::~BK_Tree() {
 }
 
 void BK_Tree::add(String *word, HEInfo *info) {
+  pthread_mutex_lock(&this->mutex);
   BK_TreeNode *current = this->root;
 
   if (current == nullptr) {
     this->root = new BK_TreeNode(word, info);
+    pthread_mutex_unlock(&this->mutex);
     return;
   }
+  pthread_mutex_unlock(&this->mutex);
+
   int diff;
   while (true) {
     // Compare word with node data
@@ -42,7 +47,6 @@ void BK_Tree::add(String *word, HEInfo *info) {
     // Search for child node with equal weight in edge
     BK_TreeNode *childNode = nullptr;
     if ((childNode = current->findChild(diff)) == nullptr) {
-
       current->addChild(diff, new BK_TreeNode(word, info));
       return;
     }
@@ -94,6 +98,7 @@ BK_TreeNode::BK_TreeNode(String *d, HEInfo *info) {
   this->childs = nullptr;
   this->info = new heInfoList();
   this->info->addQuery(info);
+  pthread_mutex_init(&this->mutex, NULL);
 }
 
 BK_TreeNode::~BK_TreeNode() {
@@ -133,9 +138,12 @@ BK_TreeNode *BK_TreeNode::findChild(int w) {
 
 void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
   // the edge list was empty
+  pthread_mutex_lock(&this->mutex);
+
   if (this->childs == nullptr) {
     this->childs = new BK_TreeEdge(w, c);
     this->childs->setNext(nullptr);
+    pthread_mutex_unlock(&this->mutex);
     return;
   }
 
@@ -151,16 +159,19 @@ void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
   if (prev == nullptr) {
     this->childs = new BK_TreeEdge(w, c);
     this->childs->setNext(current);
+    pthread_mutex_unlock(&this->mutex);
     return;
   }
   // the new edge must be in the last place
   if (current == nullptr) {
     prev->setNext(new BK_TreeEdge(w, c));
+    pthread_mutex_unlock(&this->mutex);
     return;
   }
   // the new edge must be between prev-current
   prev->setNext(new BK_TreeEdge(w, c));
   prev->getNext()->setNext(current);
+  pthread_mutex_unlock(&this->mutex);
   return;
 }
 

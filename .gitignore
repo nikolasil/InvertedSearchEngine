@@ -2,3 +2,4 @@
 *.o
 invSearchEngine
 test
+sigmod/test_data/input*

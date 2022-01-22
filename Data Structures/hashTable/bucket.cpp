@@ -10,6 +10,7 @@ Bucket::Bucket() {
   this->head = nullptr;
   this->last = nullptr;
   this->count = 0;
+  pthread_mutex_init(&this->mutex, NULL);
 }
 
 Bucket::~Bucket() {
@@ -43,10 +44,13 @@ void Bucket::lookup(String *word, MatchArray *MatchArray, ResultList *forDelitio
 }
 
 bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
+  pthread_mutex_lock(&this->mutex);
   bucketNode *exists = this->getNode(word);
   if (exists != nullptr) {
     exists->addToQueryList(wordInfo);
     delete word;
+    pthread_mutex_unlock(&this->mutex);
+
     return exists;
   }
 
@@ -58,6 +62,7 @@ bucketNode *Bucket::addNode(String *word, ExactInfo *wordInfo) {
   }
   this->last = newNode;
   count++;
+  pthread_mutex_unlock(&this->mutex);
   return newNode;
 }
 
@@ -66,6 +71,7 @@ bucketNode *Bucket::getNode(String *word) {
   bucketNode *current = this->head;
   while (current != nullptr) {
     if (current->getWord()->exactMatch(word)) {
+
       return current;
     }
     current = current->getNext();

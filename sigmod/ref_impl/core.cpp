@@ -81,12 +81,12 @@ ErrorCode query(int numArgs, void **args) {
   // cout << "started query " << query_id << endl;
   switch (match_type) {
   case MT_EXACT_MATCH: {
-    pthread_mutex_lock(&(structs.mutex0));
     // cout << "Query id: " << query_id;
     char temp_query_str[MAX_QUERY_LENGTH];
+    char *save_ptr;
     strcpy(temp_query_str, query_str);
     unsigned int maxQueryWords = 0;
-    char *wordToken = strtok(temp_query_str, " ");
+    char *wordToken = strtok_r(temp_query_str, " ", &save_ptr);
     ExactInfo *exactInfo = new ExactInfo();
     exactInfo->query_id = query_id;
     exactInfo->flag = true;
@@ -95,24 +95,26 @@ ErrorCode query(int numArgs, void **args) {
       // cout << " " << wordToken;
       structs.getHashTable()->insert(new String(wordToken), exactInfo);
       maxQueryWords++;
-      wordToken = strtok(NULL, " ");
+
+      wordToken = strtok_r(NULL, " ", &save_ptr);
     }
 
     // cout << endl;
     exactInfo->maxQueryWords = maxQueryWords;
     structs.getExactStructsList()->addQuery(exactInfo);
     delete wordToken;
+    pthread_mutex_lock(&(structs.mutex0));
     structs.setMaxQueryId(structs.getMaxQueryId() + 1);
     pthread_mutex_unlock(&(structs.mutex0));
     break;
   }
   case MT_EDIT_DIST: {
-    pthread_mutex_lock(&(structs.mutex0));
     // cout << "Query id: " << query_id;
     char temp_query_str[MAX_QUERY_LENGTH];
     strcpy(temp_query_str, query_str);
     unsigned int maxQueryWords = 0;
-    char *wordToken = strtok(temp_query_str, " ");
+    char *save_ptr;
+    char *wordToken = strtok_r(temp_query_str, " ", &save_ptr);
     HEInfo *heInfo = new HEInfo();
     heInfo->query_id = query_id;
     heInfo->matchDist = match_dist;
@@ -122,24 +124,25 @@ ErrorCode query(int numArgs, void **args) {
       // cout << " " << wordToken;
       structs.getEdit()->add(new String(wordToken), heInfo);
       maxQueryWords++;
-      wordToken = strtok(NULL, " ");
+      wordToken = strtok_r(NULL, " ", &save_ptr);
     }
 
     // cout << endl;
     heInfo->maxQueryWords = maxQueryWords;
     structs.getHeStructsList()->addQuery(heInfo);
     delete wordToken;
+    pthread_mutex_lock(&(structs.mutex0));
     structs.setMaxQueryId(structs.getMaxQueryId() + 1);
     pthread_mutex_unlock(&(structs.mutex0));
     break;
   }
   case MT_HAMMING_DIST: {
-    pthread_mutex_lock(&(structs.mutex0));
     // cout << "Query id: " << query_id;
     char temp_query_str[MAX_QUERY_LENGTH];
     strcpy(temp_query_str, query_str);
     unsigned int maxQueryWords = 0;
-    char *wordToken = strtok(temp_query_str, " ");
+    char *save_ptr;
+    char *wordToken = strtok_r(temp_query_str, " ", &save_ptr);
     HEInfo *heInfo = new HEInfo();
 
     heInfo->query_id = query_id;
@@ -150,15 +153,17 @@ ErrorCode query(int numArgs, void **args) {
       // cout << " " << wordToken;
       structs.getHamming()->insert(new String(wordToken), heInfo);
       maxQueryWords++;
-      wordToken = strtok(NULL, " ");
+      wordToken = strtok_r(NULL, " ", &save_ptr);
     }
     // cout << endl;
 
     heInfo->maxQueryWords = maxQueryWords;
     structs.getHeStructsList()->addQuery(heInfo);
     delete wordToken;
+    pthread_mutex_lock(&(structs.mutex0));
     structs.setMaxQueryId(structs.getMaxQueryId() + 1);
     pthread_mutex_unlock(&(structs.mutex0));
+
     break;
   }
   }

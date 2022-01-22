@@ -35,6 +35,7 @@ private:
   bucketNode *head;
   bucketNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   Bucket();

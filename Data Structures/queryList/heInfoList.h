@@ -34,6 +34,7 @@ private:
   heInfoNode *head;
   heInfoNode *last;
   int count;
+  pthread_mutex_t mutex;
 
 public:
   heInfoList();

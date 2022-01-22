@@ -42,6 +42,7 @@ private:
   String *data;
   BK_TreeEdge *childs;
   heInfoList *info;
+  pthread_mutex_t mutex;
 
 public:
   BK_TreeNode(String *d, HEInfo *info);
@@ -65,6 +66,7 @@ public:
 class BK_Tree {
 private:
   BK_TreeNode *root;
+  pthread_mutex_t mutex;
 
 public:
   BK_Tree();
