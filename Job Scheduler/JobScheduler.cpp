@@ -9,50 +9,44 @@ void *threadFunc(void *args) {
   JobScheduler *scheduler = (JobScheduler *)args;
   Job *j = NULL;
   while (1) {
-
+    // cout << "wait" << endl;
     pthread_mutex_lock(scheduler->getMutex());
 
-    if (scheduler->getQueue()->getLastJobType() != scheduler->getLastJobType()) {
-      if (scheduler->getQueue()->getLastJobType() == 'w') {
-        cout << "flag w" << endl;
-        pthread_mutex_unlock(scheduler->getMutex());
+    if (scheduler->getWaitAllAndSignal()) {
+      pthread_mutex_unlock(scheduler->getMutex());
 
-        pthread_barrier_wait(scheduler->getBarrier());
+      pthread_barrier_wait(scheduler->getBarrier());
 
-        pthread_mutex_lock(scheduler->getMutex());
+      pthread_mutex_lock(scheduler->getMutex());
+      if (scheduler->getWaitAllAndSignal()) {
+        scheduler->setWaitAllAndSignal(false);
         pthread_cond_signal(scheduler->getCond());
-        scheduler->setLastJobType('w');
-        pthread_mutex_unlock(scheduler->getMutex());
-
-        pthread_barrier_wait(scheduler->getBarrierAfter());
-
-        pthread_mutex_lock(scheduler->getMutex());
-      } else if (scheduler->getQueue()->getLastJobType() != 't') {
-        cout << "flag" << endl;
-        pthread_mutex_unlock(scheduler->getMutex());
-
-        pthread_barrier_wait(scheduler->getBarrier());
-
-        pthread_mutex_lock(scheduler->getMutex());
-        // pthread_cond_signal(scheduler->getCond());
-        scheduler->setLastJobType(scheduler->getQueue()->getLastJobType());
-        pthread_mutex_unlock(scheduler->getMutex());
-
-        pthread_barrier_wait(scheduler->getBarrierAfter());
-
-        pthread_mutex_lock(scheduler->getMutex());
       }
-    }
+      pthread_mutex_unlock(scheduler->getMutex());
 
+      pthread_barrier_wait(scheduler->getBarrierAfter());
+      continue;
+    } else if (scheduler->getWaitAll()) {
+      pthread_mutex_unlock(scheduler->getMutex());
+
+      pthread_barrier_wait(scheduler->getBarrier());
+
+      pthread_mutex_lock(scheduler->getMutex());
+      if (scheduler->getWaitAll()) {
+        scheduler->setWaitAll(false);
+      }
+      pthread_mutex_unlock(scheduler->getMutex());
+
+      pthread_barrier_wait(scheduler->getBarrierAfter());
+      continue;
+    }
     j = NULL;
     j = scheduler->getJob();
     pthread_mutex_unlock(scheduler->getMutex());
     if (j == NULL) {
       continue;
     }
-    if (j->getStatus()) {
-      j->execute();
-    }
+    j->execute();
   }
 }
 
@@ -61,7 +55,8 @@ JobScheduler::JobScheduler(int numThreads) {
   this->numThreads = numThreads;
   this->threadIDs = new pthread_t[numThreads];
   this->lastJobType = 't';
-  this->flag = false;
+  this->waitAllAndSignal = false;
+  this->waitAll = false;
   pthread_mutex_init(&(this->mutex), NULL);
   pthread_mutex_init(&(this->condMutex), NULL);
   pthread_barrier_init(&(this->barrier), NULL, this->numThreads);
@@ -88,10 +83,21 @@ void JobScheduler::addJob(Job *job) {
 Job *JobScheduler::getJob() {
   QueueNode *qn = queue->remove();
   if (qn != NULL) {
-    if (this->getLastJobType() == 'w') {
-      this->setLastJobType(qn->getJob()->getType());
-      return NULL;
+    if (qn->getJob()->getType() != this->lastJobType) {
+      if (this->lastJobType == 't') { // first job ever OR after match documents
+        this->setLastJobType(qn->getJob()->getType());
+      } else if (!qn->getJob()->getStatus() && qn->getJob()->getType() == 'w') { // no more match documents
+        this->setLastJobType('t');
+        this->setWaitAllAndSignal(true);
+        return NULL;
+      } else {
+        this->setLastJobType(qn->getJob()->getType());
+        this->setWaitAll(true);
+        queue->addToHead(qn->getJob());
+        return NULL;
+      }
     }
+
     return qn->getJob();
   }
   return NULL;

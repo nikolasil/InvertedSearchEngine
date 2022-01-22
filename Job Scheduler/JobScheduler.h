@@ -10,7 +10,8 @@ private:
   Queue *queue;
   long numThreads;
   char lastJobType;
-  bool flag;
+  bool waitAllAndSignal;
+  bool waitAll;
   pthread_t *threadIDs;
   pthread_mutex_t mutex;
   pthread_mutex_t condMutex;
@@ -25,7 +26,8 @@ public:
   Queue *getQueue() { return this->queue; };
   long getNumThreads() { return this->numThreads; };
   char getLastJobType() { return this->lastJobType; };
-  bool getFlag() { return this->flag; };
+  bool getWaitAllAndSignal() { return this->waitAllAndSignal; };
+  bool getWaitAll() { return this->waitAll; };
   pthread_t *getThreadIDs() { return this->threadIDs; };
   pthread_mutex_t *getMutex() { return &(this->mutex); };
   pthread_mutex_t *getCondMutex() { return &(this->condMutex); };
@@ -36,7 +38,8 @@ public:
   void setQueue(Queue *queue) { this->queue = queue; };
   void setNumThreads(long numThreads) { this->numThreads = numThreads; };
   void setLastJobType(char lastJobType) { this->lastJobType = lastJobType; };
-  void setFlag(bool flag) { this->flag = flag; };
+  void setWaitAllAndSignal(bool waitAllAndSignal) { this->waitAllAndSignal = waitAllAndSignal; };
+  void setWaitAll(bool waitAll) { this->waitAll = waitAll; };
   void setThreadIDs(pthread_t *threadIDs) { this->threadIDs = threadIDs; };
   void setMutex(pthread_mutex_t mutex) { this->mutex = mutex; };
   void setCondMutex(pthread_mutex_t condMutex) { this->condMutex = condMutex; };

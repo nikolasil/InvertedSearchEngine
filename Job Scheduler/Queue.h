@@ -7,6 +7,7 @@ class QueueNode {
 private:
   Job *job;
   QueueNode *next;
+  QueueNode *prev;
 
 public:
   QueueNode(Job *data);
@@ -14,9 +15,11 @@ public:
   // Getters
   Job *getJob() { return this->job; };
   QueueNode *getNext() { return this->next; };
+  QueueNode *getPrev() { return this->prev; };
   // Setters
   void setJob(Job *data) { this->job = data; };
   void setNext(QueueNode *next) { this->next = next; };
+  void setPrev(QueueNode *prev) { this->prev = prev; };
   // Utility
   void print();
 };
@@ -39,6 +42,7 @@ public:
   void setTail(QueueNode *tail) { this->tail = tail; };
   void setSize(int size) { this->size = size; };
   // Utility
+  void addToHead(Job *job);
   void add(Job *job);
   QueueNode *remove();
   char getLastJobType();

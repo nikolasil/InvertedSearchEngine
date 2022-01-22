@@ -57,7 +57,7 @@ extern "C" {
 #define MAX_QUERY_WORDS 5
 
 // Number of threads for job scheduler
-#define NUM_THREADS 3
+#define NUM_THREADS 16
 
 /// Maximum query length in characters.
 #define MAX_QUERY_LENGTH ((MAX_WORD_LENGTH + 1) * MAX_QUERY_WORDS)

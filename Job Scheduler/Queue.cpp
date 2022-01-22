@@ -6,6 +6,7 @@ using namespace std;
 QueueNode::QueueNode(Job *data) {
   this->job = data;
   this->next = NULL;
+  this->prev = NULL;
 }
 
 QueueNode ::~QueueNode() {}
@@ -28,6 +29,19 @@ void Queue::add(Job *job) {
     this->head = node;
     this->tail = node;
   } else {
+    this->tail->setNext(node);
+    node->setPrev(this->tail);
+    this->tail = node;
+  }
+  this->size++;
+}
+void Queue::addToHead(Job *job) {
+  QueueNode *node = new QueueNode(job);
+  if (this->head == NULL) {
+    this->head = node;
+    this->tail = node;
+  } else {
+    this->head->setPrev(node);
     node->setNext(this->head);
     this->head = node;
   }
@@ -35,19 +49,20 @@ void Queue::add(Job *job) {
 }
 
 QueueNode *Queue::remove() {
-  QueueNode *node = this->tail;
-  if (this->tail == this->head) {
+  QueueNode *node = this->head;
+  if (this->head == NULL) {
+    return NULL;
+  }
+  if (this->head == this->tail) {
     this->head = NULL;
     this->tail = NULL;
   } else {
-    QueueNode *temp = this->head;
-    while (temp->getNext() != this->tail) {
-      temp = temp->getNext();
-    }
-    this->tail = temp;
-    this->tail->setNext(NULL);
+    this->head = this->head->getNext();
+    this->head->setPrev(NULL);
   }
   this->size--;
+  node->setNext(NULL);
+  node->setPrev(NULL);
   return node;
 }
 
