@@ -186,10 +186,8 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode equery(int numArgs, void **args) {
-  pthread_mutex_lock(&(structs.mutex0));
   QueryID query_id = *(QueryID *)args[0];
   structs.getForDeletion()->add(query_id);
-  pthread_mutex_unlock(&(structs.mutex0));
   return EC_SUCCESS;
 }
 
@@ -206,7 +204,6 @@ ErrorCode EndQuery(QueryID query_id) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ErrorCode document(int numArgs, void **args) {
-  pthread_mutex_lock(&(structs.mutex0));
   DocID doc_id = *(DocID *)args[0];
   // cout << doc_id;
   const char *doc_str = (const char *)args[1];
@@ -216,7 +213,8 @@ ErrorCode document(int numArgs, void **args) {
 
   MatchArray *matchArray = new MatchArray(structs.getMaxQueryId());
 
-  const char *wordToken = strtok(cur_doc_str, " ");
+  char *save_ptr;
+  const char *wordToken = strtok_r(cur_doc_str, " ", &save_ptr);
   String *word = nullptr;
 
   while (wordToken != NULL) {
@@ -224,20 +222,15 @@ ErrorCode document(int numArgs, void **args) {
 
     // HashTable
     structs.getHashTable()->lookup(word, matchArray, structs.getForDeletion());
-    // pthread_mutex_unlock(&(structs.mutex0));
 
     // Edit Distance
-    // pthread_mutex_lock(&(structs.mutex0));
     structs.getEdit()->editLookup(word, matchArray, structs.getForDeletion());
-    // pthread_mutex_unlock(&(structs.mutex0));
 
     // Hamming Distance
-    // pthread_mutex_lock(&(structs.mutex0));
     structs.getHamming()->lookup(word, matchArray, structs.getForDeletion());
-    // pthread_mutex_unlock(&(structs.mutex0));
 
     if (wordToken) {
-      wordToken = strtok(NULL, " ");
+      wordToken = strtok_r(NULL, " ", &save_ptr);
     }
     delete word;
   }
@@ -258,11 +251,8 @@ ErrorCode document(int numArgs, void **args) {
     }
   }
 
-  // pthread_mutex_lock(&(structs.mutex3));
   structs.getDocs()->add(doc);
   delete matchArray;
-  // cout << " end" << endl;
-  pthread_mutex_unlock(&(structs.mutex0));
   return EC_SUCCESS;
 }
 

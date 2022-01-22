@@ -32,16 +32,7 @@ private:
   heInfoList *heStructsList;
 
 public:
-  pthread_mutex_t mutex;
   pthread_mutex_t mutex0;
-  pthread_mutex_t mutex1;
-  pthread_mutex_t mutex2;
-  pthread_mutex_t mutex3;
-  pthread_mutex_t mutex4;
-  pthread_mutex_t mutex5;
-  pthread_mutex_t mutex6;
-  pthread_mutex_t mutex7;
-  pthread_mutex_t mutex8;
 
   DataStructs();
   ~DataStructs();

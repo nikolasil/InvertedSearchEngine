@@ -39,19 +39,6 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   }
 }
 
-void MatchArray::insertNoLock(String *queryWord, int queryId, int maxQueryWords) {
-  if (this->array[queryId - 1] == NULL) {
-    // cout << "null" << endl;
-    this->array[queryId - 1] = new MatchTree(maxQueryWords); // create and initialize matchTree
-  }
-  this->array[queryId - 1]->insert(queryWord); // insert query word to matchTree
-  // cout << "Query word: " << queryWord->getStr() << " inserted to matchTree " << queryId << endl;
-  // check if the query word is matched
-  if (this->array[queryId - 1]->matched()) {
-    this->matchedIds->add(queryId);
-  }
-}
-
 void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
   heInfoNode *curr = infoList->getHead();
 
@@ -61,7 +48,7 @@ void MatchArray::update(String *word, heInfoList *infoList, int threshold, Resul
       if (forDeletion->searchRemove(curr->getId())) {
         curr->setFlag(false);
       } else if (curr->getFlag())
-        this->insertNoLock(word, curr->getId(), curr->getMaxQueryWords());
+        this->insert(word, curr->getId(), curr->getMaxQueryWords());
     }
     curr = curr->getNext();
   }

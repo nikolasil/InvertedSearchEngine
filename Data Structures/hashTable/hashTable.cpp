@@ -76,9 +76,11 @@ int HashTable::hexadecimalToDecimal(unsigned char hexVal[]) {
 }
 void HashTable::lookup(String *H, MatchArray *MatchArray, ResultList *forDelition) {
   // Hash word with SHA1
+  pthread_mutex_lock(&this->mutex);
   unsigned char *returnHash = SHA1((const unsigned char *)(H->getStr()), H->getSize(), NULL);
   // Get Bucket Index in Hash Table
   int index = getIndex(returnHash);
+  pthread_mutex_unlock(&this->mutex);
 
   // If Bucket is Empty
   if (this->table[index] == NULL) {
