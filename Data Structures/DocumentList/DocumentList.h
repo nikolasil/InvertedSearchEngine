@@ -10,7 +10,7 @@ class DocumentNode {
 private:
   Document doc;
   DocumentNode *next;
-  pthread_mutex_t mutex;
+  DocumentNode *prev;
 
 public:
   DocumentNode(Document doc);
@@ -20,17 +20,11 @@ public:
   // Getters
   Document getDoc() { return this->doc; };
   DocumentNode *getNext() { return this->next; };
+  DocumentNode *getPrev() { return this->prev; };
   // Setters
-  void setDoc(Document doc) {
-    pthread_mutex_lock(&(this->mutex));
-    this->doc = doc;
-    pthread_mutex_unlock(&(this->mutex));
-  };
-  void setNext(DocumentNode *next) {
-    pthread_mutex_lock(&(this->mutex));
-    this->next = next;
-    pthread_mutex_unlock(&(this->mutex));
-  };
+  void setDoc(Document doc) { this->doc = doc; };
+  void setNext(DocumentNode *next) { this->next = next; };
+  void setPrev(DocumentNode *prev) { this->prev = prev; };
 };
 
 class DocumentList {
@@ -55,7 +49,7 @@ public:
   // Methods
   void print();
   void add(Document doc);
-  void remove(DocID docId);
+  DocumentNode *removeFirst();
   Document getFirst();
   // void addToEnd(Document doc);
   // void removeFromStart();

@@ -1,0 +1,534 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  us/call  us/call  name    
+ 76.94      1.20     1.20  2807246     0.43     0.43  String::editDistance(char*, char*, int, int)
+  3.85      1.26     0.06                             BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*)
+  3.53      1.32     0.06  8471241     0.01     0.01  BK_TreeEdge::getWeight()
+  2.56      1.36     0.04   984700     0.04     0.04  DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**)
+  2.56      1.40     0.04   760295     0.05     0.05  String::hammingDistance(String*)
+  1.92      1.43     0.03  1042361     0.03     0.03  String::exactMatch(String*)
+  1.92      1.46     0.03    97302     0.31     0.99  MatchArray::update(String*, heInfoList*, int, DeletionTree*)
+  1.28      1.48     0.02                             BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*)
+  0.64      1.49     0.01  3086565     0.00     0.00  BK_TreeNode::getFirstChild()
+  0.64      1.50     0.01   888131     0.01     0.04  MatchTree::insert(String*)
+  0.64      1.51     0.01   867294     0.01     0.06  MatchArray::insert(String*, int, int)
+  0.64      1.52     0.01                             BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*)
+  0.64      1.53     0.01                             Bucket::lookup(String*, MatchArray*, DeletionTree*)
+  0.64      1.54     0.01                             BK_Tree::editLookup(String*, MatchArray*, DeletionTree*)
+  0.64      1.55     0.01                             BK_Tree::~BK_Tree()
+  0.32      1.55     0.01  6721657     0.00     0.00  BK_TreeNode::getData()
+  0.32      1.56     0.01  3291322     0.00     0.00  BK_TreeEdge::getNext()
+  0.32      1.56     0.01       42   119.07   119.07  BK_TreeNode::BK_TreeNode(String*, HEInfo*)
+  0.00      1.56     0.00  3288841     0.00     0.00  BK_TreeEdge::getChild()
+  0.00      1.56     0.00  1045590     0.00     0.04  DeletionTree::remove(unsigned int)
+  0.00      1.56     0.00   969747     0.00     0.00  MatchTree::matched()
+  0.00      1.56     0.00   233592     0.00     0.00  HashTable::hash_string(char*)
+  0.00      1.56     0.00   149443     0.00     0.00  String::compare(String*)
+  0.00      1.56     0.00    47419     0.00     0.00  MatchTreeNode::MatchTreeNode(String*)
+  0.00      1.56     0.00    35030     0.00     0.00  MatchTreeNode::~MatchTreeNode()
+  0.00      1.56     0.00    33263     0.00     0.00  MatchTree::~MatchTree()
+  0.00      1.56     0.00    29872     0.00     0.00  MatchTree::MatchTree(int)
+  0.00      1.56     0.00    21217     0.00     0.00  ResultListNode::~ResultListNode()
+  0.00      1.56     0.00    18276     0.00     0.00  ResultList::add(int)
+  0.00      1.56     0.00    17415     0.00     0.00  Queue::remove()
+  0.00      1.56     0.00    17016     0.00     0.00  JobScheduler::getJob()
+  0.00      1.56     0.00    16333     0.00     0.00  ResultListNode::ResultListNode(int)
+  0.00      1.56     0.00    10000     0.00     0.00  Bucket::Bucket()
+  0.00      1.56     0.00     2290     0.00     0.00  String::~String()
+  0.00      1.56     0.00     1893     0.00     0.00  Queue::add(Job*)
+  0.00      1.56     0.00     1872     0.00     0.02  BK_TreeNode::findChild(int)
+  0.00      1.56     0.00     1855     0.00     0.00  exactInfoNode::exactInfoNode(ExactInfo*)
+  0.00      1.56     0.00     1830     0.00     0.00  QueueNode::QueueNode(Job*)
+  0.00      1.56     0.00     1746     0.00     0.00  Job::execute()
+  0.00      1.56     0.00     1610     0.00     0.00  heInfoNode::heInfoNode(HEInfo*)
+  0.00      1.56     0.00     1419     0.00     0.00  bucketNode::addToQueryList(ExactInfo*)
+  0.00      1.56     0.00     1384     0.00     0.00  exactInfoList::addQuery(ExactInfo*)
+  0.00      1.56     0.00     1285     0.00     0.03  Bucket::getNode(String*)
+  0.00      1.56     0.00     1154     0.00     0.00  heInfoList::addQuery(HEInfo*)
+  0.00      1.56     0.00      479     0.00     0.00  DeletionTreeNode::DeletionTreeNode(unsigned int)
+  0.00      1.56     0.00      224     0.00     0.00  ResultList::ResultList()
+  0.00      1.56     0.00      217     0.00     0.00  ResultList::destroy()
+  0.00      1.56     0.00      209     0.00     0.00  DocumentNode::DocumentNode(Document)
+  0.00      1.56     0.00      202     0.00     0.00  ResultList::~ResultList()
+  0.00      1.56     0.00       56     0.00     0.00  DeletionTreeNode::minValueNode(DeletionTreeNode*)
+  0.00      1.56     0.00       42     0.00     0.00  heInfoList::heInfoList()
+  0.00      1.56     0.00       41     0.00     0.00  BK_TreeEdge::setNext(BK_TreeEdge*)
+  0.00      1.56     0.00       41     0.00     0.01  BK_TreeNode::addChild(int, BK_TreeNode*)
+  0.00      1.56     0.00       38     0.00     0.00  BK_TreeEdge::BK_TreeEdge(int, BK_TreeNode*)
+  0.00      1.56     0.00       29     0.00     0.00  BK_Tree::BK_Tree()
+  0.00      1.56     0.00       24     0.00     0.00  exactInfoList::exactInfoList()
+  0.00      1.56     0.00       23     0.00     0.00  bucketNode::bucketNode(String*, ExactInfo*)
+  0.00      1.56     0.00       15     0.00     0.00  Queue::addToHead(Job*)
+  0.00      1.56     0.00       15     0.00     0.00  main
+  0.00      1.56     0.00        1     0.00     0.00  GetClockTimeInMilliSec()
+  0.00      1.56     0.00        1     0.00     0.00  DeletionTree::DeletionTree()
+  0.00      1.56     0.00        1     0.00     0.00  DocumentList::DocumentList()
+  0.00      1.56     0.00        1     0.00     0.00  hammingArray::hammingArray()
+  0.00      1.56     0.00        1     0.00     0.00  Queue::Queue()
+  0.00      1.56     0.00        1     0.00     0.00  HashTable::HashTable(int)
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.64% of 1.56 seconds
+
+index % time    self  children    called     name
+                             2346850             BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[1]     82.0    0.06    1.22       0+2346850 BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+                1.10    0.00 2578479/2807246     String::editDistance(char*, char*, int, int) [2]
+                0.02    0.04   54338/97302       MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+                0.05    0.00 7131828/8471241     BK_TreeEdge::getWeight() [6]
+                0.01    0.00 2458487/3086565     BK_TreeNode::getFirstChild() [15]
+                0.00    0.00 2717680/3291322     BK_TreeEdge::getNext() [18]
+                0.00    0.00 5436659/6721657     BK_TreeNode::getData() [20]
+                0.00    0.00 2716572/3288841     BK_TreeEdge::getChild() [32]
+                             2346850             BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+-----------------------------------------------
+                0.00    0.00    1319/2807246     BK_Tree::add(String*, HEInfo*) [17]
+                0.10    0.00  227448/2807246     BK_Tree::editLookup(String*, MatchArray*, DeletionTree*) [3]
+                1.10    0.00 2578479/2807246     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[2]     76.9    1.20    0.00 2807246         String::editDistance(char*, char*, int, int) [2]
+-----------------------------------------------
+                                                 <spontaneous>
+[3]      6.9    0.01    0.10                 BK_Tree::editLookup(String*, MatchArray*, DeletionTree*) [3]
+                0.10    0.00  227448/2807246     String::editDistance(char*, char*, int, int) [2]
+                0.00    0.00  479025/6721657     BK_TreeNode::getData() [20]
+                0.00    0.00     326/97302       MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+-----------------------------------------------
+                0.00    0.00     326/97302       BK_Tree::editLookup(String*, MatchArray*, DeletionTree*) [3]
+                0.00    0.00    6826/97302       BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*) [12]
+                0.01    0.02   35812/97302       BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.02    0.04   54338/97302       BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[4]      6.2    0.03    0.07   97302         MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+                0.01    0.03  640974/867294      MatchArray::insert(String*, int, int) [7]
+                0.00    0.03  774736/1045590     DeletionTree::remove(unsigned int) [8]
+                0.00    0.00   11329/18276       ResultList::add(int) [41]
+-----------------------------------------------
+                              457539             BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+[5]      5.6    0.01    0.08       0+457539  BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.01    0.02   35812/97302       MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+                0.03    0.00  565212/760295      String::hammingDistance(String*) [10]
+                0.01    0.00 1334906/8471241     BK_TreeEdge::getWeight() [6]
+                0.00    0.00  628078/3086565     BK_TreeNode::getFirstChild() [15]
+                0.00    0.00  571105/3291322     BK_TreeEdge::getNext() [18]
+                0.00    0.00  604813/6721657     BK_TreeNode::getData() [20]
+                0.00    0.00  570189/3288841     BK_TreeEdge::getChild() [32]
+                              457539             BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+-----------------------------------------------
+                0.00    0.00      28/8471241     BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+                0.00    0.00    4479/8471241     BK_TreeNode::findChild(int) [23]
+                0.01    0.00 1334906/8471241     BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.05    0.00 7131828/8471241     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[6]      3.5    0.06    0.00 8471241         BK_TreeEdge::getWeight() [6]
+-----------------------------------------------
+                0.00    0.01  226320/867294      Bucket::lookup(String*, MatchArray*, DeletionTree*) [13]
+                0.01    0.03  640974/867294      MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+[7]      3.2    0.01    0.04  867294         MatchArray::insert(String*, int, int) [7]
+                0.01    0.03  888131/888131      MatchTree::insert(String*) [11]
+                0.00    0.00  969747/969747      MatchTree::matched() [33]
+                0.00    0.00   29872/29872       MatchTree::MatchTree(int) [39]
+-----------------------------------------------
+                0.00    0.01  270854/1045590     Bucket::lookup(String*, MatchArray*, DeletionTree*) [13]
+                0.00    0.03  774736/1045590     MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+[8]      2.6    0.00    0.04 1045590         DeletionTree::remove(unsigned int) [8]
+                0.04    0.00  984700/984700      DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [9]
+-----------------------------------------------
+                             5011200             DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [9]
+                0.04    0.00  984700/984700      DeletionTree::remove(unsigned int) [8]
+[9]      2.6    0.04    0.00  984700+5011200 DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [9]
+                0.00    0.00      56/56          DeletionTreeNode::minValueNode(DeletionTreeNode*) [60]
+                             5011200             DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [9]
+-----------------------------------------------
+                0.00    0.00    1653/760295      BK_Tree::add(String*, HEInfo*) [17]
+                0.01    0.00  193430/760295      BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*) [12]
+                0.03    0.00  565212/760295      BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+[10]     2.6    0.04    0.00  760295         String::hammingDistance(String*) [10]
+-----------------------------------------------
+                0.01    0.03  888131/888131      MatchArray::insert(String*, int, int) [7]
+[11]     2.6    0.01    0.03  888131         MatchTree::insert(String*) [11]
+                0.03    0.00 1035869/1042361     String::exactMatch(String*) [14]
+                0.00    0.00  149443/149443      String::compare(String*) [35]
+                0.00    0.00   47419/47419       MatchTreeNode::MatchTreeNode(String*) [36]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     2.4    0.02    0.02                 BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*) [12]
+                0.01    0.00  193430/760295      String::hammingDistance(String*) [10]
+                0.00    0.00    6826/97302       MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+                0.00    0.00  193874/6721657     BK_TreeNode::getData() [20]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     2.1    0.01    0.02                 Bucket::lookup(String*, MatchArray*, DeletionTree*) [13]
+                0.00    0.01  226320/867294      MatchArray::insert(String*, int, int) [7]
+                0.00    0.01  270854/1045590     DeletionTree::remove(unsigned int) [8]
+                0.00    0.00    5124/1042361     String::exactMatch(String*) [14]
+                0.00    0.00    6947/18276       ResultList::add(int) [41]
+-----------------------------------------------
+                0.00    0.00    1368/1042361     Bucket::getNode(String*) [21]
+                0.00    0.00    5124/1042361     Bucket::lookup(String*, MatchArray*, DeletionTree*) [13]
+                0.03    0.00 1035869/1042361     MatchTree::insert(String*) [11]
+[14]     1.9    0.03    0.00 1042361         String::exactMatch(String*) [14]
+-----------------------------------------------
+                0.00    0.00  628078/3086565     BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.01    0.00 2458487/3086565     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[15]     0.6    0.01    0.00 3086565         BK_TreeNode::getFirstChild() [15]
+-----------------------------------------------
+                                                 <spontaneous>
+[16]     0.6    0.01    0.00                 BK_Tree::~BK_Tree() [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.4    0.00    0.01                 BK_Tree::add(String*, HEInfo*) [17]
+                0.01    0.00      42/42          BK_TreeNode::BK_TreeNode(String*, HEInfo*) [19]
+                0.00    0.00    1319/2807246     String::editDistance(char*, char*, int, int) [2]
+                0.00    0.00    1653/760295      String::hammingDistance(String*) [10]
+                0.00    0.00    1872/1872        BK_TreeNode::findChild(int) [23]
+                0.00    0.00    7286/6721657     BK_TreeNode::getData() [20]
+                0.00    0.00      41/41          BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+                0.00    0.00    2080/3288841     BK_TreeEdge::getChild() [32]
+                0.00    0.00    1112/1154        heInfoList::addQuery(HEInfo*) [54]
+                0.00    0.00    1018/2290        String::~String() [46]
+                0.00    0.00      39/41          BK_TreeEdge::setNext(BK_TreeEdge*) [62]
+-----------------------------------------------
+                0.00    0.00      18/3291322     BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+                0.00    0.00    2519/3291322     BK_TreeNode::findChild(int) [23]
+                0.00    0.00  571105/3291322     BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.00    0.00 2717680/3291322     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[18]     0.3    0.01    0.00 3291322         BK_TreeEdge::getNext() [18]
+-----------------------------------------------
+                0.01    0.00      42/42          BK_Tree::add(String*, HEInfo*) [17]
+[19]     0.3    0.01    0.00      42         BK_TreeNode::BK_TreeNode(String*, HEInfo*) [19]
+                0.00    0.00      42/1154        heInfoList::addQuery(HEInfo*) [54]
+                0.00    0.00      41/42          heInfoList::heInfoList() [61]
+-----------------------------------------------
+                0.00    0.00    7286/6721657     BK_Tree::add(String*, HEInfo*) [17]
+                0.00    0.00  193874/6721657     BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*) [12]
+                0.00    0.00  479025/6721657     BK_Tree::editLookup(String*, MatchArray*, DeletionTree*) [3]
+                0.00    0.00  604813/6721657     BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.00    0.00 5436659/6721657     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[20]     0.3    0.01    0.00 6721657         BK_TreeNode::getData() [20]
+-----------------------------------------------
+                0.00    0.00    1285/1285        Bucket::addNode(String*, ExactInfo*) [22]
+[21]     0.0    0.00    0.00    1285         Bucket::getNode(String*) [21]
+                0.00    0.00    1368/1042361     String::exactMatch(String*) [14]
+-----------------------------------------------
+                                                 <spontaneous>
+[22]     0.0    0.00    0.00                 Bucket::addNode(String*, ExactInfo*) [22]
+                0.00    0.00    1285/1285        Bucket::getNode(String*) [21]
+                0.00    0.00    1419/1419        bucketNode::addToQueryList(ExactInfo*) [52]
+                0.00    0.00    1384/1384        exactInfoList::addQuery(ExactInfo*) [53]
+                0.00    0.00    1272/2290        String::~String() [46]
+                0.00    0.00      23/23          bucketNode::bucketNode(String*, ExactInfo*) [66]
+-----------------------------------------------
+                0.00    0.00    1872/1872        BK_Tree::add(String*, HEInfo*) [17]
+[23]     0.0    0.00    0.00    1872         BK_TreeNode::findChild(int) [23]
+                0.00    0.00    4479/8471241     BK_TreeEdge::getWeight() [6]
+                0.00    0.00    2519/3291322     BK_TreeEdge::getNext() [18]
+-----------------------------------------------
+                0.00    0.00      41/41          BK_Tree::add(String*, HEInfo*) [17]
+[24]     0.0    0.00    0.00      41         BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+                0.00    0.00      28/8471241     BK_TreeEdge::getWeight() [6]
+                0.00    0.00      18/3291322     BK_TreeEdge::getNext() [18]
+                0.00    0.00      38/38          BK_TreeEdge::BK_TreeEdge(int, BK_TreeNode*) [63]
+                0.00    0.00       2/41          BK_TreeEdge::setNext(BK_TreeEdge*) [62]
+-----------------------------------------------
+                0.00    0.00      15/15          __libc_csu_init [155]
+[25]     0.0    0.00    0.00      15         main [25]
+-----------------------------------------------
+                0.00    0.00    2080/3288841     BK_Tree::add(String*, HEInfo*) [17]
+                0.00    0.00  570189/3288841     BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [5]
+                0.00    0.00 2716572/3288841     BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [1]
+[32]     0.0    0.00    0.00 3288841         BK_TreeEdge::getChild() [32]
+-----------------------------------------------
+                0.00    0.00  969747/969747      MatchArray::insert(String*, int, int) [7]
+[33]     0.0    0.00    0.00  969747         MatchTree::matched() [33]
+-----------------------------------------------
+                0.00    0.00    1360/233592      HashTable::insert(String*, ExactInfo*) [143]
+                0.00    0.00  232232/233592      HashTable::lookup(String*, MatchArray*, DeletionTree*) [144]
+[34]     0.0    0.00    0.00  233592         HashTable::hash_string(char*) [34]
+-----------------------------------------------
+                0.00    0.00  149443/149443      MatchTree::insert(String*) [11]
+[35]     0.0    0.00    0.00  149443         String::compare(String*) [35]
+-----------------------------------------------
+                0.00    0.00   47419/47419       MatchTree::insert(String*) [11]
+[36]     0.0    0.00    0.00   47419         MatchTreeNode::MatchTreeNode(String*) [36]
+-----------------------------------------------
+                               20458             MatchTreeNode::~MatchTreeNode() [37]
+                0.00    0.00   35030/35030       MatchTree::~MatchTree() [38]
+[37]     0.0    0.00    0.00   35030+20458   MatchTreeNode::~MatchTreeNode() [37]
+                               20458             MatchTreeNode::~MatchTreeNode() [37]
+-----------------------------------------------
+                0.00    0.00   33263/33263       MatchArray::~MatchArray() [81]
+[38]     0.0    0.00    0.00   33263         MatchTree::~MatchTree() [38]
+                0.00    0.00   35030/35030       MatchTreeNode::~MatchTreeNode() [37]
+-----------------------------------------------
+                0.00    0.00   29872/29872       MatchArray::insert(String*, int, int) [7]
+[39]     0.0    0.00    0.00   29872         MatchTree::MatchTree(int) [39]
+-----------------------------------------------
+                0.00    0.00   21217/21217       ResultList::destroy() [57]
+[40]     0.0    0.00    0.00   21217         ResultListNode::~ResultListNode() [40]
+-----------------------------------------------
+                0.00    0.00    6947/18276       Bucket::lookup(String*, MatchArray*, DeletionTree*) [13]
+                0.00    0.00   11329/18276       MatchArray::update(String*, heInfoList*, int, DeletionTree*) [4]
+[41]     0.0    0.00    0.00   18276         ResultList::add(int) [41]
+                0.00    0.00   16333/16333       ResultListNode::ResultListNode(int) [44]
+-----------------------------------------------
+                0.00    0.00   17415/17415       JobScheduler::getJob() [43]
+[42]     0.0    0.00    0.00   17415         Queue::remove() [42]
+-----------------------------------------------
+                0.00    0.00   17016/17016       threadFunc(void*) [75]
+[43]     0.0    0.00    0.00   17016         JobScheduler::getJob() [43]
+                0.00    0.00   17415/17415       Queue::remove() [42]
+                0.00    0.00      15/15          Queue::addToHead(Job*) [67]
+-----------------------------------------------
+                0.00    0.00   16333/16333       ResultList::add(int) [41]
+[44]     0.0    0.00    0.00   16333         ResultListNode::ResultListNode(int) [44]
+-----------------------------------------------
+                0.00    0.00   10000/10000       HashTable::HashTable(int) [73]
+[45]     0.0    0.00    0.00   10000         Bucket::Bucket() [45]
+-----------------------------------------------
+                0.00    0.00    1018/2290        BK_Tree::add(String*, HEInfo*) [17]
+                0.00    0.00    1272/2290        Bucket::addNode(String*, ExactInfo*) [22]
+[46]     0.0    0.00    0.00    2290         String::~String() [46]
+-----------------------------------------------
+                0.00    0.00    1893/1893        JobScheduler::addJob(Job*) [114]
+[47]     0.0    0.00    0.00    1893         Queue::add(Job*) [47]
+                0.00    0.00    1816/1830        QueueNode::QueueNode(Job*) [49]
+-----------------------------------------------
+                0.00    0.00    1855/1855        exactInfoList::addQuery(ExactInfo*) [53]
+[48]     0.0    0.00    0.00    1855         exactInfoNode::exactInfoNode(ExactInfo*) [48]
+-----------------------------------------------
+                0.00    0.00      14/1830        Queue::addToHead(Job*) [67]
+                0.00    0.00    1816/1830        Queue::add(Job*) [47]
+[49]     0.0    0.00    0.00    1830         QueueNode::QueueNode(Job*) [49]
+-----------------------------------------------
+                0.00    0.00    1746/1746        threadFunc(void*) [75]
+[50]     0.0    0.00    0.00    1746         Job::execute() [50]
+-----------------------------------------------
+                0.00    0.00    1610/1610        heInfoList::addQuery(HEInfo*) [54]
+[51]     0.0    0.00    0.00    1610         heInfoNode::heInfoNode(HEInfo*) [51]
+-----------------------------------------------
+                0.00    0.00    1419/1419        Bucket::addNode(String*, ExactInfo*) [22]
+[52]     0.0    0.00    0.00    1419         bucketNode::addToQueryList(ExactInfo*) [52]
+-----------------------------------------------
+                0.00    0.00    1384/1384        Bucket::addNode(String*, ExactInfo*) [22]
+[53]     0.0    0.00    0.00    1384         exactInfoList::addQuery(ExactInfo*) [53]
+                0.00    0.00    1855/1855        exactInfoNode::exactInfoNode(ExactInfo*) [48]
+-----------------------------------------------
+                0.00    0.00      42/1154        BK_TreeNode::BK_TreeNode(String*, HEInfo*) [19]
+                0.00    0.00    1112/1154        BK_Tree::add(String*, HEInfo*) [17]
+[54]     0.0    0.00    0.00    1154         heInfoList::addQuery(HEInfo*) [54]
+                0.00    0.00    1610/1610        heInfoNode::heInfoNode(HEInfo*) [51]
+-----------------------------------------------
+                0.00    0.00     479/479         DeletionTree::insert(unsigned int) [103]
+[55]     0.0    0.00    0.00     479         DeletionTreeNode::DeletionTreeNode(unsigned int) [55]
+-----------------------------------------------
+                0.00    0.00     224/224         MatchArray::MatchArray(int) [80]
+[56]     0.0    0.00    0.00     224         ResultList::ResultList() [56]
+-----------------------------------------------
+                0.00    0.00     217/217         MatchArray::~MatchArray() [81]
+[57]     0.0    0.00    0.00     217         ResultList::destroy() [57]
+                0.00    0.00   21217/21217       ResultListNode::~ResultListNode() [40]
+-----------------------------------------------
+                0.00    0.00     209/209         DocumentList::add(Document) [107]
+[58]     0.0    0.00    0.00     209         DocumentNode::DocumentNode(Document) [58]
+-----------------------------------------------
+                0.00    0.00     202/202         MatchArray::~MatchArray() [81]
+[59]     0.0    0.00    0.00     202         ResultList::~ResultList() [59]
+-----------------------------------------------
+                0.00    0.00      56/56          DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [9]
+[60]     0.0    0.00    0.00      56         DeletionTreeNode::minValueNode(DeletionTreeNode*) [60]
+-----------------------------------------------
+                0.00    0.00       1/42          DataStructs::DataStructs() [100]
+                0.00    0.00      41/42          BK_TreeNode::BK_TreeNode(String*, HEInfo*) [19]
+[61]     0.0    0.00    0.00      42         heInfoList::heInfoList() [61]
+-----------------------------------------------
+                0.00    0.00       2/41          BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+                0.00    0.00      39/41          BK_Tree::add(String*, HEInfo*) [17]
+[62]     0.0    0.00    0.00      41         BK_TreeEdge::setNext(BK_TreeEdge*) [62]
+-----------------------------------------------
+                0.00    0.00      38/38          BK_TreeNode::addChild(int, BK_TreeNode*) [24]
+[63]     0.0    0.00    0.00      38         BK_TreeEdge::BK_TreeEdge(int, BK_TreeNode*) [63]
+-----------------------------------------------
+                0.00    0.00       1/29          DataStructs::DataStructs() [100]
+                0.00    0.00      28/29          hammingArray::hammingArray() [71]
+[64]     0.0    0.00    0.00      29         BK_Tree::BK_Tree() [64]
+-----------------------------------------------
+                0.00    0.00       1/24          DataStructs::DataStructs() [100]
+                0.00    0.00      23/24          bucketNode::bucketNode(String*, ExactInfo*) [66]
+[65]     0.0    0.00    0.00      24         exactInfoList::exactInfoList() [65]
+-----------------------------------------------
+                0.00    0.00      23/23          Bucket::addNode(String*, ExactInfo*) [22]
+[66]     0.0    0.00    0.00      23         bucketNode::bucketNode(String*, ExactInfo*) [66]
+                0.00    0.00      23/24          exactInfoList::exactInfoList() [65]
+-----------------------------------------------
+                0.00    0.00      15/15          JobScheduler::getJob() [43]
+[67]     0.0    0.00    0.00      15         Queue::addToHead(Job*) [67]
+                0.00    0.00      14/1830        QueueNode::QueueNode(Job*) [49]
+-----------------------------------------------
+                0.00    0.00       1/1           TestSigmod(char const*) [74]
+[68]     0.0    0.00    0.00       1         GetClockTimeInMilliSec() [68]
+-----------------------------------------------
+                0.00    0.00       1/1           DataStructs::DataStructs() [100]
+[69]     0.0    0.00    0.00       1         DeletionTree::DeletionTree() [69]
+-----------------------------------------------
+                0.00    0.00       1/1           DataStructs::DataStructs() [100]
+[70]     0.0    0.00    0.00       1         DocumentList::DocumentList() [70]
+-----------------------------------------------
+                0.00    0.00       1/1           DataStructs::DataStructs() [100]
+[71]     0.0    0.00    0.00       1         hammingArray::hammingArray() [71]
+                0.00    0.00      28/29          BK_Tree::BK_Tree() [64]
+-----------------------------------------------
+                0.00    0.00       1/1           JobScheduler::JobScheduler(int) [115]
+[72]     0.0    0.00    0.00       1         Queue::Queue() [72]
+-----------------------------------------------
+                0.00    0.00       1/1           DataStructs::DataStructs() [100]
+[73]     0.0    0.00    0.00       1         HashTable::HashTable(int) [73]
+                0.00    0.00   10000/10000       Bucket::Bucket() [45]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [68] GetClockTimeInMilliSec() [23] BK_TreeNode::findChild(int) [72] Queue::Queue()
+   [7] MatchArray::insert(String*, int, int) [19] BK_TreeNode::BK_TreeNode(String*, HEInfo*) [13] Bucket::lookup(String*, MatchArray*, DeletionTree*)
+   [4] MatchArray::update(String*, heInfoList*, int, DeletionTree*) [8] DeletionTree::remove(unsigned int) [21] Bucket::getNode(String*)
+  [41] ResultList::add(int)   [69] DeletionTree::DeletionTree() [45] Bucket::Bucket()
+  [57] ResultList::destroy()  [70] DocumentList::DocumentList() [14] String::exactMatch(String*)
+  [56] ResultList::ResultList() [58] DocumentNode::DocumentNode(Document) [2] String::editDistance(char*, char*, int, int)
+  [59] ResultList::~ResultList() [43] JobScheduler::getJob() [10] String::hammingDistance(String*)
+  [52] bucketNode::addToQueryList(ExactInfo*) [71] hammingArray::hammingArray() [35] String::compare(String*)
+  [66] bucketNode::bucketNode(String*, ExactInfo*) [36] MatchTreeNode::MatchTreeNode(String*) [46] String::~String()
+  [54] heInfoList::addQuery(HEInfo*) [37] MatchTreeNode::~MatchTreeNode() [3] BK_Tree::editLookup(String*, MatchArray*, DeletionTree*)
+  [61] heInfoList::heInfoList() [53] exactInfoList::addQuery(ExactInfo*) [12] BK_Tree::hammingLookup(String*, MatchArray*, DeletionTree*)
+  [51] heInfoNode::heInfoNode(HEInfo*) [65] exactInfoList::exactInfoList() [64] BK_Tree::BK_Tree()
+  [18] BK_TreeEdge::getNext() [48] exactInfoNode::exactInfoNode(ExactInfo*) [16] BK_Tree::~BK_Tree()
+  [62] BK_TreeEdge::setNext(BK_TreeEdge*) [44] ResultListNode::ResultListNode(int) [34] HashTable::hash_string(char*)
+  [32] BK_TreeEdge::getChild() [40] ResultListNode::~ResultListNode() [73] HashTable::HashTable(int)
+   [6] BK_TreeEdge::getWeight() [60] DeletionTreeNode::minValueNode(DeletionTreeNode*) [11] MatchTree::insert(String*)
+  [63] BK_TreeEdge::BK_TreeEdge(int, BK_TreeNode*) [9] DeletionTreeNode::remove(DeletionTreeNode*, unsigned int, DeletionTreeNode**) [33] MatchTree::matched()
+   [1] BK_TreeNode::editLookup(String*, int, int, MatchArray*, DeletionTree*) [55] DeletionTreeNode::DeletionTreeNode(unsigned int) [39] MatchTree::MatchTree(int)
+  [15] BK_TreeNode::getFirstChild() [50] Job::execute()   [38] MatchTree::~MatchTree()
+   [5] BK_TreeNode::hammingLookup(String*, int, int, MatchArray*, DeletionTree*) [47] Queue::add(Job*) [49] QueueNode::QueueNode(Job*)
+  [20] BK_TreeNode::getData() [42] Queue::remove()        [25] main
+  [24] BK_TreeNode::addChild(int, BK_TreeNode*) [67] Queue::addToHead(Job*)

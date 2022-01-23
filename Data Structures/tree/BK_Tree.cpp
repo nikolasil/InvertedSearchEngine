@@ -46,10 +46,13 @@ void BK_Tree::add(String *word, HEInfo *info) {
     }
     // Search for child node with equal weight in edge
     BK_TreeNode *childNode = nullptr;
+    pthread_mutex_lock(&this->mutex);
     if ((childNode = current->findChild(diff)) == nullptr) {
       current->addChild(diff, new BK_TreeNode(word, info));
+      pthread_mutex_unlock(&this->mutex);
       return;
     }
+    pthread_mutex_unlock(&this->mutex);
     current = childNode;
   }
 }
@@ -138,12 +141,12 @@ BK_TreeNode *BK_TreeNode::findChild(int w) {
 
 void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
   // the edge list was empty
-  pthread_mutex_lock(&this->mutex);
+  // pthread_mutex_lock(&this->mutex);
 
   if (this->childs == nullptr) {
     this->childs = new BK_TreeEdge(w, c);
     this->childs->setNext(nullptr);
-    pthread_mutex_unlock(&this->mutex);
+    // pthread_mutex_unlock(&this->mutex);
     return;
   }
 
@@ -159,19 +162,19 @@ void BK_TreeNode::addChild(int w, BK_TreeNode *c) {
   if (prev == nullptr) {
     this->childs = new BK_TreeEdge(w, c);
     this->childs->setNext(current);
-    pthread_mutex_unlock(&this->mutex);
+    // pthread_mutex_unlock(&this->mutex);
     return;
   }
   // the new edge must be in the last place
   if (current == nullptr) {
     prev->setNext(new BK_TreeEdge(w, c));
-    pthread_mutex_unlock(&this->mutex);
+    // pthread_mutex_unlock(&this->mutex);
     return;
   }
   // the new edge must be between prev-current
   prev->setNext(new BK_TreeEdge(w, c));
   prev->getNext()->setNext(current);
-  pthread_mutex_unlock(&this->mutex);
+  // pthread_mutex_unlock(&this->mutex);
   return;
 }
 

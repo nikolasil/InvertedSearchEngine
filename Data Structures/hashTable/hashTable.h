@@ -5,7 +5,6 @@
 #include "../MatchArray/ResultList.h"
 #include "../string/String.h"
 #include "bucket.h"
-#include <openssl/sha.h>
 #include <pthread.h>
 
 #define TABLE_SIZE 10000
@@ -29,11 +28,10 @@ public:
   Bucket *getBucket(int i) { return this->table[i]; };
   void setBucket(Bucket *b, int i) { this->table[i] = b; };
   void insert(String *word, ExactInfo *wordInfo);
-  int getIndex(unsigned char *H);
   void lookup(String *H, MatchArray *MatchArray, ResultList *forDelition);
   void print();
   // Hashing Related Methods
-  int hexadecimalToDecimal(unsigned char hexVal[]);
+  __uint32_t hash_string(char *s);
 };
 
 #endif

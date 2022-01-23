@@ -288,7 +288,7 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   }
   // cout << "broke wait getNextAvailRes" << endl;
 
-  Document d = structs.getDocs()->getFirst();
+  Document d = structs.getDocs()->removeFirst()->getDoc();
   // structs.getDocs()->print();
   // cout << d.query_ids << endl;
   // cout << structs.getDocs()->getCount() << " after getNextAvailRes " << d.doc_id << endl;
@@ -296,7 +296,7 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   *p_num_res = d.num_res;
   *p_query_ids = d.query_ids;
 
-  structs.getDocs()->remove(d.doc_id);
+  // structs.getDocs()->remove(d.doc_id);
   if (flag)
     flag = false;
   if (structs.getDocs()->getCount() == 0)
