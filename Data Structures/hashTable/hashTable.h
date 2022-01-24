@@ -7,7 +7,7 @@
 #include "bucket.h"
 #include <pthread.h>
 
-#define TABLE_SIZE 10000
+#define TABLE_SIZE 500000
 
 class HashTable {
 private:
@@ -28,7 +28,7 @@ public:
   Bucket *getBucket(int i) { return this->table[i]; };
   void setBucket(Bucket *b, int i) { this->table[i] = b; };
   void insert(String *word, ExactInfo *wordInfo);
-  void lookup(String *H, MatchArray *MatchArray, ResultList *forDelition);
+  void lookup(String *H, MatchArray *MatchArray);
   void print();
   // Hashing Related Methods
   __uint32_t hash_string(char *s);

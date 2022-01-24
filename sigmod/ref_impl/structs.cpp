@@ -4,7 +4,8 @@ DataStructs::DataStructs() {
   this->ht = new HashTable();
   this->hamming = new hammingArray();
   this->edit = new BK_Tree();
-  this->forDeletion = new ResultList();
+  this->ExactQueryHT = new ExactQueryHashTable();
+  this->HEQueryHT = new HEQueryHashTable();
   this->docs = new DocumentList();
   this->maxQueryId = 0;
   this->lastServedDocId = 0;
@@ -18,13 +19,14 @@ DataStructs::~DataStructs() {
   delete hamming;
   delete edit;
 
+  delete ExactQueryHT;
+  delete HEQueryHT;
+
   exactStructsList->destroy();
   heStructsList->destroy();
-  forDeletion->destroy();
   // docs->destroy();
   delete exactStructsList;
   delete heStructsList;
-  delete forDeletion;
   delete docs;
 }
 

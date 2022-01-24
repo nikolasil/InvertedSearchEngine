@@ -78,7 +78,7 @@ ErrorCode query(int numArgs, void **args) {
   strcpy(query.str, query_str);
   query.match_type = match_type;
   query.match_dist = match_dist;
-  // cout << "started query " << query_id << endl;
+  // cout << "q " << query_id << endl;
   switch (match_type) {
   case MT_EXACT_MATCH: {
     // cout << "Query id: " << query_id;
@@ -101,11 +101,10 @@ ErrorCode query(int numArgs, void **args) {
 
     // cout << endl;
     exactInfo->maxQueryWords = maxQueryWords;
-    structs.getExactStructsList()->addQuery(exactInfo);
+    // structs.getExactStructsList()->addQuery(exactInfo);
+    structs.getExactQueryHashTable()->insert(exactInfo);
+
     delete wordToken;
-    pthread_mutex_lock(&(structs.mutex0));
-    structs.setMaxQueryId(structs.getMaxQueryId() + 1);
-    pthread_mutex_unlock(&(structs.mutex0));
     break;
   }
   case MT_EDIT_DIST: {
@@ -129,11 +128,9 @@ ErrorCode query(int numArgs, void **args) {
 
     // cout << endl;
     heInfo->maxQueryWords = maxQueryWords;
-    structs.getHeStructsList()->addQuery(heInfo);
+    // structs.getHeStructsList()->addQuery(heInfo);
+    structs.getHEQueryHashTable()->insert(heInfo);
     delete wordToken;
-    pthread_mutex_lock(&(structs.mutex0));
-    structs.setMaxQueryId(structs.getMaxQueryId() + 1);
-    pthread_mutex_unlock(&(structs.mutex0));
     break;
   }
   case MT_HAMMING_DIST: {
@@ -158,11 +155,9 @@ ErrorCode query(int numArgs, void **args) {
     // cout << endl;
 
     heInfo->maxQueryWords = maxQueryWords;
-    structs.getHeStructsList()->addQuery(heInfo);
+    // structs.getHeStructsList()->addQuery(heInfo);
+    structs.getHEQueryHashTable()->insert(heInfo);
     delete wordToken;
-    pthread_mutex_lock(&(structs.mutex0));
-    structs.setMaxQueryId(structs.getMaxQueryId() + 1);
-    pthread_mutex_unlock(&(structs.mutex0));
 
     break;
   }
@@ -180,6 +175,7 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   args0[3] = new unsigned int(match_dist);
 
   jobScheduler->addJob(new Job('s', &query, args0, 4));
+  structs.setMaxQueryId(structs.getMaxQueryId() + 1);
   // cout << "added start querry" << endl;
 }
 
@@ -187,7 +183,9 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
 
 ErrorCode equery(int numArgs, void **args) {
   QueryID query_id = *(QueryID *)args[0];
-  structs.getForDeletion()->add(query_id);
+  // structs.getForDeletion()->add(query_id);
+  structs.getExactQueryHashTable()->setFlagFalse(query_id);
+  structs.getHEQueryHashTable()->setFlagFalse(query_id);
   return EC_SUCCESS;
 }
 
@@ -205,7 +203,7 @@ ErrorCode EndQuery(QueryID query_id) {
 
 ErrorCode document(int numArgs, void **args) {
   DocID doc_id = *(DocID *)args[0];
-  // cout << doc_id;
+  // cout << doc_id << endl;
   const char *doc_str = (const char *)args[1];
 
   char cur_doc_str[MAX_DOC_LENGTH];
@@ -221,13 +219,13 @@ ErrorCode document(int numArgs, void **args) {
     word = new String(wordToken);
 
     // HashTable
-    structs.getHashTable()->lookup(word, matchArray, structs.getForDeletion());
+    structs.getHashTable()->lookup(word, matchArray);
 
     // Edit Distance
-    structs.getEdit()->editLookup(word, matchArray, structs.getForDeletion());
+    structs.getEdit()->editLookup(word, matchArray);
 
     // Hamming Distance
-    structs.getHamming()->lookup(word, matchArray, structs.getForDeletion());
+    structs.getHamming()->lookup(word, matchArray);
 
     if (wordToken) {
       wordToken = strtok_r(NULL, " ", &save_ptr);

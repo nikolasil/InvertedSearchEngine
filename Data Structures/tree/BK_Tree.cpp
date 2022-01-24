@@ -64,7 +64,7 @@ void BK_Tree::print() {
   }
 }
 
-void BK_Tree::editLookup(String *word, MatchArray *matchArray, ResultList *forDeletion) {
+void BK_Tree::editLookup(String *word, MatchArray *matchArray) {
   if (this->root == nullptr) {
     return;
   }
@@ -72,27 +72,28 @@ void BK_Tree::editLookup(String *word, MatchArray *matchArray, ResultList *forDe
   // cout << "Diff between " << word->getStr() << " and  " << this->root->getData()->getStr() << "  is " << diff << " ." << endl;
   for (int i = 1; i <= MAX_THRESHOLD; i++) {
     if (diff <= i) {
-      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i, forDeletion);
+      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
       break;
     }
   }
-  this->root->editLookup(word, 1, diff, matchArray, forDeletion);
+  this->root->editLookup(word, 1, diff, matchArray);
 }
 
-void BK_Tree::hammingLookup(String *word, MatchArray *matchArray, ResultList *forDeletion) {
+void BK_Tree::hammingLookup(String *word, MatchArray *matchArray) {
   if (this->root == nullptr) {
     return;
   }
+
   int diff = word->hammingDistance(this->root->getData());
 
   for (int i = 1; i <= MAX_THRESHOLD; i++) {
     if (diff <= i) {
-      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i, forDeletion);
+      matchArray->update(this->root->getData(), this->root->getInfo(), (unsigned int)i);
       break;
     }
   }
 
-  this->root->hammingLookup(word, 1, diff, matchArray, forDeletion);
+  this->root->hammingLookup(word, 1, diff, matchArray);
 }
 
 // Tree Node
@@ -188,7 +189,7 @@ void BK_TreeNode::print() {
   cout << endl;
 }
 
-void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray, ResultList *forDeletion) {
+void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
   BK_TreeNode *child;
   BK_TreeEdge *currentEdge = this->getFirstChild();
   int i;
@@ -200,21 +201,21 @@ void BK_TreeNode::editLookup(String *word, int threshold, int parentDiff, MatchA
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (diff <= i) {
         // cout << "inserting " << child->getData()->getStr() << " with weight " << i << " in matchArray" << endl;
-        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i, forDeletion);
+        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i);
         break;
       }
     }
 
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (currentEdge->getWeight() >= (parentDiff - i) && currentEdge->getWeight() <= (parentDiff + i)) {
-        child->editLookup(word, i, diff, matchArray, forDeletion);
+        child->editLookup(word, i, diff, matchArray);
         break;
       }
     }
     currentEdge = currentEdge->getNext();
   }
 }
-void BK_TreeNode::hammingLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray, ResultList *forDeletion) {
+void BK_TreeNode::hammingLookup(String *word, int threshold, int parentDiff, MatchArray *matchArray) {
   BK_TreeNode *child;
   BK_TreeEdge *currentEdge = this->getFirstChild();
   int i;
@@ -225,13 +226,13 @@ void BK_TreeNode::hammingLookup(String *word, int threshold, int parentDiff, Mat
     diff = child->getData()->hammingDistance(word);
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (diff <= i) {
-        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i, forDeletion);
+        matchArray->update(child->getData(), child->getInfo(), (unsigned int)i);
         break;
       }
     }
     for (i = threshold; i <= MAX_THRESHOLD; i++) {
       if (currentEdge->getWeight() >= (parentDiff - i) && currentEdge->getWeight() <= (parentDiff + i)) {
-        child->hammingLookup(word, i, diff, matchArray, forDeletion);
+        child->hammingLookup(word, i, diff, matchArray);
         break;
       }
     }

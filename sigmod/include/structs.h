@@ -11,20 +11,27 @@ class heInfoList;
 class Bucket;
 class MatchArray;
 
+class ExactQueryHashTable;
+class HEQueryHashTable;
+
 #include "../../Data Structures/DocumentList/DocumentList.h"
 #include "../../Data Structures/MatchArray/MatchArray.h"
+#include "../../Data Structures/QueryHashTable/exactQueryHashTable.h"
+#include "../../Data Structures/QueryHashTable/heQueryHashTable.h"
 #include "../../Data Structures/hashTable/bucket.h"
 #include "../../Data Structures/hashTable/hashTable.h"
 #include "../../Data Structures/string/String.h"
 #include "../../Data Structures/tree/BK_Tree.h"
 #include "../../Data Structures/tree/hammingArray.h"
 #include <pthread.h>
+
 class DataStructs {
 private:
   HashTable *ht;
   hammingArray *hamming;
   BK_Tree *edit;
-  ResultList *forDeletion;
+  ExactQueryHashTable *ExactQueryHT;
+  HEQueryHashTable *HEQueryHT;
   DocumentList *docs;
   unsigned int maxQueryId;
   int lastServedDocId;
@@ -40,7 +47,8 @@ public:
   HashTable *getHashTable() { return this->ht; };
   hammingArray *getHamming() { return this->hamming; };
   BK_Tree *getEdit() { return this->edit; };
-  ResultList *getForDeletion() { return this->forDeletion; };
+  ExactQueryHashTable *getExactQueryHashTable() { return this->ExactQueryHT; };
+  HEQueryHashTable *getHEQueryHashTable() { return this->HEQueryHT; };
   DocumentList *getDocs() { return this->docs; };
   unsigned int getMaxQueryId() { return this->maxQueryId; };
   int getLastServedDocId() { return this->lastServedDocId; };

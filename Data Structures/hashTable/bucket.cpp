@@ -24,17 +24,18 @@ void Bucket::print() {
   this->head->print();
 }
 
-void Bucket::lookup(String *word, MatchArray *MatchArray, ResultList *forDelition) {
+void Bucket::lookup(String *word, MatchArray *MatchArray) {
   bucketNode *temp = this->head;
   while (temp != nullptr) {
     if (temp->getWord()->exactMatch(word)) {
 
       exactInfoNode *cur = temp->getList()->getHead();
       while (cur != nullptr) {
-        if (forDelition->searchRemove(cur->getId())) {
-          cur->setFlag(false);
-        } else if (cur->getFlag())
+        if (cur->getFlag() == true)
           MatchArray->insert(temp->getWord(), cur->getId(), cur->getMaxQueryWords());
+        // else {
+        //   cout << "Deleted " << cur->getId() << endl;
+        // }
         cur = cur->getNext();
       }
     }

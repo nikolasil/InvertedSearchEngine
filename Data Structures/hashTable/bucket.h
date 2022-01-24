@@ -49,7 +49,7 @@ public:
   void setLast(bucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  void lookup(String *word, MatchArray *MatchArray, ResultList *forDelition);
+  void lookup(String *word, MatchArray *MatchArray);
   bucketNode *addNode(String *word, ExactInfo *wordInfo);
   bucketNode *getNode(String *word);
   void print();

@@ -39,16 +39,17 @@ void MatchArray::insert(String *queryWord, int queryId, int maxQueryWords) {
   }
 }
 
-void MatchArray::update(String *word, heInfoList *infoList, int threshold, ResultList *forDeletion) {
+void MatchArray::update(String *word, heInfoList *infoList, int threshold) {
   heInfoNode *curr = infoList->getHead();
 
   while (curr != nullptr) {
 
     if (curr->getMatchDist() >= (unsigned int)threshold) {
-      if (forDeletion->searchRemove(curr->getId())) {
-        curr->setFlag(false);
-      } else if (curr->getFlag())
+      if (curr->getFlag() == true)
         this->insert(word, curr->getId(), curr->getMaxQueryWords());
+      // else {
+      //   cout << "Deleted " << curr->getId() << endl;
+      // }
     }
     curr = curr->getNext();
   }

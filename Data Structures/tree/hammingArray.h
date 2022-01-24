@@ -21,7 +21,7 @@ public:
   void setTree(int index, BK_Tree *t) { array[index] = t; };
   // Methods
   void insert(String *word, HEInfo *info);
-  void lookup(String *word, MatchArray *matchArray, ResultList *forDeletion);
+  void lookup(String *word, MatchArray *matchArray);
   void print();
 };
 

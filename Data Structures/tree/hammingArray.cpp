@@ -39,8 +39,8 @@ void hammingArray::print() {
   }
 }
 
-void hammingArray::lookup(String *word, MatchArray *matchArray, ResultList *forDeletion) {
+void hammingArray::lookup(String *word, MatchArray *matchArray) {
   BK_Tree *tree = this->array[word->getSize() - 4];
   if (tree)
-    tree->hammingLookup(word, matchArray, forDeletion);
+    tree->hammingLookup(word, matchArray);
 }

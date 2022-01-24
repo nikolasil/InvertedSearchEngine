@@ -33,7 +33,6 @@ void DocumentList::add(Document doc) {
     pthread_mutex_unlock(&(this->mutex));
     return;
   }
-
   this->last->setNext(newNode);
   this->last = newNode;
   count++;

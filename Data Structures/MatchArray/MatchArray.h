@@ -27,7 +27,7 @@ public:
   void setMatchedIds(ResultList *matchedIds) { this->matchedIds = matchedIds; };
   // Methods
   void insert(String *queryWord, int queryId, int maxQueryWords);
-  void update(String *word, heInfoList *list, int threshold, ResultList *forDeletion);
+  void update(String *word, heInfoList *list, int threshold);
   void deleteMatchTree(int queryId);
   void print(int queryId);
   void print();

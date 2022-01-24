@@ -54,7 +54,7 @@ uint32_t HashTable::hash_string(char *s) {
 void HashTable::insert(String *word, ExactInfo *wordInfo) {
   // Insert Word into Bucket
   // cout << "Inserting " << word->getStr() << " into Bucket " << index << endl;
-  this->table[(hash_string(word->getStr()) % (TABLE_SIZE - 1)) + 1]->addNode(word, wordInfo);
+  this->table[(hash_string(word->getStr()) % (TABLE_SIZE - 1))]->addNode(word, wordInfo);
 }
 
 void HashTable::print() {
@@ -67,7 +67,7 @@ void HashTable::print() {
   }
 }
 
-void HashTable::lookup(String *H, MatchArray *MatchArray, ResultList *forDelition) {
+void HashTable::lookup(String *H, MatchArray *MatchArray) {
   // cout << "Looking up " << H->getStr() << " in Bucket " << index << endl;
-  this->table[(hash_string(H->getStr()) % (TABLE_SIZE - 1)) + 1]->lookup(H, MatchArray, forDelition);
+  this->table[(hash_string(H->getStr()) % (TABLE_SIZE - 1))]->lookup(H, MatchArray);
 }
