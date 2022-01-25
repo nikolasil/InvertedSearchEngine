@@ -46,7 +46,7 @@ public:
   void setLast(HEQueryBucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  HEQueryBucketNode *addNode(HEInfo *queryInfo);
+  void addNode(HEInfo *queryInfo);
   HEQueryBucketNode *getNode(unsigned int query);
   void print();
 };
@@ -55,7 +55,6 @@ class HEQueryHashTable {
 private:
   HEQueryBucket **table;
   int size;
-  // pthread_mutex_t mutex;
 
 public:
   HEQueryHashTable(int size = TABLE_SIZE);

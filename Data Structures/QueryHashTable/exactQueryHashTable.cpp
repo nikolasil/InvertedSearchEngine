@@ -49,7 +49,7 @@ ExactQueryBucket::ExactQueryBucket() {
 ExactQueryBucket::~ExactQueryBucket() {
   pthread_mutex_destroy(&this->mutex);
 }
-ExactQueryBucketNode *ExactQueryBucket::addNode(ExactInfo *queryInfo) {
+void ExactQueryBucket::addNode(ExactInfo *queryInfo) {
   pthread_mutex_lock(&this->mutex);
   ExactQueryBucketNode *newNode = new ExactQueryBucketNode(queryInfo);
   if (this->head == NULL) {

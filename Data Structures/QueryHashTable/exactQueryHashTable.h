@@ -46,7 +46,7 @@ public:
   void setLast(ExactQueryBucketNode *last) { this->last = last; };
   void setCount(int count) { this->count = count; };
   // Methods
-  ExactQueryBucketNode *addNode(ExactInfo *queryInfo);
+  void addNode(ExactInfo *queryInfo);
   ExactQueryBucketNode *getNode(unsigned int query);
   void print();
 };
@@ -55,7 +55,6 @@ class ExactQueryHashTable {
 private:
   ExactQueryBucket **table;
   int size;
-  // pthread_mutex_t mutex;
 
 public:
   ExactQueryHashTable(int size = TABLE_SIZE);

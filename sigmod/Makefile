@@ -49,12 +49,12 @@ TESTER = test.o
 # Build all programs
 all: clean $(PROGRAMS)
 test :  $(IMPL_O)  $(FILES) $(TESTER)
-	$(CXX) $(CXXFLAGS) -w  -o test  $(IMPL_O)  $(FILES) $(TESTER) -lcrypto
+	$(CXX) $(CXXFLAGS) -w  -o test  $(IMPL_O)  $(FILES) $(TESTER)
 lib: $(IMPL_O) $(FILES)
-	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES) -lcrypto
+	$(CXX) $(CXXFLAGS) -shared -o lib$(LIBRARY).so $(IMPL_O) $(FILES)
 
 testdriver: lib $(TEST_O) $(FILES)
-	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES) -lcrypto
+	$(CXX) $(CXXFLAGS) -o testdriver $(TEST_O) ./lib$(LIBRARY).so $(FILES)
 
 hashTable.o:
 	$(CXX) $(CXXFLAGS) -c ../Data\ Structures/hashTable/hashTable.cpp

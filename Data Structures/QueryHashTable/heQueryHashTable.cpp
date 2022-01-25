@@ -47,7 +47,7 @@ HEQueryBucket::HEQueryBucket() {
 HEQueryBucket::~HEQueryBucket() {
   pthread_mutex_destroy(&this->mutex);
 }
-HEQueryBucketNode *HEQueryBucket::addNode(HEInfo *queryInfo) {
+void HEQueryBucket::addNode(HEInfo *queryInfo) {
   pthread_mutex_lock(&this->mutex);
   HEQueryBucketNode *newNode = new HEQueryBucketNode(queryInfo);
   if (this->head == NULL) {

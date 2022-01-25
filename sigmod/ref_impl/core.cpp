@@ -177,6 +177,7 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   jobScheduler->addJob(new Job('s', &query, args0, 4));
   structs.setMaxQueryId(structs.getMaxQueryId() + 1);
   // cout << "added start querry" << endl;
+  return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
