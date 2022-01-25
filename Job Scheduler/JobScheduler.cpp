@@ -46,6 +46,8 @@ void *threadFunc(void *args) {
     if (j == NULL) {
       continue;
     }
+    if (j->getType() == '.')
+      return NULL;
     j->execute();
   }
 }
@@ -72,6 +74,11 @@ JobScheduler::JobScheduler(int numThreads) {
 }
 
 JobScheduler::~JobScheduler() {
+  for (int i = 0; i < this->numThreads; i++) {
+    pthread_join(this->threadIDs[i], nullptr);
+  }
+  delete queue;
+  delete this->threadIDs;
 }
 
 void JobScheduler::addJob(Job *job) {

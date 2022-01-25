@@ -9,7 +9,14 @@ QueueNode::QueueNode(Job *data) {
   this->prev = NULL;
 }
 
-QueueNode ::~QueueNode() {}
+QueueNode ::~QueueNode() {
+  if (this->job != NULL) {
+    delete this->job;
+  }
+  if (this->next != NULL) {
+    delete this->next;
+  }
+}
 
 void QueueNode::print() {
   cout << "Job: " << this->job->getType() << endl;
@@ -21,7 +28,11 @@ Queue::Queue() {
   this->size = 0;
 }
 
-Queue::~Queue() {}
+Queue::~Queue() {
+  if (this->head != NULL) {
+    delete this->head;
+  }
+}
 
 void Queue::add(Job *job) {
   QueueNode *node = new QueueNode(job);

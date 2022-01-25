@@ -45,17 +45,24 @@
 
 using namespace std;
 
-JobScheduler *jobScheduler;
+JobScheduler jobScheduler(NUM_THREADS);
 DataStructs structs;
 
 ErrorCode InitializeIndex() {
-  jobScheduler = new JobScheduler(NUM_THREADS);
   return EC_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+ErrorCode end(int numArgs, void **args) {
+  return EC_SUCCESS;
+}
 ErrorCode DestroyIndex() {
+  for (int i = 0; i < NUM_THREADS; i++) {
+    void **args0 = new void *[1];
+
+    jobScheduler.addJob(new Job('.', &end, args0, 0));
+    delete args0;
+  }
   return EC_SUCCESS;
 }
 
@@ -66,7 +73,6 @@ DataStructs *getStructs() {
 }
 
 ErrorCode query(int numArgs, void **args) {
-
   QueryID query_id = *(QueryID *)args[0];
   const char *query_str = (const char *)args[1];
   MatchType match_type = *((MatchType *)args[2]);
@@ -174,7 +180,7 @@ StartQuery(QueryID query_id, const char *query_str, MatchType match_type, unsign
   args0[2] = new MatchType(match_type);
   args0[3] = new unsigned int(match_dist);
 
-  jobScheduler->addJob(new Job('s', &query, args0, 4));
+  jobScheduler.addJob(new Job('s', &query, args0, 4));
   structs.setMaxQueryId(structs.getMaxQueryId() + 1);
   // cout << "added start querry" << endl;
   return EC_SUCCESS;
@@ -194,7 +200,7 @@ ErrorCode EndQuery(QueryID query_id) {
   void **args0 = new void *[1];
   args0[0] = new QueryID(query_id);
 
-  jobScheduler->addJob(new Job('e', &equery, args0, 1));
+  jobScheduler.addJob(new Job('e', &equery, args0, 1));
   // cout << "added end querry" << endl;
 
   return EC_SUCCESS;
@@ -261,7 +267,7 @@ ErrorCode MatchDocument(DocID doc_id, const char *doc_str) {
   args0[1] = new char[MAX_DOC_LENGTH];
   memcpy((char *)args0[1], doc_str, strlen(doc_str));
   // structs.getHashTable()->print();
-  jobScheduler->addJob(new Job('m', &document, args0, 2));
+  jobScheduler.addJob(new Job('m', &document, args0, 2));
   // cout << "added match doc" << endl;
   return EC_SUCCESS;
 }
@@ -279,10 +285,10 @@ ErrorCode GetNextAvailRes(DocID *p_doc_id, unsigned int *p_num_res, QueryID **p_
   if (flag) {
     Job *j = new Job('w', NULL, NULL, 0);
     j->setStatus(0);
-    jobScheduler->addJob(j);
+    jobScheduler.addJob(j);
     // structs.getHamming()->print();
     // structs.getEdit()->print();
-    pthread_cond_wait(jobScheduler->getCond(), jobScheduler->getCondMutex());
+    pthread_cond_wait(jobScheduler.getCond(), jobScheduler.getCondMutex());
     // structs.getHashTable()->print();
   }
   // cout << "broke wait getNextAvailRes" << endl;
