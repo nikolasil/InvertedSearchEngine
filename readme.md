@@ -379,4 +379,4 @@ We can see that the optimazation of the exactInfo and heInfo being referenced by
 ### Contributors
 
 - [Nikolas Iliopoulos](https://github.com/nikolasil) (1115201800332)
-- [Michalis Volakis](https://github.com/michael-vol) (1115201800022)
+- [Michalis Volakis](https://github.com/mihavo) (1115201800022)
